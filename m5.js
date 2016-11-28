@@ -132,5 +132,6 @@ function measure_distance () {
 
 function init () {
     setupShokuba();
+    geocoder = new google.maps.Geocoder();
 //    loadGmapsAPI();
 }
