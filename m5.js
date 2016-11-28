@@ -46,7 +46,7 @@ function loadGmapsAPI () {
     var script = document.createElement( "script" );
     var uri = "http://maps.google.com/maps/api/js?";
     var apikey = "AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo";
-    uri = uri + "key=" + apikey + "&sensor=true&" + "libraries=geometry&callback=mapInitialize";
+    uri = uri + "key=" + apikey + "&sensor=true&libraries=geometry&callback=mapInitialize";
     script.type = "text/javascript";
     script.src = uri;
     document.body.appendChild( script );
@@ -132,5 +132,5 @@ function measure_distance () {
 
 function init () {
     setupShokuba();
-    loadGmapsAPI();
+//    loadGmapsAPI();
 }
