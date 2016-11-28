@@ -1,2 +1,59 @@
-Hello world.
-こんにちは。
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=11" />
+	<script type="text/jscript" src="objwp.js"></script>
+	<script type="text/jscript" src="m5.js"></script>
+	<title>m5</title>
+	<style>
+	 h1 {
+	     font-size: 1em;
+	 }
+
+	 table {
+	     border-collapse: collapse;
+	 }
+	</style>
+    </head>
+
+    <body onLoad="init();">
+	<h1>出発地点</h1>
+	<table border="1">
+	    <tr>
+		<td>住所（漢字）</td>
+		<td><input type="text" id="addr" size="40"></td>
+		<td><button onClick="getGeocode();">geocode変換</button></td>
+	    </tr>
+	    <tr>
+		<td>geocode結果</td>
+		<td colspan="2">formatted_address = <span id="faddr"></span><br>lat = <span id="stLat"></span>, lng = <span id="stLng"></span></td>
+	    </tr>
+	</table>
+
+	<h1>目的地</h1>
+	<select id="kyoku" size="29" onClick="selectShokuba(this.value);"></select>
+	<select id="shokuba" size="29"></select>
+
+	<h1>交通用具</h1>
+	<table>
+	    <tr>
+		<td>
+		    <label>
+			<input name="yougu" type="radio" value="WALKING" checked/> 徒歩
+		    </label><br>
+		    <label>
+			<input name="yougu" type="radio" value="DRIVING" /> 自動車
+		    </label>
+		</td>
+		<td>
+		    <button onClick="measure_distance();">距離を測る</button>
+		</td>
+	    </tr>
+	</table>
+
+	<div id="map_yougu" style="width: 950px; height: 660px;"></div>
+
+
+    </body>
+</html>
