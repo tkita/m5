@@ -68,8 +68,8 @@
 	<h1 id="top">出発地点</h1>
 	<table border="1">
 	    <tr>
-		<td>住所（漢字）</td>
-		<td><input type="text" id="addr" size="40"></td>
+		<td>住所</td>
+		<td><input type="text" id="addr" size="40" placeholder="漢字"></td>
 		<td><button onClick="getGeocode();">geocode変換</button></td>
 	    </tr>
 	    <tr>
@@ -81,7 +81,7 @@
 	<h1>目的地</h1>
 	<div style="margin: 1em;">
 	    <div style="float: left;">
-		<input type="text" id="kword" size="40">&nbsp;<button onClick="searchShokuba();">検索</button>
+		<input type="text" id="kword" size="40" placeholder="名称、住所、電話番号下４桁">&nbsp;<button onClick="searchShokuba();">検索</button>
 	    </div>
 	    <div style="text-align: right;">
 		<span style="padding: 1em;"><a href="#koutsuyougu">交通用具へ</a></span>
