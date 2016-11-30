@@ -88,8 +88,18 @@
 		<span style="padding: 1em;"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
 	    </div>
 	</div>
-	<select id="kyoku" size="29" onChange="selectShokuba(this.value);"></select>
-	<select id="shokuba" size="29"></select><br>
+	<div style="float: left;">
+	    <label>
+		局など<br>
+		<select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
+	    </label>
+	</div>
+	<div>
+	    <label>
+		所属や建物<br>
+		<select id="shokuba" size="29" style="font-family: monospace;"></select>
+	    </label>
+	</div>
 	<button style="margin: 1em;" onClick="move();">目的地の位置情報を出発地へセット</button>
 
 	<h1 id="koutsuyougu">交通用具</h1>

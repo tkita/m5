@@ -34,6 +34,12 @@ function getRadioValue ( radio ) {
     return result;
 }
 
+function replaceZenkaku ( str ) {
+    return str.replace( /[-A-Za-z0-9]/g, function ( s ) {
+	return String.fromCharCode( s.charCodeAt( 0 ) + 0xFEE0 );
+    });
+}
+
 // 
 function getGeocode () {
     [ "faddr", "stLat", "stLng" ].forEach( function ( elm ) {
@@ -55,21 +61,26 @@ function getGeocode () {
 }
 
 function arrangeText ( text ) {
-    var ary = text.split(",");
     var padding = "　　　　　　　　　　　　　";
+    var ary = text.split( "," );
+    ary[0] = ( replaceZenkaku( ary[0] ) + padding ).substr( 0, 10 );
+    ary[1] = ( replaceZenkaku( ary[1] ) + padding ).substr( 0, 10 );
+    ary[2] = ( replaceZenkaku( ary[2] ) + padding ).substr( 0, 20 );
+    ary[3] = ( ary[3] + "         " ).substr( 0, 9 );
+    ary[4] = ( ary[4] + "         " ).substr( 0, 9 );
     var result = "";
     ary.forEach( function ( e ) {
-	result = result + ( e + padding ).substr( 0, padding.length ) + "　";
+	result = result + e + "　";
     });
     return result;
 }
 
-function selectShokuba ( kyoku ) {
+function changeKyoku ( kyoku ) {
     var dom = document.getElementById( "shokuba" );
     removeOptions( dom );
     var ary = objWorkplace[ kyoku ];
     ary.forEach( function ( e ) {
-	addOptions( dom, e, arrangeText(e) );
+	addOptions( dom, e, arrangeText( e ) );
     });
 }
 
