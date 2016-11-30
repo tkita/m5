@@ -14,11 +14,42 @@
 	 table {
 	     border-collapse: collapse;
 	 }
+
+
+	 /* 交通用具の Directions Panel */
+	 .adp-summary {
+	     border-style: dashed;
+             border-width: 3px;
+             /* border-color:  */
+             text-align: right;
+             font-weight: bold;
+         }
+
+	 td.adp-substep {
+	     font-size: 7pt;
+	 }
+
+	 td.adp-text {
+	     font-size: 8pt;
+	 }
+
+	 .adp-legal {
+	     font-size: 8pt;
+	 }
+
+
+	 /* ＪＲ線・地下鉄のフキダシ */
+	 .gm-style > div > div > div > div > div > div {
+             color: red;
+	     opacity: 0.7;
+	 }
+
 	</style>
     </head>
 
     <body>
-	<h1>出発地点</h1>
+
+	<h1 id="top">出発地点</h1>
 	<table border="1">
 	    <tr>
 		<td>住所（漢字）</td>
@@ -36,9 +67,11 @@
 	    <input type="text" id="kword" size="40">&nbsp;<button onClick="searchShokuba();">検索</button>
 	</div>
 	<select id="kyoku" size="29" onChange="selectShokuba(this.value);"></select>
-	<select id="shokuba" size="29"></select>
+	<select id="shokuba" size="29"></select><br>
+	<button style="margin: 1em;" onClick="move();">目的地の位置情報を出発地へセット</button>
 
 	<h1>交通用具</h1>
+	<div style="text-align: right;"><a href="#top">TOP</a></div>
 	<table>
 	    <tr>
 		<td>
@@ -54,19 +87,21 @@
 		</td>
 	    </tr>
 	</table>
-
-	<div id="directionsPanel" style="width: 200px; float: left;" ></div>
+	<div id="directionsPanel" style="width: 200px; margin: 1em; float: left;" ></div>
 	<div id="yougu_map" style="width: 950px; height: 660px;"></div>
 
-	<h1>ＪＲ線・地下鉄</h1>
-	<button onClick="dispNearStation();">近隣の駅を表示する</button>
-	<div id="left_station_map"  style="width: 700px; height: 600px;"></div>
-	<div id="right_station_map" style="width: 700px; height: 600px;"></div>
+	<h1 style="clear: both;">ＪＲ線・地下鉄</h1>
+	<div style="text-align: right;"><a href="#top">TOP</a></div>
+	<button onClick="dispNearStation();">近隣の駅を表示する</button><br>
+	<div>
+	    <div id="left_station_map"  style="width: 700px; height: 600px; margin: 0.5em; float: left;"></div>
+	    <div id="right_station_map" style="width: 700px; height: 600px; margin: 0.5em;"></div>
+	</div>
 	
 	<script type="text/jscript" src="./objwp.js"></script>
 	<script type="text/jscript" src="./objStations.js"></script>
 	<script type="text/jscript" src="./m5.js"></script>
-	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&sensor=true&libraries=geometry&callback=init"></script>
+	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
 
     </body>
 </html>
