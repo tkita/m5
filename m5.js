@@ -22,6 +22,7 @@ function removeOptions ( sel ) {
     while ( sel.options.length ) {
 	sel.remove(0);
     }
+    return sel;
 }
 
 function getRadioValue ( radio ) {
@@ -76,8 +77,7 @@ function arrangeText ( text ) {
 }
 
 function changeKyoku ( kyoku ) {
-    var dom = document.getElementById( "shokuba" );
-    removeOptions( dom );
+    var dom = removeOptions( document.getElementById( "shokuba" ) );
     var ary = objWorkplace[ kyoku ];
     ary.forEach( function ( e ) {
 	addOptions( dom, e, arrangeText( e ) );
@@ -105,8 +105,7 @@ function searchShokuba () {
 	return;
     }
 
-    var dom = document.getElementById( "shokuba" );
-    removeOptions( dom );
+    var dom = removeOptions( document.getElementById( "shokuba" ) );
     result.forEach( function ( e ) {
 	addOptions( dom, e, arrangeText( e ) );
     });
@@ -331,6 +330,175 @@ function dispNearStation () {
     }
 }
 
+//
+function getNearBusStop ( lat, lng ) {
+    // id, lat, lng, name
+    var result = objbusstops.map( function ( s ) {
+	var h1 = Math.abs( lat - s[1] );
+	var h2 = Math.abs( lng - s[2] );
+	return { id:   s[0],
+		 lat:  s[1],
+		 lng:  s[2],
+		 name: s[3],
+		 dist: h1 * h1 + h2 * h2 };
+    });
+    result.sort( function ( a, b ) {
+	if ( a.dist < b.dist ) return -1;
+	if ( a.dist > b.dist ) return 1;
+	return 0;
+    });
+    return result.slice( 0, 5 ); // 上位５つ
+}
+
+function searchBusStops () {
+    var lat, lng;
+    if ( document.getElementsByName( "bus" )[0].checked ) {
+	lat = document.getElementById( "stLat" ).innerHTML;
+	lng = document.getElementById( "stLng" ).innerHTML;
+    } else {
+	var sel = document.getElementById( "shokuba" );
+	if ( sel.selectedIndex < 0 ) {
+	    alert( "目的地が選択されていません" );
+	    return;
+	}
+	var wp = sel.options[ sel.selectedIndex ].value;
+	lat = wp.split( "," )[3];
+	lng = wp.split( "," )[4];
+    }
+    if( lat == "" ) {
+	alert( "出発地点が未入力です" );
+	return;
+    }
+
+    var sel = removeOptions( document.getElementById( "busStops" ) );
+    getNearBusStop( lat, lng ).forEach( function ( e ) {
+	addOptions( sel, e['id'], e['name'] );
+    });
+}
+
+function changeBusStop ( id ) {
+    var result = [];
+    objBusStopRoute.forEach( function ( e ) {
+    	if ( id == e[0] ) {
+    	    result.push( e );
+    	}});
+    var sel = removeOptions( document.getElementById( "busRoutes" ) );
+    result.forEach( function ( e ) {
+	//var str = e[2] + "（" + e[1] + "）";
+	addOptions( sel, e[1] + e[2], e[2] + "（" + e[1] + "）" );
+    });
+}
+
+function dispBusRoute ( str ) {
+    //console.info( str );
+    //console.info( objBusRoute[ str ] );
+
+    var lat, lng;
+    var sel = document.getElementById( "shokuba" );
+    var wp = sel.options[ sel.selectedIndex ].value;
+
+    if ( document.getElementsByName( "bus" )[0].checked ) {
+	lat = document.getElementById( "stLat" ).innerHTML;
+	lng = document.getElementById( "stLng" ).innerHTML;
+    } else {
+	lat = wp.split( "," )[3];
+	lng = wp.split( "," )[4];
+    }
+
+    var latlng = new google.maps.LatLng( lat, lng );
+    var myOptions = { zoom: 14,
+		      center: latlng,
+		      panControl: false,
+		      scaleControl: true,
+		      zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
+		      mapTypeId: google.maps.MapTypeId.ROADMAP
+		    };
+    var map = new google.maps.Map( document.getElementById( "bus_map" ), myOptions );
+    var transitLayer = new google.maps.TransitLayer();
+    transitLayer.setMap(map);
+
+    var url = "http://maps.google.co.jp/mapfiles/ms/icons/";
+    var marker = new google.maps.Marker( {
+	position: latlng,
+	icon: new google.maps.MarkerImage( url + 'green-dot.png' ),
+	map: map
+    } );
+
+    if ( document.getElementsByName( "bus" )[0].checked ) {
+	lat = wp.split( "," )[3];
+	lng = wp.split( "," )[4];
+    } else {
+	lat = document.getElementById( "stLat" ).innerHTML;
+	lng = document.getElementById( "stLng" ).innerHTML;
+
+    }
+    var marker = new google.maps.Marker( {
+	position: new google.maps.LatLng( lat, lng ),
+	icon: new google.maps.MarkerImage( url + 'red-dot.png' ),
+	map: map
+    } );
+
+    // バス停(1)
+    var a = [];
+    for ( var i = 0; i < objBusStopRoute.length; i++ ) {
+	if ( ( objBusStopRoute[i][1] + objBusStopRoute[i][2] ) == str ) {
+	    a.push( objBusStopRoute[i][0] );
+	}
+    }
+
+    // バス停(2)
+    var sel = document.getElementById( "busStops" );
+    var id = sel.options[ sel.selectedIndex ].value;
+    var url = "http://labs.google.com/ridefinder/images/";
+    for ( var i = 0; i < a.length; i++ ) {
+	for ( var j = 0; j < objbusstops.length; j++ ) {
+	    if ( a[i] == objbusstops[j][0] ) {
+		var marker = new google.maps.Marker( {
+		    position: new google.maps.LatLng( objbusstops[j][1] , objbusstops[j][2] ),
+		    icon: new google.maps.MarkerImage( url + 'mm_20_white.png' ),
+		    map: map
+		} );
+		attachMessage( marker, objbusstops[j][3] )
+		// バス停リストボックスと一致するバス停には、あらかじめフキダシ表示する
+		if ( id == objbusstops[j][0] ) {
+		    google.maps.event.trigger( marker, "click" );
+		}
+		break;
+	    }
+	}
+    }
+
+    // バス路線
+    var multiPoly = objBusRoute[ str ];
+    for ( var i = 0; i < multiPoly.length; i++ ) {
+	var p = [];		// [ A, B ]
+	for ( var j = 0; j < multiPoly[i].length; j++ ) {
+	    var d = multiPoly[i][j].split(",");
+	    // console.info( d[0], d[1] );
+	    p.push( { lng: Number( d[0] ), lat: Number( d[1] ) } );
+	}
+	var objLine = new google.maps.Polyline( { path: p,
+						  strokeColor: '#FF0000',
+						  strokeOpacity: 0.5,
+						  strokeWeight: 3
+						});
+	objLine.setMap( map );
+    }
+
+
+    var container = document.createElement( "div" );
+    container.style.margin = "10px";
+    container.style.padding = "5px";
+    container.style.border = "1px solid #000";
+    container.style.background = "#fff";
+    container.style.fontSize = "14px";
+    var sel = document.getElementById( "busRoutes" );
+    container.innerText = sel.options[ sel.selectedIndex ].text;
+    map.controls[ google.maps.ControlPosition.BOTTOM_LEFT ].push( container );
+
+}
+
+//
 function setupShokuba () {
     var dom = document.getElementById( "kyoku" );
     var keys = Object.keys( objWorkplace );

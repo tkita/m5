@@ -86,6 +86,7 @@
 	    <div style="text-align: right;">
 		<span style="padding: 1em;"><a href="#koutsuyougu">交通用具へ</a></span>
 		<span style="padding: 1em;"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
+		<span style="padding: 1em;"><a href="#bus">バスへ</a></span>
 	    </div>
 	</div>
 	<div style="float: left;">
@@ -129,9 +130,31 @@
 	    <div id="left_station_map"  style="width: 700px; height: 600px; margin: 0.5em; float: left;"></div>
 	    <div id="right_station_map" style="width: 700px; height: 600px; margin: 0.5em;"></div>
 	</div>
+
+	<h1 id="bus" style="clear: both;">バス</h1>
+	<div style="text-align: right;"><a href="#top">TOP</a></div>
+	<div style="float: left; margin-right: 1em;">
+	    <label><input name="bus" type="radio" value="jtk" checked /> 自宅周辺</label><br>
+	    <label><input name="bus" type="radio" value="skb" /> 職場周辺</label><br>
+	    <button id="bus" onClick="searchBusStops();">近隣のバス停を検索</button>
+	</div>
+
+	<div style="float: left; margin-right: 1em;">
+	    バス停<br>
+	    <select id="busStops" size="12" style="width: 20em;" onChange="changeBusStop(this.value);"></select>
+	</div>
 	
+	<div>
+	    選択したバス停を含む路線<img src="http://labs.google.com/ridefinder/images/mm_20_white.png"><br>
+	    <select id="busRoutes" size="12" style="width: 25em;" onClick="dispBusRoute(this.value);"></select>
+	</div>
+	<div id="bus_map" style="width: 1200px; height: 800px;"></div>	
+
 	<script type="text/jscript" src="./objwp.js"></script>
-	<script type="text/jscript" src="./objStations.js"></script>
+	<script type="text/jscript" src="./objstations.js"></script>
+	<script type="text/jscript" src="./objbusstops.js"></script>
+	<script type="text/jscript" src="./objbusstoproute.js"></script>
+	<script type="text/jscript" src="./objbusroute.js"></script>
 	<script type="text/jscript" src="./m5.js"></script>
 	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
 
