@@ -28,10 +28,13 @@
 	     background-color: Gainsboro;
 	 }
 
-	 table {
-	     border-collapse: collapse;
+	 h2 {
+	     font-size: 1em;
 	 }
 
+	 .content {
+	     margin-left: 1em;
+	 }
 
 	 /* 交通用具の Directions Panel */
 	 .adp-summary {
@@ -66,89 +69,115 @@
 
     <body>
 	<h1 id="top">出発地点</h1>
-	<table border="1">
-	    <tr>
-		<td>住所</td>
-		<td><input type="text" id="addr" size="40" placeholder="漢字"></td>
-		<td><button onClick="getGeocode();">geocode変換</button></td>
-	    </tr>
-	    <tr>
-		<td>geocode結果</td>
-		<td colspan="2">formatted_address = <span id="faddr"></span><br>lat = <span id="stLat"></span>, lng = <span id="stLng"></span></td>
-	    </tr>
-	</table>
+	<div class="content">
+	    <h2>住所</h2>
+	    <div class="content">
+		<button onClick="cbPaste();" tabindex="-1">クリップボードから貼り付け</button>
+		<input type="text" id="addr" size="50" placeholder="漢字">
+	    </div>
+
+	    <h2>Geocode 変換</h2>
+	    <div class="content">
+		<div style="float: left;">
+		    <button onClick="getGeocode();">実行</button>
+		</div>
+		<ul style="overflow: hidden;">
+		    <li>formatted_address = <span id="faddr"></span></li>
+		    <li>lat = <span id="stLat"></span></li>
+		    <li>lng = <span id="stLng"></span></li>
+		</ul>
+	    </div>
+	</div>
 
 	<h1>目的地</h1>
-	<div style="margin: 1em;">
-	    <div style="float: left;">
-		<input type="text" id="kword" size="40" placeholder="名称、住所、電話番号下４桁">&nbsp;<button onClick="searchShokuba();">検索</button>
+	<div class="content">
+	    <div style="margin-bottom: 1em;">
+		<div style="float: left;">
+		    <input type="text" id="kword" size="40" placeholder="名称、住所、電話番号（下４桁で可）" onFocus="this.select();" onKeyPress="goSearch(event.keyCode);" style="margin-right: 1em;">
+		    <button onClick="searchShokuba();">検索</button>
+		</div>
+		<div style="text-align: right;">
+		    <span style="margin-right: 1em;"><a href="#koutsuyougu">交通用具へ</a></span>
+		    <span style="margin-right: 1em;"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
+		    <span style="margin-right: 1em;"><a href="#bus">バスへ</a></span>
+		</div>
 	    </div>
-	    <div style="text-align: right;">
-		<span style="padding: 1em;"><a href="#koutsuyougu">交通用具へ</a></span>
-		<span style="padding: 1em;"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
-		<span style="padding: 1em;"><a href="#bus">バスへ</a></span>
+
+	    <div style="float: left; margin-right: 1em;">
+		<label>
+		    局など<br>
+		    <select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
+		</label>
 	    </div>
+	    <div>
+		<label>
+		    所属や建物<br>
+		    <select id="shokuba" size="29" style="font-family: monospace;"></select>
+		</label>
+	    </div>
+	    <button style="margin: 1em;" onClick="move();">目的地の位置情報を出発地へセット</button>
 	</div>
-	<div style="float: left;">
-	    <label>
-		局など<br>
-		<select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
-	    </label>
-	</div>
-	<div>
-	    <label>
-		所属や建物<br>
-		<select id="shokuba" size="29" style="font-family: monospace;"></select>
-	    </label>
-	</div>
-	<button style="margin: 1em;" onClick="move();">目的地の位置情報を出発地へセット</button>
 
 	<h1 id="koutsuyougu">交通用具</h1>
 	<div style="text-align: right;"><a href="#top">TOP</a></div>
-	<table>
-	    <tr>
-		<td>
-		    <label>
-			<input name="yougu" type="radio" value="WALKING" checked/> 徒歩
-		    </label><br>
-		    <label>
-			<input name="yougu" type="radio" value="DRIVING" /> 自動車
-		    </label>
-		</td>
-		<td>
-		    <button onClick="measure_distance();">距離を測る</button>
-		</td>
-	    </tr>
-	</table>
-	<div id="directionsPanel" style="width: 200px; margin: 1em; float: left;" ></div>
-	<div id="yougu_map" style="width: 950px; height: 660px;"></div>
+
+	<div class="content">
+	    <div style="float: left; margin-right: 1em;">
+		<label>
+		    <input name="yougu" type="radio" checked/> 徒歩
+		</label><br>
+		<label>
+		    <input name="yougu" type="radio" /> 自動車
+		</label>
+	    </div>
+	    <div>
+		<button onClick="measure_distance();" style="height: 3em;">距離を測る</button>
+	    </div>
+	    
+	    <div style="clear: both;"></div>
+	    <div id="directionsPanel" style="width: 200px; margin-right: 1em; float: left;" ></div>
+	    <div id="yougu_map" style="width: 950px; height: 660px;"></div>
+	</div>
 
 	<h1 id="jrsub" style="clear: both;">ＪＲ線・地下鉄</h1>
 	<div style="text-align: right;"><a href="#top">TOP</a></div>
-	<button onClick="dispNearStation();">近隣の駅を表示する</button><br>
-	<div>
-	    <div id="left_station_map"  style="width: 700px; height: 600px; margin: 0.5em; float: left;"></div>
-	    <div id="right_station_map" style="width: 700px; height: 600px; margin: 0.5em;"></div>
+	<div class="content">
+	    <div style="margin-bottom: 1em;">
+		<button onClick="dispNearStation();">近隣の駅を表示する</button>
+	    </div>
+	    <div style="overflow: hidden;">
+		<div style="margin-right: 1em; float: left;">
+		    <span id="leftAddr"></span>
+		    <div id="left_station_map"  style="width: 700px; height: 600px;"></div>
+		</div>
+		<div>
+		    <span id="rightAddr"></span>
+		    <div id="right_station_map" style="width: 700px; height: 600px;"></div>
+		</div>
+	    </div>
 	</div>
 
 	<h1 id="bus" style="clear: both;">バス</h1>
 	<div style="text-align: right;"><a href="#top">TOP</a></div>
-	<div style="float: left; margin-right: 1em;">
-	    <label><input name="bus" type="radio" value="jtk" checked /> 自宅周辺</label><br>
-	    <label><input name="bus" type="radio" value="skb" /> 職場周辺</label><br>
-	    <button id="bus" onClick="searchBusStops();">近隣のバス停を検索</button>
-	</div>
+	<div class="content">
+	    <div style="float: left; margin-right: 1em;">
+		<label><input name="busAround" type="radio" checked /> 自宅周辺</label><br>
+		<label><input name="busAround" type="radio" /> 職場周辺</label><br>
+		<button onClick="searchBusStops();">近隣のバス停を検索</button>
+	    </div>
 
-	<div style="float: left; margin-right: 1em;">
-	    バス停<br>
-	    <select id="busStops" size="12" style="width: 20em;" onChange="changeBusStop(this.value);"></select>
-	</div>
+	    <div style="float: left; margin-right: 1em;">
+		バス停<br>
+		<select id="busStops" size="12" style="width: 20em;" onChange="changeBusStop(this.value);"></select>
+	    </div>
 	
-	<div>
-	    選択したバス停を含む路線<img src="http://labs.google.com/ridefinder/images/mm_20_white.png"><br>
-	    <select id="busRoutes" size="12" style="width: 25em;" onClick="dispBusRoute(this.value);"></select>
+	    <div>
+		選択したバス停を含む路線<img src="http://labs.google.com/ridefinder/images/mm_20_white.png"><br>
+		<select id="busRoutes" size="12" style="width: 25em;" onClick="dispBusRoute(this.value);"></select>
+	    </div>
+	    <div id="bus_map" style="width: 1200px; height: 800px;"></div>	
+	    <div style="text-align: right;"><a href="#top">TOP</a></div>
 	</div>
-	<div id="bus_map" style="width: 1200px; height: 800px;"></div>	
 
 	<script type="text/jscript" src="./objwp.js"></script>
 	<script type="text/jscript" src="./objstations.js"></script>

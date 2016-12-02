@@ -3,7 +3,17 @@ var geocoder;
 
 // subroutines
 
-//子要素を全て削除
+function clearGeocodeResult () {
+    [ "faddr", "stLat", "stLng" ].forEach( function ( elm ) {
+	document.getElementById( elm ).innerHTML = "";
+    });
+}
+
+function cbPaste () {
+    document.getElementById( "addr" ).value = clipboardData.getData( "text" );
+    clearGeocodeResult();
+}
+
 function removeAllChilds ( e ) {
     while ( e.firstChild ) {
 	e.removeChild( e.firstChild );
@@ -43,22 +53,19 @@ function replaceZenkaku ( str ) {
 
 // 
 function getGeocode () {
-    [ "faddr", "stLat", "stLng" ].forEach( function ( elm ) {
-	document.getElementById( elm ).value = "";
-    });
-
+    clearGeocodeResult();
     var addr = document.getElementById( "addr" ).value;
     geocoder.geocode( { address: addr },
 		      function( results, status ) {
 			  if ( status == google.maps.GeocoderStatus.OK ) {
-			      document.getElementById( "faddr" ).innerHTML = results[0].formatted_address;
+			      document.getElementById( "faddr" ).innerHTML =
+				  results[0].formatted_address;
 			      var l = results[0].geometry.location;
 			      document.getElementById( "stLat" ).innerHTML = l.lat();
 			      document.getElementById( "stLng" ).innerHTML = l.lng();
 			  } else {
 			      alert( "Google Geocoder Faild：" + status );
-			  }
-		      } );
+			  }});
 }
 
 function arrangeText ( text ) {
@@ -78,37 +85,45 @@ function arrangeText ( text ) {
 
 function changeKyoku ( kyoku ) {
     var dom = removeOptions( document.getElementById( "shokuba" ) );
-    var ary = objWorkplace[ kyoku ];
-    ary.forEach( function ( e ) {
+    objWorkplace[ kyoku ].forEach( function ( e ) {
 	addOptions( dom, e, arrangeText( e ) );
     });
+}
+
+function goSearch ( code ) {
+    if ( code === 13 ) {
+	if ( searchShokuba() ) {
+	    document.getElementById( "shokuba" ).focus();
+	} else {
+	    document.getElementById( "kword" ).focus();
+	}
+    }
 }
 
 function searchShokuba () {
     var kword = document.getElementById( "kword" ).value;
     if ( kword == "" ) {
 	alert( "キーワードが未入力です" );
-	return;
+	return false;
     }
-    var keys = Object.keys( objWorkplace );
-    var result = [];
-    keys.forEach( function ( p ) {
-	objWorkplace[ p ].forEach( function ( s ) {
-	    if ( s.indexOf( kword ) > -1 ) {
-		result.push( s );
-	    }
-	});
-    });
 
+    var result = [];
+    Object.keys( objWorkplace ).forEach( function ( key ) {
+	objWorkplace[ key ].forEach( function ( str ) {
+	    if ( str.indexOf( kword ) > -1 ) {
+		result.push( str );
+	    }});
+    });
     if ( result.length == 0 ) {
 	alert("該当なし");
-	return;
+	return false;
     }
 
     var dom = removeOptions( document.getElementById( "shokuba" ) );
     result.forEach( function ( e ) {
 	addOptions( dom, e, arrangeText( e ) );
     });
+    return true;
 }
 
 function move () {
@@ -117,15 +132,13 @@ function move () {
 	alert( "目的地が選択されていません" );
 	return;
     }
-    var wp = sel.options[ sel.selectedIndex ].value;
-    document.getElementById( "faddr" ).innerHTML = wp.split( "," )[0] + " " + wp.split( "," )[1];
-    document.getElementById( "stLat" ).innerHTML = wp.split( "," )[3];
-    document.getElementById( "stLng" ).innerHTML = wp.split( "," )[4];
+    var wp = sel.options[ sel.selectedIndex ].value.split( "," );
+    document.getElementById( "faddr" ).innerHTML = wp[0] + " " + wp[1];
+    document.getElementById( "stLat" ).innerHTML = wp[3];
+    document.getElementById( "stLng" ).innerHTML = wp[4];
 }
 
 function measure_distance () {
-    var rValue = getRadioValue( document.getElementsByName( "yougu" ) );
-
     var stLat = document.getElementById( "stLat" ).innerHTML;
     var stLng = document.getElementById( "stLng" ).innerHTML;
     if( stLat == "" ) {
@@ -138,18 +151,15 @@ function measure_distance () {
 	alert( "目的地が選択されていません" );
 	return;
     }
-    var wp = sel.options[ sel.selectedIndex ].value;
-    var edLat = wp.split( "," )[3];
-    var edLng = wp.split( "," )[4];
-    var myOptions = {
-        zoom: 18,
-        panControl: false,
-        scaleControl: true,
-        zoomControlOptions: {
-            style: google.maps.ZoomControlStyle.SMALL
-        },
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
+    var wp = sel.options[ sel.selectedIndex ].value.split( "," );
+    var edLat = wp[3];
+    var edLng = wp[4];
+    var myOptions = { zoom: 18,
+		      panControl: false,
+		      scaleControl: true,
+		      zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
+		      mapTypeId: google.maps.MapTypeId.ROADMAP
+		    };
     var map = new google.maps.Map( document.getElementById( "yougu_map" ), myOptions );
 
     // 地下鉄を強調表示
@@ -157,53 +167,51 @@ function measure_distance () {
     transitLayer.setMap( map );
 
     // 出発地点を半径１ｋｍの円で囲む
-    var circleOptions = {
-	strokeColor: "#c71585",
-	strokeOpacity: 0.1,
-	strokeWeight: 3,
-	fillColor: "#ff1493",
-	fillOpacity: 0.02,
-	clickable: false,
-	map: map,
-	center: new google.maps.LatLng( stLat, stLng ),
-	radius: 1000
-    };
+    var circleOptions = { strokeColor: "#c71585",
+			  strokeOpacity: 0.1,
+			  strokeWeight: 3,
+			  fillColor: "#ff1493",
+			  fillOpacity: 0.02,
+			  clickable: false,
+			  map: map,
+			  center: new google.maps.LatLng( stLat, stLng ),
+			  radius: 1000
+			};
     var circle = new google.maps.Circle( circleOptions );
 
-    //
-    var col = rValue == "WALKING" ? '#FF66FF' : '#00FFFF';
-    var plo = new google.maps.Polyline( {
-	strokeOpacity: 0.5,
-	strokeWeight: 5,
-	strokeColor: col
-    });
+    var col = document.getElementsByName( "yougu" )[0].checked ?
+	'#FF66FF' :
+	'#00FFFF';
+    var plo = new google.maps.Polyline( { strokeOpacity: 0.5,
+					  strokeWeight: 5,
+					  strokeColor: col
+					});
 
-    var directionsRenderer = new google.maps.DirectionsRenderer( {
-	draggable: true,
-	polylineOptions: plo
-    } );
+    var directionsRenderer = new google.maps.DirectionsRenderer( { draggable: true,
+								   polylineOptions: plo
+								 } );
     directionsRenderer.setMap( map );
 
-    // var mode = { WALKING: google.maps.DirectionsTravelMode.WALKING,
-    // 		 DRIVING: google.maps.DirectionsTravelMode.DRIVING }[ rValue ];
-    var mode = rValue == "WALKING" ? google.maps.DirectionsTravelMode.WALKING :	google.maps.DirectionsTravelMode.DRIVING;
-    var request = {
-	origin:      new google.maps.LatLng( stLat, stLng ),
-	destination: new google.maps.LatLng( edLat, edLng ),
-	avoidHighways: true,	// true = 高速道路を除外する
-	avoidTolls:    true,    // true = 有料区間を除外する
-	travelMode:    mode
-    };
+    var tMode = document.getElementsByName( "yougu" )[0].checked ?
+	google.maps.DirectionsTravelMode.WALKING :
+	google.maps.DirectionsTravelMode.DRIVING;
+    var request = { origin: new google.maps.LatLng( stLat, stLng ),
+		    destination: new google.maps.LatLng( edLat, edLng ),
+		    avoidHighways: true,	// true = 高速道路を除外する
+		    avoidTolls: true,		// true = 有料区間を除外する
+		    travelMode: tMode
+		  };
     var directionsService = new google.maps.DirectionsService();
     directionsService.route( request, function( result, status ) {
 	if ( status == google.maps.DirectionsStatus.OK ) {
 	    directionsRenderer.setDirections( result );
-	}});
-
+	} else {
+	    alert( "Google Directions Service Faild：" + status );
+	}
+    });
     directionsRenderer.setPanel(
-	removeAllChilds(
-	    document.getElementById( "directionsPanel" )
-	));
+	removeAllChilds( document.getElementById( "directionsPanel" ) ) );
+	
     // document.getElementsByClassName( "adp-summary" ).style.borderColor = col;
 }
 
@@ -220,11 +228,10 @@ function makeMap( latlng, canvas ) {
 }
 
 function makeMarker( latlng, image, map ) {
-    var marker = new google.maps.Marker( {
-	position: latlng,
-	icon: new google.maps.MarkerImage( image ),
-	map: map
-    } );
+    var marker = new google.maps.Marker( { position: latlng,
+					   icon: new google.maps.MarkerImage( image ),
+					   map: map
+					 } );
 };
 
 function makeCircle( map, latlng ) {
@@ -280,10 +287,13 @@ function dispNearStation () {
 	alert( "目的地が選択されていません" );
 	return;
     }
-    var wp = sel.options[ sel.selectedIndex ].value;
-    var edLat = wp.split( "," )[3];
-    var edLng = wp.split( "," )[4];
+    var wp = sel.options[ sel.selectedIndex ].value.split( "," );
+    var edLat = wp[3];
+    var edLng = wp[4];
     var url = "https://maps.google.co.jp/mapfiles/ms/icons/";
+
+    document.getElementById("leftAddr").innerHTML = document.getElementById("faddr").innerHTML;
+    document.getElementById("rightAddr").innerHTML = wp[0] + " " + wp[1] + " " + wp[2];
 
     // TODO: makeMaker と makeCircle を makeMap に内蔵しちゃう。
 
@@ -298,11 +308,10 @@ function dispNearStation () {
 						  nStations[i]["lng"] );
 	var dist = google.maps.geometry.spherical.computeDistanceBetween( objLatLngFrom,
 									  objLatLngTo );
-	var marker = new google.maps.Marker( {
-	    position: objLatLngTo,
-	    icon: new google.maps.MarkerImage( pinImageUrl ),
-	    map: leftMap
-	} );
+	var marker = new google.maps.Marker( { position: objLatLngTo,
+					       icon: new google.maps.MarkerImage( pinImageUrl ),
+					       map: leftMap
+					     } );
 	var str = "(" + ( i + 1 ) + ") " + nStations[i]["name"] + ": " + Math.floor( dist ) + "m";
 	attachMessage( marker, str );
 	google.maps.event.trigger( marker, "click" );
@@ -319,11 +328,10 @@ function dispNearStation () {
 						  nStations[i]["lng"] );
 	var dist = google.maps.geometry.spherical.computeDistanceBetween( objLatLngFrom,
 									  objLatLngTo );
-	var marker = new google.maps.Marker( {
-	    position: objLatLngTo,
-	    icon: new google.maps.MarkerImage( pinImageUrl ),
-	    map: rightMap
-	} );
+	var marker = new google.maps.Marker( { position: objLatLngTo,
+					       icon: new google.maps.MarkerImage( pinImageUrl ),
+					       map: rightMap
+					     } );
 	var str = "(" + ( i + 1 ) + ") " + nStations[i]["name"] + ": " + Math.floor( dist ) + "m";
 	attachMessage( marker, str );
 	google.maps.event.trigger( marker, "click" );
@@ -347,12 +355,12 @@ function getNearBusStop ( lat, lng ) {
 	if ( a.dist > b.dist ) return 1;
 	return 0;
     });
-    return result.slice( 0, 5 ); // 上位５つ
+    return result.slice( 0, 10 ); // 上位
 }
 
 function searchBusStops () {
     var lat, lng;
-    if ( document.getElementsByName( "bus" )[0].checked ) {
+    if ( document.getElementsByName( "busAround" )[0].checked ) {
 	lat = document.getElementById( "stLat" ).innerHTML;
 	lng = document.getElementById( "stLng" ).innerHTML;
     } else {
@@ -397,7 +405,7 @@ function dispBusRoute ( str ) {
     var sel = document.getElementById( "shokuba" );
     var wp = sel.options[ sel.selectedIndex ].value;
 
-    if ( document.getElementsByName( "bus" )[0].checked ) {
+    if ( document.getElementsByName( "busAround" )[0].checked ) {
 	lat = document.getElementById( "stLat" ).innerHTML;
 	lng = document.getElementById( "stLng" ).innerHTML;
     } else {
@@ -415,16 +423,15 @@ function dispBusRoute ( str ) {
 		    };
     var map = new google.maps.Map( document.getElementById( "bus_map" ), myOptions );
     var transitLayer = new google.maps.TransitLayer();
-    transitLayer.setMap(map);
+    transitLayer.setMap( map );
 
     var url = "http://maps.google.co.jp/mapfiles/ms/icons/";
-    var marker = new google.maps.Marker( {
-	position: latlng,
-	icon: new google.maps.MarkerImage( url + 'green-dot.png' ),
-	map: map
-    } );
+    var marker = new google.maps.Marker( { position: latlng,
+					   icon: new google.maps.MarkerImage( url + 'green-dot.png' ),
+					   map: map
+					 } );
 
-    if ( document.getElementsByName( "bus" )[0].checked ) {
+    if ( document.getElementsByName( "busAround" )[0].checked ) {
 	lat = wp.split( "," )[3];
 	lng = wp.split( "," )[4];
     } else {
@@ -432,11 +439,10 @@ function dispBusRoute ( str ) {
 	lng = document.getElementById( "stLng" ).innerHTML;
 
     }
-    var marker = new google.maps.Marker( {
-	position: new google.maps.LatLng( lat, lng ),
-	icon: new google.maps.MarkerImage( url + 'red-dot.png' ),
-	map: map
-    } );
+    var marker = new google.maps.Marker( { position: new google.maps.LatLng( lat, lng ),
+					   icon: new google.maps.MarkerImage( url + 'red-dot.png' ),
+					   map: map
+					 } );
 
     // バス停(1)
     var a = [];
@@ -453,11 +459,10 @@ function dispBusRoute ( str ) {
     for ( var i = 0; i < a.length; i++ ) {
 	for ( var j = 0; j < objbusstops.length; j++ ) {
 	    if ( a[i] == objbusstops[j][0] ) {
-		var marker = new google.maps.Marker( {
-		    position: new google.maps.LatLng( objbusstops[j][1] , objbusstops[j][2] ),
-		    icon: new google.maps.MarkerImage( url + 'mm_20_white.png' ),
-		    map: map
-		} );
+		var marker = new google.maps.Marker( { position: new google.maps.LatLng( objbusstops[j][1] , objbusstops[j][2] ),
+						       icon: new google.maps.MarkerImage( url + 'mm_20_white.png' ),
+						       map: map
+						     } );
 		attachMessage( marker, objbusstops[j][3] )
 		// バス停リストボックスと一致するバス停には、あらかじめフキダシ表示する
 		if ( id == objbusstops[j][0] ) {
@@ -485,7 +490,6 @@ function dispBusRoute ( str ) {
 	objLine.setMap( map );
     }
 
-
     var container = document.createElement( "div" );
     container.style.margin = "10px";
     container.style.padding = "5px";
@@ -495,7 +499,6 @@ function dispBusRoute ( str ) {
     var sel = document.getElementById( "busRoutes" );
     container.innerText = sel.options[ sel.selectedIndex ].text;
     map.controls[ google.maps.ControlPosition.BOTTOM_LEFT ].push( container );
-
 }
 
 //
