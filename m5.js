@@ -35,15 +35,15 @@ function removeOptions ( sel ) {
     return sel;
 }
 
-function getRadioValue ( radio ) {
-    var result = "";
-    for ( var i = 0; i < radio.length; i++ ) {
-	if ( radio[i].checked ) {
-	    result = radio[i].value;
-	    break;
-	}}
-    return result;
-}
+// function getRadioValue ( radio ) {
+//     var result = "";
+//     for ( var i = 0; i < radio.length; i++ ) {
+// 	if ( radio[i].checked ) {
+// 	    result = radio[i].value;
+// 	    break;
+// 	}}
+//     return result;
+// }
 
 function replaceZenkaku ( str ) {
     return str.replace( /[-A-Za-z0-9]/g, function ( s ) {
@@ -54,18 +54,18 @@ function replaceZenkaku ( str ) {
 // 
 function getGeocode () {
     clearGeocodeResult();
-    var addr = document.getElementById( "addr" ).value;
-    geocoder.geocode( { address: addr },
-		      function( results, status ) {
-			  if ( status == google.maps.GeocoderStatus.OK ) {
-			      document.getElementById( "faddr" ).innerHTML =
-				  results[0].formatted_address;
-			      var l = results[0].geometry.location;
-			      document.getElementById( "stLat" ).innerHTML = l.lat();
-			      document.getElementById( "stLng" ).innerHTML = l.lng();
-			  } else {
-			      alert( "Google Geocoder Faild：" + status );
-			  }});
+    geocoder.geocode(
+	{ address: document.getElementById( "addr" ).value },
+	function( results, status ) {
+	    if ( status == google.maps.GeocoderStatus.OK ) {
+		document.getElementById( "faddr" ).innerHTML =
+		    results[0].formatted_address;
+		var l = results[0].geometry.location;
+		document.getElementById( "stLat" ).innerHTML = l.lat();
+		document.getElementById( "stLng" ).innerHTML = l.lng();
+	    } else {
+		alert( "Google Geocoder Faild：" + status );
+	    }});
 }
 
 function arrangeText ( text ) {
@@ -250,15 +250,16 @@ function makeCircle( map, latlng ) {
 
 function getNearStations ( lat, lng ) {
     // objStations ... 別ファイル [ id, name, lat, lng ]
-    var result = objStations.map( function ( s ) {
-	var h1 = Math.abs( lat - s[2] );
-	var h2 = Math.abs( lng - s[3] );
-	return { id:   s[0],
-		 name: s[1],
-		 lat:  s[2],
-		 lng:  s[3],
-		 dist: h1 * h1 + h2 * h2 };
-    });
+    var result = objStations.map(
+	function ( s ) {
+	    var h1 = Math.abs( lat - s[2] );
+	    var h2 = Math.abs( lng - s[3] );
+	    return { id:   s[0],
+		     name: s[1],
+		     lat:  s[2],
+		     lng:  s[3],
+		     dist: h1 * h1 + h2 * h2 };
+	});
     result.sort( function ( a, b ) {
 	if ( a.dist < b.dist ) return -1;
 	if ( a.dist > b.dist ) return 1;
@@ -274,7 +275,6 @@ function attachMessage( marker, msg ) {
 }
 
 function dispNearStation () {
-    var pinImageUrl = "http://labs.google.com/ridefinder/images/mm_20_orange.png";
     var stLat = document.getElementById( "stLat" ).innerHTML;
     var stLng = document.getElementById( "stLng" ).innerHTML;
     if( stLat == "" ) {
@@ -290,52 +290,38 @@ function dispNearStation () {
     var wp = sel.options[ sel.selectedIndex ].value.split( "," );
     var edLat = wp[3];
     var edLng = wp[4];
-    var url = "https://maps.google.co.jp/mapfiles/ms/icons/";
 
-    document.getElementById("leftAddr").innerHTML = document.getElementById("faddr").innerHTML;
-    document.getElementById("rightAddr").innerHTML = wp[0] + " " + wp[1] + " " + wp[2];
+    document.getElementById( "leftAddr" ).innerHTML = document.getElementById( "faddr" ).innerHTML;
+    document.getElementById( "rightAddr" ).innerHTML = wp[0] + " " + wp[1] + " " + wp[2];
 
     // TODO: makeMaker と makeCircle を makeMap に内蔵しちゃう。
+    dispNearStationSub ( "left_station_map", stLat, stLng );
+    dispNearStationSub ( "right_station_map", edLat, edLng );
+}
 
-    // left map
-    var objLatLngFrom = new google.maps.LatLng( stLat, stLng );
-    var leftMap = makeMap( objLatLngFrom, "left_station_map" );
-    makeMarker( objLatLngFrom, url + "green-dot.png", leftMap );
-    makeCircle( leftMap, objLatLngFrom );
-    var nStations = getNearStations( stLat, stLng ); // [ id, name, lat, lng, dist ]
-    for ( var i = 0; i < nStations.length; i++ ) {
-	var objLatLngTo = new google.maps.LatLng( nStations[i]["lat"],
-						  nStations[i]["lng"] );
-	var dist = google.maps.geometry.spherical.computeDistanceBetween( objLatLngFrom,
-									  objLatLngTo );
-	var marker = new google.maps.Marker( { position: objLatLngTo,
-					       icon: new google.maps.MarkerImage( pinImageUrl ),
-					       map: leftMap
-					     } );
-	var str = "(" + ( i + 1 ) + ") " + nStations[i]["name"] + ": " + Math.floor( dist ) + "m";
-	attachMessage( marker, str );
-	google.maps.event.trigger( marker, "click" );
-    }
+// dispNearStation sub
+function dispNearStationSub ( mapDomName, lat, lng ) {
+    var objLatLngFrom = new google.maps.LatLng( lat, lng );
+    var map = makeMap( objLatLngFrom, mapDomName );
+    makeMarker( objLatLngFrom,
+		"https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png", map );
+    makeCircle( map, objLatLngFrom );
 
-    // right map
-    var latlng = new google.maps.LatLng( edLat, edLng );
-    var rightMap = makeMap( latlng, "right_station_map" );
-    makeMarker( latlng, url + "red-dot.png", rightMap );
-    makeCircle( rightMap, latlng );
-    var nStations = getNearStations( edLat, edLng ); // [ id, name, lat, lng, dist ]
-    for ( var i = 0; i < nStations.length; i++ ) {
-	var objLatLngTo = new google.maps.LatLng( nStations[i]["lat"],
-						  nStations[i]["lng"] );
-	var dist = google.maps.geometry.spherical.computeDistanceBetween( objLatLngFrom,
-									  objLatLngTo );
-	var marker = new google.maps.Marker( { position: objLatLngTo,
-					       icon: new google.maps.MarkerImage( pinImageUrl ),
-					       map: rightMap
-					     } );
-	var str = "(" + ( i + 1 ) + ") " + nStations[i]["name"] + ": " + Math.floor( dist ) + "m";
-	attachMessage( marker, str );
-	google.maps.event.trigger( marker, "click" );
-    }
+    getNearStations( lat, lng ).forEach(
+	function ( e, idx, ary ) {
+    	    var objLatLngTo = new google.maps.LatLng( e["lat"], e["lng"] );
+    	    var dist = google.maps.geometry.spherical.computeDistanceBetween(
+		objLatLngFrom,
+    		objLatLngTo );
+    	    var marker = new google.maps.Marker(
+		{ position: objLatLngTo,
+    		  icon: new google.maps.MarkerImage( "http://labs.google.com/ridefinder/images/mm_20_orange.png" ),
+    		  map: map
+    		} );
+    	    var str = "(" + ( idx + 1 ) + ") " + e["name"] + ": " + Math.floor( dist ) + "m";
+    	    attachMessage( marker, str );
+    	    google.maps.event.trigger( marker, "click" );
+	});
 }
 
 //
