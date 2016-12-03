@@ -21,7 +21,7 @@ function removeAllChilds ( e ) {
     return e;
 }
 
-function addOptions ( sel, value, text ) {
+function addOption ( sel, value, text ) {
     var opt = document.createElement( "option" );
     opt.value = value;
     opt.appendChild( document.createTextNode( text ) );
@@ -64,17 +64,24 @@ function makeMarker( lat, lng, image, map ) {
 }
 
 function makeCircle( map, lat, lng ) {
-    var circleOptions = { strokeColor: "#c71585",
-			  strokeOpacity: 0.1,
+    var circleOptions = { strokeColor: "green", // "#c71585",
+			  strokeOpacity: 0.3,
 			  strokeWeight: 3,
 			  fillColor: "#ff1493",
-			  fillOpacity: 0.02,
+			  fillOpacity: 0,
 			  clickable: false,
 			  map: map,
 			  center: new google.maps.LatLng( lat, lng ),
-			  radius: 1000   // 半径１ｋｍ
+			  radius: 1000   // 半径 1000 m
 			};
     var circle = new google.maps.Circle( circleOptions );
+}
+
+function drawPolyline ( map, path, option ) {
+    option.path = path;
+    option.geodesic = true;
+    var objPolyline = new google.maps.Polyline( option );
+    objPolyline.setMap( map );
 }
 
 // 
@@ -112,7 +119,7 @@ function arrangeText ( text ) {
 function changeKyoku ( kyoku ) {
     var dom = removeOptions( document.getElementById( "shokuba" ) );
     objWorkplace[ kyoku ].forEach( function ( e ) {
-	addOptions( dom, e, arrangeText( e ) );
+	addOption( dom, e, arrangeText( e ) );
     });
 }
 
@@ -147,7 +154,7 @@ function searchShokuba () {
 
     var dom = removeOptions( document.getElementById( "shokuba" ) );
     result.forEach( function ( e ) {
-	addOptions( dom, e, arrangeText( e ) );
+	addOption( dom, e, arrangeText( e ) );
     });
     return true;
 }
@@ -192,14 +199,11 @@ function measure_distance () {
     var col = document.getElementsByName( "yougu" )[0].checked ?
 	'#FF66FF' :
 	'#00FFFF';
-    var plo = new google.maps.Polyline( { strokeOpacity: 0.5,
-					  strokeWeight: 5,
-					  strokeColor: col
-					});
-
-    var directionsRenderer = new google.maps.DirectionsRenderer( { draggable: true,
-								   polylineOptions: plo
-								 } );
+    var directionsRenderer = new google.maps.DirectionsRenderer(
+	{ draggable: true,
+	  polylineOptions: { strokeOpacity: 0.5,
+			     strokeWeight: 5,
+			     strokeColor: col }});
     directionsRenderer.setMap( map );
 
     var tMode = document.getElementsByName( "yougu" )[0].checked ?
@@ -222,7 +226,21 @@ function measure_distance () {
     directionsRenderer.setPanel(
 	removeAllChilds( document.getElementById( "directionsPanel" ) ) );
 	
-    // document.getElementsByClassName( "adp-summary" ).style.borderColor = col;
+    var coords = objBoundLine[ getOptionValue( "boundAddr" ) ];
+    if ( coords ) {
+	var p = [];
+	coords.split( " " ).forEach( function ( e ) {
+	    var c = e.split( "," );
+	    p.push( { lat: Number( c[1] ),
+		      lng: Number( c[0] ) } );
+	});
+	drawPolyline ( map, p, { strokeColor: '#000',
+				 strokeOpacity: 0.8,
+				 strokeWeight: 2 } );
+    }
+    
+
+   // document.getElementsByClassName( "adp-summary" ).style.borderColor = col;
 }
 
 // ＪＲ線・地下鉄
@@ -338,7 +356,7 @@ function searchBusStops () {
 
     var sel = removeOptions( document.getElementById( "busStops" ) );
     getNearBusStop( lat, lng ).forEach( function ( e ) {
-	addOptions( sel, e['id'], e['name'] );
+	addOption( sel, e['id'], e['name'] );
     });
 }
 
@@ -348,7 +366,7 @@ function changeBusStop ( id ) {
     	return ( id == e[0] );
     });
     result.forEach( function ( e ) {
-	addOptions( sel, e[1] + e[2], e[2] + "（" + e[1] + "）" );
+	addOption( sel, e[1] + e[2], e[2] + "（" + e[1] + "）" );
     });
 }
 
@@ -398,28 +416,23 @@ function dispBusRoute ( str ) {
     });
 
     // バス路線
-    objBusRoute[ str ].forEach(
-	function ( m ) {
-	    var p = m.map(
-		function ( e ) {
-		    var d = e.split( "," );
-		    return { lng: Number( d[0] ),
-			     lat: Number( d[1] ) };
-		});
-	    var objLine = new google.maps.Polyline( { path: p,
-						      strokeColor: '#FF0000',
-						      strokeOpacity: 0.5,
-						      strokeWeight: 3
-						    });
-	    objLine.setMap( map );
+    objBusRoute[ str ].forEach( function ( e ) {
+	var p = e.split(" ").map( function ( x ) {
+	    var z = x.split( "," );
+	    return { lng: Number( z[0] ),
+		     lat: Number( z[1] ) };
 	});
+	drawPolyline ( map, p, { strokeColor: '#FF0000',
+				 strokeOpacity: 0.5,
+				 strokeWeight: 3 } );
+    });
 
     var container = document.createElement( "div" );
-    [ [ "margin", "10px" ],
-      [ "padding", "5px"],
-      [ "border", "1px solid #000" ],
+    [ [ "margin",     "10px" ],
+      [ "padding",    "5px"],
+      [ "border",     "1px solid #000" ],
       [ "background", "#fff" ],
-      [ "fontSize", "14px" ] ].forEach( function ( e ) {
+      [ "fontSize",   "14px" ] ].forEach( function ( e ) {
 	  container.style[ e[0] ] = e[1];
       });
     var sel = document.getElementById( "busRoutes" );
@@ -431,11 +444,40 @@ function dispBusRoute ( str ) {
 function setupShokuba () {
     var dom = document.getElementById( "kyoku" );
     Object.keys( objWorkplace ).forEach( function ( e ) {
-	addOptions( dom, e, e );
+	addOption( dom, e, e );
+    });
+}
+
+function setupBoundCity () {
+    var city = [];
+    objBound.forEach( function ( e ) {
+	if ( city.indexOf( e[1] ) == -1 ) {
+	    city.push( e[1] );
+	}
+    });
+    city.forEach( function( e ) {
+	addOption( document.getElementById( "boundCity" ), e, e );
+    });
+}
+
+function changeCity ( city ) {
+    var addr = objBound.filter( function ( e ) {
+	return ( e[1] == city );
+    });
+    addr.sort( function ( a, b ) {
+	if ( a[0] < b[0] ) return -1;
+	if ( a[0] > b[0] ) return 1;
+	return 0;
+    });
+    var sel = removeOptions( document.getElementById( "boundAddr" ) );
+    addr.forEach( function ( e ) {
+	addOption( sel, e[0], e[2] );
     });
 }
 
 function init () {
     setupShokuba();
+    setupBoundCity();
+    changeCity( getOptionValue( "boundCity" ) );
     geocoder = new google.maps.Geocoder();
 }
