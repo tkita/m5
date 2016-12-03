@@ -28,6 +28,11 @@ function addOptions ( sel, value, text ) {
     sel.appendChild( opt );
 }
 
+function getOptionValue ( domId ) {
+    var sel = document.getElementById( domId );
+    return sel.options[ sel.selectedIndex ].value;
+}
+
 function removeOptions ( sel ) {
     while ( sel.options.length ) {
 	sel.remove(0);
@@ -35,21 +40,28 @@ function removeOptions ( sel ) {
     return sel;
 }
 
-// function getRadioValue ( radio ) {
-//     var result = "";
-//     for ( var i = 0; i < radio.length; i++ ) {
-// 	if ( radio[i].checked ) {
-// 	    result = radio[i].value;
-// 	    break;
-// 	}}
-//     return result;
-// }
-
 function replaceZenkaku ( str ) {
     return str.replace( /[-A-Za-z0-9]/g, function ( s ) {
 	return String.fromCharCode( s.charCodeAt( 0 ) + 0xFEE0 );
     });
 }
+
+function makeMap( canvas, lat, lng, option ) {
+    option.center = new google.maps.LatLng( lat, lng );
+    option.panControl = false;
+    option.scaleControl = true;
+    option.zoomControlOptions = { style: google.maps.ZoomControlStyle.SMALL };
+    option.mapTypeId = google.maps.MapTypeId.ROADMAP;
+    return new google.maps.Map( document.getElementById( canvas ), option );
+}
+
+function makeMarker( lat, lng, image, map ) {
+    var marker = new google.maps.Marker(
+	{ position: new google.maps.LatLng( lat, lng ),
+	  icon: new google.maps.MarkerImage( image ),
+	  map: map });
+    return marker;
+};
 
 // 
 function getGeocode () {
@@ -154,13 +166,7 @@ function measure_distance () {
     var wp = sel.options[ sel.selectedIndex ].value.split( "," );
     var edLat = wp[3];
     var edLng = wp[4];
-    var myOptions = { zoom: 18,
-		      panControl: false,
-		      scaleControl: true,
-		      zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
-		      mapTypeId: google.maps.MapTypeId.ROADMAP
-		    };
-    var map = new google.maps.Map( document.getElementById( "yougu_map" ), myOptions );
+    var map = makeMap( "yougu_map", stLat, stLng, { zoom: 18 } );
 
     // 地下鉄を強調表示
     var transitLayer = new google.maps.TransitLayer();
@@ -216,24 +222,6 @@ function measure_distance () {
 }
 
 // ＪＲ線・地下鉄
-function makeMap( latlng, canvas ) {
-    var myOptions = { zoom: 14,
-		      center: latlng,
-		      panControl: false,
-		      scaleControl: true,
-		      zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
-		      mapTypeId: google.maps.MapTypeId.ROADMAP
-		    };
-    return new google.maps.Map( document.getElementById( canvas ), myOptions );
-}
-
-function makeMarker( latlng, image, map ) {
-    var marker = new google.maps.Marker( { position: latlng,
-					   icon: new google.maps.MarkerImage( image ),
-					   map: map
-					 } );
-};
-
 function makeCircle( map, latlng ) {
     var circleOptions = { strokeColor: "#c71585",
 			  strokeOpacity: 0.1,
@@ -294,30 +282,23 @@ function dispNearStation () {
     document.getElementById( "leftAddr" ).innerHTML = document.getElementById( "faddr" ).innerHTML;
     document.getElementById( "rightAddr" ).innerHTML = wp[0] + " " + wp[1] + " " + wp[2];
 
-    // TODO: makeMaker と makeCircle を makeMap に内蔵しちゃう。
     dispNearStationSub ( "left_station_map", stLat, stLng );
     dispNearStationSub ( "right_station_map", edLat, edLng );
 }
 
-// dispNearStation sub
 function dispNearStationSub ( mapDomName, lat, lng ) {
     var objLatLngFrom = new google.maps.LatLng( lat, lng );
-    var map = makeMap( objLatLngFrom, mapDomName );
-    makeMarker( objLatLngFrom,
+    var map = makeMap( mapDomName, lat, lng, { zoom: 14 } );
+    makeMarker( lat, lng,
 		"https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png", map );
     makeCircle( map, objLatLngFrom );
 
     getNearStations( lat, lng ).forEach(
 	function ( e, idx, ary ) {
-    	    var objLatLngTo = new google.maps.LatLng( e["lat"], e["lng"] );
     	    var dist = google.maps.geometry.spherical.computeDistanceBetween(
 		objLatLngFrom,
-    		objLatLngTo );
-    	    var marker = new google.maps.Marker(
-		{ position: objLatLngTo,
-    		  icon: new google.maps.MarkerImage( "http://labs.google.com/ridefinder/images/mm_20_orange.png" ),
-    		  map: map
-    		} );
+    		new google.maps.LatLng( e["lat"], e["lng"] ) );
+	    var marker = makeMarker( e["lat"], e["lng"], "http://labs.google.com/ridefinder/images/mm_20_orange.png", map );
     	    var str = "(" + ( idx + 1 ) + ") " + e["name"] + ": " + Math.floor( dist ) + "m";
     	    attachMessage( marker, str );
     	    google.maps.event.trigger( marker, "click" );
@@ -355,11 +336,11 @@ function searchBusStops () {
 	    alert( "目的地が選択されていません" );
 	    return;
 	}
-	var wp = sel.options[ sel.selectedIndex ].value;
-	lat = wp.split( "," )[3];
-	lng = wp.split( "," )[4];
+	var wp = sel.options[ sel.selectedIndex ].value.split( "," );
+	lat = wp[3];
+	lng = wp[4];
     }
-    if( lat == "" ) {
+    if ( lat == "" ) {
 	alert( "出発地点が未入力です" );
 	return;
     }
@@ -371,64 +352,44 @@ function searchBusStops () {
 }
 
 function changeBusStop ( id ) {
-    var result = [];
-    objBusStopRoute.forEach( function ( e ) {
-    	if ( id == e[0] ) {
-    	    result.push( e );
-    	}});
     var sel = removeOptions( document.getElementById( "busRoutes" ) );
+    var result = objBusStopRoute.filter( function (e) {
+    	return ( id == e[0] );
+    });
     result.forEach( function ( e ) {
-	//var str = e[2] + "（" + e[1] + "）";
 	addOptions( sel, e[1] + e[2], e[2] + "（" + e[1] + "）" );
     });
 }
 
 function dispBusRoute ( str ) {
-    //console.info( str );
-    //console.info( objBusRoute[ str ] );
-
     var lat, lng;
-    var sel = document.getElementById( "shokuba" );
-    var wp = sel.options[ sel.selectedIndex ].value;
+    var wp = getOptionValue( "shokuba" ).split( "," );
 
     if ( document.getElementsByName( "busAround" )[0].checked ) {
 	lat = document.getElementById( "stLat" ).innerHTML;
 	lng = document.getElementById( "stLng" ).innerHTML;
     } else {
-	lat = wp.split( "," )[3];
-	lng = wp.split( "," )[4];
+	lat = wp[3];
+	lng = wp[4];
     }
 
-    var latlng = new google.maps.LatLng( lat, lng );
-    var myOptions = { zoom: 14,
-		      center: latlng,
-		      panControl: false,
-		      scaleControl: true,
-		      zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
-		      mapTypeId: google.maps.MapTypeId.ROADMAP
-		    };
-    var map = new google.maps.Map( document.getElementById( "bus_map" ), myOptions );
+    var map = makeMap( "bus_map", lat, lng, { zoom: 14 } );
     var transitLayer = new google.maps.TransitLayer();
     transitLayer.setMap( map );
 
-    var url = "http://maps.google.co.jp/mapfiles/ms/icons/";
-    var marker = new google.maps.Marker( { position: latlng,
-					   icon: new google.maps.MarkerImage( url + 'green-dot.png' ),
-					   map: map
-					 } );
+    makeMarker( lat, lng,
+		"http://maps.google.co.jp/mapfiles/ms/icons/green-dot.png", map );
 
     if ( document.getElementsByName( "busAround" )[0].checked ) {
-	lat = wp.split( "," )[3];
-	lng = wp.split( "," )[4];
+	lat = wp[3];
+	lng = wp[4];
     } else {
 	lat = document.getElementById( "stLat" ).innerHTML;
 	lng = document.getElementById( "stLng" ).innerHTML;
 
     }
-    var marker = new google.maps.Marker( { position: new google.maps.LatLng( lat, lng ),
-					   icon: new google.maps.MarkerImage( url + 'red-dot.png' ),
-					   map: map
-					 } );
+    makeMarker( lat, lng,
+		"http://maps.google.co.jp/mapfiles/ms/icons/red-dot.png", map )
 
     // バス停(1)
     var a = [];
@@ -441,14 +402,11 @@ function dispBusRoute ( str ) {
     // バス停(2)
     var sel = document.getElementById( "busStops" );
     var id = sel.options[ sel.selectedIndex ].value;
-    var url = "http://labs.google.com/ridefinder/images/";
     for ( var i = 0; i < a.length; i++ ) {
 	for ( var j = 0; j < objbusstops.length; j++ ) {
 	    if ( a[i] == objbusstops[j][0] ) {
-		var marker = new google.maps.Marker( { position: new google.maps.LatLng( objbusstops[j][1] , objbusstops[j][2] ),
-						       icon: new google.maps.MarkerImage( url + 'mm_20_white.png' ),
-						       map: map
-						     } );
+		var marker = makeMarker( objbusstops[j][1] , objbusstops[j][2],
+					 "http://labs.google.com/ridefinder/images/mm_20_white.png", map );
 		attachMessage( marker, objbusstops[j][3] )
 		// バス停リストボックスと一致するバス停には、あらかじめフキダシ表示する
 		if ( id == objbusstops[j][0] ) {
