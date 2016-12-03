@@ -61,7 +61,21 @@ function makeMarker( lat, lng, image, map ) {
 	  icon: new google.maps.MarkerImage( image ),
 	  map: map });
     return marker;
-};
+}
+
+function makeCircle( map, lat, lng ) {
+    var circleOptions = { strokeColor: "#c71585",
+			  strokeOpacity: 0.1,
+			  strokeWeight: 3,
+			  fillColor: "#ff1493",
+			  fillOpacity: 0.02,
+			  clickable: false,
+			  map: map,
+			  center: new google.maps.LatLng( lat, lng ),
+			  radius: 1000   // 半径１ｋｍ
+			};
+    var circle = new google.maps.Circle( circleOptions );
+}
 
 // 
 function getGeocode () {
@@ -173,17 +187,7 @@ function measure_distance () {
     transitLayer.setMap( map );
 
     // 出発地点を半径１ｋｍの円で囲む
-    var circleOptions = { strokeColor: "#c71585",
-			  strokeOpacity: 0.1,
-			  strokeWeight: 3,
-			  fillColor: "#ff1493",
-			  fillOpacity: 0.02,
-			  clickable: false,
-			  map: map,
-			  center: new google.maps.LatLng( stLat, stLng ),
-			  radius: 1000
-			};
-    var circle = new google.maps.Circle( circleOptions );
+    makeCircle( map, stLat, stLng );
 
     var col = document.getElementsByName( "yougu" )[0].checked ?
 	'#FF66FF' :
@@ -222,20 +226,6 @@ function measure_distance () {
 }
 
 // ＪＲ線・地下鉄
-function makeCircle( map, latlng ) {
-    var circleOptions = { strokeColor: "#c71585",
-			  strokeOpacity: 0.1,
-			  strokeWeight: 3,
-			  fillColor: "#ff1493",
-			  fillOpacity: 0.02,
-			  clickable: false,
-			  map: map,
-			  center: latlng,
-			  radius: 1000
-			};
-    var circle = new google.maps.Circle( circleOptions );
-}
-
 function getNearStations ( lat, lng ) {
     // objStations ... 別ファイル [ id, name, lat, lng ]
     var result = objStations.map(
@@ -287,16 +277,15 @@ function dispNearStation () {
 }
 
 function dispNearStationSub ( mapDomName, lat, lng ) {
-    var objLatLngFrom = new google.maps.LatLng( lat, lng );
     var map = makeMap( mapDomName, lat, lng, { zoom: 14 } );
     makeMarker( lat, lng,
 		"https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png", map );
-    makeCircle( map, objLatLngFrom );
+    makeCircle( map, lat, lng );
 
     getNearStations( lat, lng ).forEach(
 	function ( e, idx, ary ) {
     	    var dist = google.maps.geometry.spherical.computeDistanceBetween(
-		objLatLngFrom,
+		new google.maps.LatLng( lat, lng ),
     		new google.maps.LatLng( e["lat"], e["lng"] ) );
 	    var marker = makeMarker( e["lat"], e["lng"], "http://labs.google.com/ridefinder/images/mm_20_orange.png", map );
     	    var str = "(" + ( idx + 1 ) + ") " + e["name"] + ": " + Math.floor( dist ) + "m";
