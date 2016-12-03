@@ -127,7 +127,7 @@ function searchShokuba () {
 	    }});
     });
     if ( result.length == 0 ) {
-	alert("該当なし");
+	alert( "該当なし" );
 	return false;
     }
 
@@ -307,16 +307,18 @@ function dispNearStationSub ( mapDomName, lat, lng ) {
 
 //
 function getNearBusStop ( lat, lng ) {
-    // id, lat, lng, name
-    var result = objbusstops.map( function ( s ) {
-	var h1 = Math.abs( lat - s[1] );
-	var h2 = Math.abs( lng - s[2] );
-	return { id:   s[0],
-		 lat:  s[1],
-		 lng:  s[2],
-		 name: s[3],
-		 dist: h1 * h1 + h2 * h2 };
-    });
+     var result = Object.keys( objbusstops ).
+	map( function ( key ) {
+	    var v = objbusstops[ key ].split( "," );
+	    var h1 = Math.abs( lat - v[0] );
+	    var h2 = Math.abs( lng - v[1] );
+	    return { id:   key,
+		     lat:  v[0],
+		     lng:  v[1],
+		     name: v[2],
+		     dist: h1 * h1 + h2 * h2 };
+	});
+
     result.sort( function ( a, b ) {
 	if ( a.dist < b.dist ) return -1;
 	if ( a.dist > b.dist ) return 1;
@@ -391,55 +393,46 @@ function dispBusRoute ( str ) {
     makeMarker( lat, lng,
 		"http://maps.google.co.jp/mapfiles/ms/icons/red-dot.png", map )
 
-    // バス停(1)
-    var a = [];
-    for ( var i = 0; i < objBusStopRoute.length; i++ ) {
-	if ( ( objBusStopRoute[i][1] + objBusStopRoute[i][2] ) == str ) {
-	    a.push( objBusStopRoute[i][0] );
-	}
-    }
-
-    // バス停(2)
-    var sel = document.getElementById( "busStops" );
-    var id = sel.options[ sel.selectedIndex ].value;
-    for ( var i = 0; i < a.length; i++ ) {
-	for ( var j = 0; j < objbusstops.length; j++ ) {
-	    if ( a[i] == objbusstops[j][0] ) {
-		var marker = makeMarker( objbusstops[j][1] , objbusstops[j][2],
-					 "http://labs.google.com/ridefinder/images/mm_20_white.png", map );
-		attachMessage( marker, objbusstops[j][3] )
-		// バス停リストボックスと一致するバス停には、あらかじめフキダシ表示する
-		if ( id == objbusstops[j][0] ) {
-		    google.maps.event.trigger( marker, "click" );
-		}
-		break;
-	    }
-	}
-    }
+    // バス停
+    var id = getOptionValue ( "busStops" );
+    var aryBusStop = objBusStopRoute.filter( function ( e ) {
+	return ( e[1] + e[2] == str );
+    });
+    aryBusStop.forEach( function ( e ) {
+	var s = objbusstops[ e[0] ].split( "," );
+    	var marker = makeMarker( s[0] , s[1],
+    	    "http://labs.google.com/ridefinder/images/mm_20_white.png", map );
+    	attachMessage( marker, s[2] );
+	if ( id == e[0] ) {
+	    google.maps.event.trigger( marker, "click" );
+	}	
+    });
 
     // バス路線
-    var multiPoly = objBusRoute[ str ];
-    for ( var i = 0; i < multiPoly.length; i++ ) {
-	var p = [];		// [ A, B ]
-	for ( var j = 0; j < multiPoly[i].length; j++ ) {
-	    var d = multiPoly[i][j].split(",");
-	    // console.info( d[0], d[1] );
-	    p.push( { lng: Number( d[0] ), lat: Number( d[1] ) } );
-	}
-	var objLine = new google.maps.Polyline( { path: p,
-						  strokeColor: '#FF0000',
-						  strokeOpacity: 0.5,
-						  strokeWeight: 3
-						});
-	objLine.setMap( map );
-    }
+    objBusRoute[ str ].forEach(
+	function ( m ) {
+	    var p = m.map(
+		function ( e ) {
+		    var d = e.split( "," );
+		    return { lng: Number( d[0] ),
+			     lat: Number( d[1] ) };
+		});
+	    var objLine = new google.maps.Polyline( { path: p,
+						      strokeColor: '#FF0000',
+						      strokeOpacity: 0.5,
+						      strokeWeight: 3
+						    });
+	    objLine.setMap( map );
+	});
 
     var container = document.createElement( "div" );
-    container.style.margin = "10px";
-    container.style.padding = "5px";
-    container.style.border = "1px solid #000";
-    container.style.background = "#fff";
-    container.style.fontSize = "14px";
+    [ [ "margin", "10px" ],
+      [ "padding", "5px"],
+      [ "border", "1px solid #000" ],
+      [ "background", "#fff" ],
+      [ "fontSize", "14px" ] ].forEach( function ( e ) {
+	  container.style[ e[0] ] = e[1];
+      });
     var sel = document.getElementById( "busRoutes" );
     container.innerText = sel.options[ sel.selectedIndex ].text;
     map.controls[ google.maps.ControlPosition.BOTTOM_LEFT ].push( container );
@@ -448,8 +441,7 @@ function dispBusRoute ( str ) {
 //
 function setupShokuba () {
     var dom = document.getElementById( "kyoku" );
-    var keys = Object.keys( objWorkplace );
-    keys.forEach( function ( e ) {
+    Object.keys( objWorkplace ).forEach( function ( e ) {
 	addOptions( dom, e, e );
     });
 }
