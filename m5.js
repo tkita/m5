@@ -465,8 +465,8 @@ function changeCity ( city ) {
 	return ( e[1] == city );
     });
     addr.sort( function ( a, b ) {
-	if ( a[0] < b[0] ) return -1;
-	if ( a[0] > b[0] ) return 1;
+	if ( a[4] < b[4] ) return -1;
+	if ( a[4] > b[4] ) return 1;
 	return 0;
     });
     var sel = removeOptions( document.getElementById( "boundAddr" ) );
