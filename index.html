@@ -73,7 +73,7 @@
 	    <h2>住所</h2>
 	    <div class="content">
 		<button onClick="cbPaste();" tabindex="-1">クリップボードから貼り付け</button>
-		<input type="text" id="addr" size="50" placeholder="漢字">
+		<input type="text" id="addr" size="50" placeholder="漢字" style="ime-mode: active;">
 	    </div>
 
 	    <h2>Geocode 変換</h2>
@@ -125,7 +125,12 @@
 	</div>
 
 	<h1 id="koutsuyougu">交通用具</h1>
-	<div style="text-align: right;"><a href="#top">TOP</a></div>
+	<div style="text-align: right;">
+	    <span style="margin-right: 1em;"><a href="#top">TOP</a></span>
+	    <span style="margin-right: 1em;"><a href="#koutsuyougu">交通用具へ</a></span>
+	    <span style="margin-right: 1em;"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
+	    <span style="margin-right: 1em;"><a href="#bus">バスへ</a></span>
+	</div>
 
 	<div class="content">
 	    <div style="float: left; margin-right: 1em;">
@@ -146,30 +151,42 @@
 	</div>
 
 	<h1 id="jrsub" style="clear: both;">ＪＲ線・地下鉄</h1>
-	<div style="text-align: right;"><a href="#top">TOP</a></div>
+	<div style="text-align: right;">
+	    <span style="margin-right: 1em;"><a href="#top">TOP</a></span>
+	    <span style="margin-right: 1em;"><a href="#koutsuyougu">交通用具へ</a></span>
+	    <span style="margin-right: 1em;"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
+	    <span style="margin-right: 1em;"><a href="#bus">バスへ</a></span>
+	</div>
+
 	<div class="content">
 	    <div style="margin-bottom: 1em;">
 		<button onClick="dispNearStation();">近隣の駅を表示する</button>
 	    </div>
 	    <div style="overflow: hidden;">
-		<div style="margin-right: 1em; float: left;">
-		    <span id="leftAddr"></span>
-		    <div id="left_station_map"  style="width: 700px; height: 600px;"></div>
-		</div>
-		<div>
-		    <span id="rightAddr"></span>
-		    <div id="right_station_map" style="width: 700px; height: 600px;"></div>
-		</div>
+		<div id="left_station_map" style="margin: 0.5em; width: 700px; height: 600px; float: left;"></div>
+		<div id="right_station_map" style="margin: 0.5em; width: 700px; height: 600px;"></div>
 	    </div>
 	</div>
 
 	<h1 id="bus" style="clear: both;">バス</h1>
-	<div style="text-align: right;"><a href="#top">TOP</a></div>
+	<div style="text-align: right;">
+	    <span style="margin-right: 1em;"><a href="#top">TOP</a></span>
+	    <span style="margin-right: 1em;"><a href="#koutsuyougu">交通用具へ</a></span>
+	    <span style="margin-right: 1em;"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
+	    <span style="margin-right: 1em;"><a href="#bus">バスへ</a></span>
+	</div>
+
 	<div class="content">
 	    <div style="float: left; margin-right: 1em;">
-		<label><input name="busAround" type="radio" checked /> 自宅周辺</label><br>
-		<label><input name="busAround" type="radio" /> 職場周辺</label><br>
-		<button onClick="searchBusStops();">近隣のバス停を検索</button>
+		<div>
+		    <label><input name="busAround" type="radio" checked /> 自宅周辺</label><br>
+		    <label><input name="busAround" type="radio" /> 職場周辺</label><br>
+		    <button onClick="searchNearBusStop();">近隣のバス停を検索</button>
+		</div>
+		<div style="margin-top: 2em;">
+		    <input type="text" id="busstopname" placeholder="漢字" style="margin-bottom: 0.4em; ime-mode: active;" onFocus="this.select();"><br>
+		    <button onClick="searchNameBusStop();">名称でバス停検索</button>
+		</div>
 	    </div>
 
 	    <div style="float: left; margin-right: 1em;">
@@ -177,12 +194,25 @@
 		<select id="busStops" size="12" style="width: 20em;" onChange="changeBusStop(this.value);"></select>
 	    </div>
 	
-	    <div>
+	    <div style="float: left; margin-right: 1em;">
 		選択したバス停を含む路線<img src="http://labs.google.com/ridefinder/images/mm_20_white.png"><br>
 		<select id="busRoutes" size="12" style="width: 25em;" onClick="dispBusRoute(this.value);"></select>
 	    </div>
+
+	    <div>
+		<button style="margin-top: 1em; margin-bottom: 0.4em;" onClick="lock();">路線を固定する</button><br>
+		<input type="text" disabled="disabled" style="margin-bottom: 0.4em;"><br>
+		<button onClick="unlock();">解除</button>
+	    </div>
+
 	    <div id="bus_map" style="width: 1200px; height: 800px;"></div>	
-	    <div style="text-align: right;"><a href="#top">TOP</a></div>
+	</div>
+
+	<div style="text-align: right;">
+	    <span style="margin-right: 1em;"><a href="#top">TOP</a></span>
+	    <span style="margin-right: 1em;"><a href="#koutsuyougu">交通用具へ</a></span>
+	    <span style="margin-right: 1em;"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
+	    <span style="margin-right: 1em;"><a href="#bus">バスへ</a></span>
 	</div>
 
 	<script type="text/jscript" src="./objwp.js"></script>
