@@ -47,11 +47,13 @@ function replaceZenkaku ( str ) {
 }
 
 function makeMap( canvas, lat, lng, option ) {
-    option.center = new google.maps.LatLng( lat, lng );
-    option.panControl = false;
-    option.scaleControl = true;
-    option.zoomControlOptions = { style: google.maps.ZoomControlStyle.SMALL };
-    option.mapTypeId = google.maps.MapTypeId.ROADMAP;
+    [ [ 'center' , new google.maps.LatLng( lat, lng ) ],
+      [ 'panControl' , false ],
+      [ 'scaleControl' , true ],
+      [ 'zoomControlOptions' , { style: google.maps.ZoomControlStyle.SMALL } ],
+      [ 'mapTypeId' , google.maps.MapTypeId.ROADMAP ] ].forEach( function (e) {
+	  option[ e[0] ] = e[1];
+      });
     return new google.maps.Map( document.getElementById( canvas ), option );
 }
 
@@ -84,12 +86,41 @@ function drawPolyline ( map, path, option ) {
     objPolyline.setMap( map );
 }
 
+function drawBoundArea ( map ) {
+    var coords = objBoundLine[ getOptionValue( "boundAddr" ) ];
+    if ( coords ) {
+	var path = coords.split( " " ).map( function ( e ) {
+	    var c = e.split( "," );
+	    return { lat: Number( c[1] ),
+		     lng: Number( c[0] ) }
+	});
+	drawPolyline( map, path, { strokeColor: "cyan",
+				   strokeOpacity: 0.8,
+				   strokeWeight: 2 } );
+    }
+}
+
+function drawControl ( map, str ) {
+    var container = document.createElement( "div" );
+    [ [ "margin",     "10px" ],
+      [ "padding",    "5px"],
+      [ "border",     "1px solid #000" ],
+      [ "background", "#fff" ],
+      [ "fontSize",   "14px" ] ].forEach( function ( e ) {
+	  container.style[ e[0] ] = e[1];
+      });
+    container.innerText = str;
+    map.controls[ google.maps.ControlPosition.BOTTOM_LEFT ].push( container );
+}
+
+function checkInData () {
+}
+
 // 
 function setBoundArea () {
     var mCity, mAddr;
     var addr = document.getElementById( "addr" ).value;
-    var max = objBound.length;
-    for ( var i = 1; i < max; i++ ) {
+    for ( var i = 1, max = objBound.length; i < max; i++ ) {
 	var str = objBound[i][1] + objBound[i][2];
 	if ( addr.indexOf( str ) > -1 ) {
 	    mCity = objBound[i][1];
@@ -267,20 +298,6 @@ function measure_distance () {
    // document.getElementsByClassName( "adp-summary" ).style.borderColor = col;
 }
 
-function drawBoundArea ( map ) {
-    var coords = objBoundLine[ getOptionValue( "boundAddr" ) ];
-    if ( coords ) {
-	var path = coords.split( " " ).map( function ( e ) {
-	    var c = e.split( "," );
-	    return { lat: Number( c[1] ),
-		     lng: Number( c[0] ) }
-	});
-	drawPolyline( map, path, { strokeColor: "cyan",
-				   strokeOpacity: 0.8,
-				   strokeWeight: 2 } );
-    }
-}
-
 // ＪＲ線・地下鉄
 function getNearStations ( lat, lng ) {
     // objStations ... 別ファイル [ id, name, lat, lng ]
@@ -405,23 +422,18 @@ function searchNearBusStop () {
 
 function searchNameBusStop () {
     var kword = document.getElementById( "busstopname" ).value;
-    var result = [];
-    Object.keys( objbusstops ).forEach( function ( key ) {
-	var name = objbusstops[ key ].split(",")[2];
-	if ( name.indexOf( kword ) > -1 ) {
-	    result.push( { id: key,
-			   name: name } );
-	}
+    var result = Object.keys( objbusstops ).filter( function ( id ) {
+	return ( objbusstops[ id ].split(",")[2].indexOf( kword ) > -1 )
     });
     var sel = removeOptions( document.getElementById( "busStops" ) );
-    result.forEach( function ( e ) {
-	addOption( sel, e['id'], e['name'] );
+    result.forEach( function ( id ) {
+	addOption( sel, id, objbusstops[ id ].split(",")[2] );
     });
 }
 
 function changeBusStop ( id ) {
     var sel = removeOptions( document.getElementById( "busRoutes" ) );
-    var result = objBusStopRoute.filter( function (e) {
+    var result = objBusStopRoute.filter( function ( e ) {
     	return ( id == e[0] );
     });
     result.forEach( function ( e ) {
@@ -474,19 +486,6 @@ function dispBusRoute ( str ) {
     drawControl( map, sel.options[ sel.selectedIndex ].text );
 }
 
-function drawControl ( map, str ) {
-    var container = document.createElement( "div" );
-    [ [ "margin",     "10px" ],
-      [ "padding",    "5px"],
-      [ "border",     "1px solid #000" ],
-      [ "background", "#fff" ],
-      [ "fontSize",   "14px" ] ].forEach( function ( e ) {
-	  container.style[ e[0] ] = e[1];
-      });
-    container.innerText = str;
-    map.controls[ google.maps.ControlPosition.BOTTOM_LEFT ].push( container );
-}
-
 //
 function setupShokuba () {
     var dom = document.getElementById( "kyoku" );
@@ -496,17 +495,11 @@ function setupShokuba () {
 }
 
 function setupBoundCity () {
-    // var city = [];
-    // objBound.forEach( function ( e ) {
-    // 	if ( city.indexOf( e[1] ) == -1 ) {
-    // 	    city.push( e[1] );
-    // 	}
-    // });
-    // city.forEach( function( e ) {
-    // 	addOption( document.getElementById( "boundCity" ), e, e );
-    // });
     var dom = document.getElementById( "boundCity" );
-    [ "---", "札幌市中央区", "札幌市北区", "札幌市東区", "札幌市白石区", "札幌市厚別区", "札幌市豊平区", "札幌市清田区", "札幌市南区", "札幌市西区", "札幌市手稲区", "小樽市", "岩見沢市", "江別市", "千歳市", "恵庭市", "北広島市", "石狩市" ].forEach( function ( e ) {
+    [ "---",          "札幌市中央区", "札幌市北区",   "札幌市東区", "札幌市白石区",
+      "札幌市厚別区", "札幌市豊平区", "札幌市清田区", "札幌市南区", "札幌市西区",
+      "札幌市手稲区", "小樽市",       "岩見沢市",     "江別市",     "千歳市",
+      "恵庭市",       "北広島市",     "石狩市" ].forEach( function ( e ) {
 	addOption( dom, e, e );
     });
 }
