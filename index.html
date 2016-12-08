@@ -76,13 +76,13 @@
     </head>
 
     <body>
-	<h1 id="top">出発地点</h1>
+	<h1 id="top">出発地点 (<u>D</u>eparture)</h1>
 	<div class="content">
 	    <h2>住所</h2>
 	    <div class="content">
-		<button onClick="cbPaste();" tabindex="-1">
-		    クリップボードから貼り付け</button>
-		<input type="text" id="addr" size="50" placeholder="漢字"
+		<button id="paste" onClick="cbPaste();" tabindex="-1">
+		    クリップボードから貼り付け (<u>V</u>)</button>
+		<input type="text" id="addr" size="50" placeholder="漢字住所"
 		       style="ime-mode: active;">
 	    </div>
 
@@ -90,7 +90,7 @@
 	    <div class="content">
 		<div style="display: flex; flex-direction: row;">
 		    <div>
-			<button onClick="getGeocode();">実行</button>
+			<button id="btnGeo" onClick="getGeocode();">実行 (<u>A</u>)</button>
 		    </div>
 		    <ul>
 			<li>formatted_address = <span id="faddr"></span></li>
@@ -100,7 +100,7 @@
 		</div>
 	    </div>
 
-	    <h2>表示するエリア</h2>
+	    <h2>マップに表示する条丁目境界線</h2>
 	    <div class="content">
 		<select id="boundCity" onChange="changeCity(this.value);"
 			style="width: 10em;"></select>
@@ -117,7 +117,7 @@
 			   onFocus="this.select();"
 			   onKeyPress="goSearch(event.keyCode);"
 			   style="margin-right: 1em;">
-		    <button onClick="searchShokuba();">検索</button>
+		    <button id="btnShokuba" onClick="searchShokuba();">検索</button>
 		</div>
 		<div>
 		    <span class="navi"><a href="#koutsuyougu">交通用具へ</a></span>
@@ -141,7 +141,7 @@
 	    </div>
 	</div>
 
-	<h1 id="koutsuyougu">交通用具</h1>
+	<h1 id="koutsuyougu">交通用具 (<u>R</u>oute)</h1>
 	<div class="content">
 	    <div style="display: flex; flex-direction: row; justify-content: space-between;">
 		<div style="display: flex; flex-direction: row;">
@@ -153,7 +153,7 @@
 			    <input name="yougu" type="radio" /> 自動車
 			</label>
 		    </div>
-		    <button onClick="measure_distance();">距離を測る</button>
+		    <button id="btnDist" onClick="measure_distance();">距離を測る</button>
 		</div>
 
 		<div>
@@ -170,7 +170,7 @@
 	    </div>
 	</div>
 
-	<h1 id="jrsub">ＪＲ線・地下鉄</h1>
+	<h1 id="jrsub">ＪＲ線・地下鉄 (<u>S</u>ubway)</h1>
 	<div class="content">
 	    <div style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 1em;">
 		<div>
@@ -192,7 +192,7 @@
 	    </div>
 	</div>
 
-	<h1 id="bus" style="clear: both;">バス</h1>
+	<h1 id="bus" style="clear: both;">バス (<u>B</u>us)</h1>
 	<div style="text-align: right;">
 	    <span class="navi"><a href="#top">TOP</a></span>
 	    <span class="navi"><a href="#koutsuyougu">交通用具へ</a></span>
@@ -209,7 +209,7 @@
 		    <label>
 			<input name="busAround" type="radio" /> 職場周辺
 		    </label><br>
-		    <button onClick="searchNearBusStop();">近隣のバス停を検索</button><br>
+		    <button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button><br>
 		    <br>
 		    <input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
 			   onFocus="this.select();"
@@ -246,10 +246,10 @@
 	</div>
 
 	<div style="text-align: right;">
-	    <span class="navi"><a href="#top">TOP</a></span>
-	    <span class="navi"><a href="#koutsuyougu">交通用具へ</a></span>
-	    <span class="navi"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
-	    <span class="navi"><a href="#bus">バスへ</a></span>
+	    <span class="navi"><a href="#top" id="link_top">TOP</a></span>
+	    <span class="navi"><a href="#koutsuyougu" id="link_yougu">交通用具へ</a></span>
+	    <span class="navi"><a href="#jrsub" id="link_jrsub">ＪＲ線・地下鉄へ</a></span>
+	    <span class="navi"><a href="#bus" id="link_bus">バスへ</a></span>
 	</div>
 
 	<script type="text/jscript" src="./objwp.js"></script>

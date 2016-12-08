@@ -12,6 +12,7 @@ function clearGeocodeResult () {
 function cbPaste () {
     document.getElementById( "addr" ).value = clipboardData.getData( "text" );
     clearGeocodeResult();
+    document.getElementById( "btnGeo" ).focus();
 }
 
 function removeAllChilds ( e ) {
@@ -491,6 +492,8 @@ function dispBusRoute ( busRouteKey ) {
     makeMarker( lat,       lng,       url + "green-dot.png", map );
     makeMarker( latlng[2], latlng[3], url + "red-dot.png",   map );
 
+    makeCircle( map, lat, lng );
+
     // バス停
     var url = "http://labs.google.com/ridefinder/images/";
     drawBusStops( map, busRouteKey, url + "mm_20_orange.png",
@@ -557,4 +560,39 @@ function init () {
     setupBoundCity();
     changeCity( getOptionValue( "boundCity" ) );
     geocoder = new google.maps.Geocoder();
+
+    document.onkeydown = function() {
+	if ( event.ctrlKey && event.keyCode == 68 ) { // CTRL-d
+	    event.keyCode = null;
+	    document.getElementById( "link_top" ).click();
+	    document.getElementById( "paste" ).focus();
+	    return false;
+	} else if ( event.ctrlKey && event.keyCode == 82 ) { // CTRL-r
+	    event.keyCode = null;
+	    document.getElementById( "link_yougu" ).click();
+	    document.getElementById( "btnDist" ).focus();
+	    return false;
+	} else if ( event.ctrlKey && event.keyCode == 83 ) { // CTRL-s
+	    event.keyCode = null;
+	    document.getElementById( "link_jrsub" ).click();
+	    document.getElementById( "btnShokuba" ).focus();
+	    return false;
+	} else if ( event.ctrlKey && event.keyCode == 66 ) { // CTRL-b
+	    event.keyCode = null;
+	    document.getElementById( "link_bus" ).click();
+	    document.getElementById( "btnBus" ).focus();
+	    return false;
+	} else if ( event.ctrlKey && event.keyCode == 86 ) { // CTRL-v
+	    event.keyCode = null;
+	    document.getElementById( "link_top" ).click();
+	    document.getElementById( "addr" ).value = "";
+	    document.getElementById( "paste" ).click();
+	    document.getElementById( "btnGeo" ).focus();
+	    return false;
+	} else if ( event.ctrlKey && event.keyCode == 65 ) { // CTRL-a
+	    event.keyCode = null;
+	    document.getElementById( "btnGeo" ).click();
+	    return false;
+	}
+    }
 }
