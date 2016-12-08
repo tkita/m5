@@ -32,10 +32,6 @@
 	     font-size: 1em;
 	 }
 
-	 .content {
-	     margin-left: 1em;
-	 }
-
 	 .navi {
 	     margin-right: 1em;
 	 }
@@ -44,7 +40,37 @@
 	     border: 1px solid black;
 	 }
 
-	 /* 交通用具の Directions Panel */
+	 .ime-active {
+	     ime-mode: active;
+	 }
+
+	 #boundAddr {
+	     width: 20em;
+	 }
+
+	 #kyoku {
+	     display: block;
+	     float: left;
+	     margin-right: 1em;
+	 }
+
+	 #shokuba {
+	     display: block;
+	     font-family: monospace;
+	 }
+
+	 /* 交通用具 */
+	 #directionsPanel {
+	     width: 200px;
+	     margin-right: 1em;
+	 }
+
+	 #yougu_map {
+	     width: 950px;
+	     height: 660px;
+	 }
+	 
+	 /* Directions Panel */
 	 .adp-summary {
 	     border-style: dashed;
              border-width: 3px;
@@ -65,6 +91,18 @@
 	     font-size: 8pt;
 	 }
 
+	 /* ＪＲ線・地下鉄 */
+	 #left_station_map {
+	     margin: 0.5em;
+	     width: 700px;
+	     height: 600px;
+	 }
+
+	 #right_station_map {
+	     margin: 0.5em;
+	     width: 700px;
+	     height: 600px;
+	 }
 
 	 /* ＪＲ線・地下鉄のフキダシ */
 	 .gm-style > div > div > div > div > div > div {
@@ -72,183 +110,184 @@
 	     opacity: 0.7;
 	 }
 
+	 #busstopname {
+	     margin-bottom: 0.4em;
+	 }
+
+	 #busStops {
+	     width: 20em;
+	 }
+
+	 #busRoutes {
+	     width: 25em;
+	 }
+
+	 #btnLock {
+	     margin-top: 1em;
+	     margin-bottom: 0.4em;
+	 }
+
+	 #lock {
+	     margin-bottom: 0.4em;
+	 }
+
+	 #bus_map{
+	     width: 1000px;
+	     height: 660px;
+	     margin: 0.5em;
+	 }
 	</style>
     </head>
 
     <body>
-	<h1 id="top">出発地点 (<u>D</u>eparture)</h1>
-	<div class="content">
-	    <h2>住所</h2>
-	    <div class="content">
-		<button id="paste" onClick="cbPaste();" tabindex="-1">
-		    クリップボードから貼り付け (<u>V</u>)</button>
-		<input type="text" id="addr" size="50" placeholder="漢字住所"
-		       style="ime-mode: active;">
-	    </div>
+	<h1 id="departure">出発地点 (<u>D</u>eparture)</h1>
+	<h2>住所</h2>
+	<button id="btnPaste" onClick="cbPaste();" tabindex="-1">
+	    クリップボードから貼り付け (<u>V</u>)</button>
+	<input type="text" id="addr" size="50" placeholder="漢字住所" class="ime-active">
 
-	    <h2>Geocode 変換</h2>
-	    <div class="content">
-		<div style="display: flex; flex-direction: row;">
-		    <div>
-			<button id="btnGeo" onClick="getGeocode();">実行 (<u>A</u>)</button>
-		    </div>
-		    <ul>
-			<li>formatted_address = <span id="faddr"></span></li>
-			<li>lat = <span id="stLat"></span></li>
-			<li>lng = <span id="stLng"></span></li>
-		    </ul>
-		</div>
+	<h2>Geocode 変換</h2>
+	<div style="display: flex; flex-direction: row;">
+	    <div>
+		<button id="btnGeo" onClick="getGeocode();">実行 (<u>A</u>)</button>
 	    </div>
-
-	    <h2>マップに表示する条丁目境界線</h2>
-	    <div class="content">
-		<select id="boundCity" onChange="changeCity(this.value);"
-			style="width: 10em;"></select>
-		<select id="boundAddr" style="width: 20em;"></select>
-	    </div>
+	    <ul>
+		<li>formatted_address = <span id="faddr"></span></li>
+		<li>lat = <span id="stLat"></span></li>
+		<li>lng = <span id="stLng"></span></li>
+	    </ul>
 	</div>
+
+	<h2>マップに表示する条丁目境界線</h2>
+	<select id="boundCity" onChange="changeCity(this.value);"></select>
+	<select id="boundAddr"></select>
 
 	<h1>目的地</h1>
-	<div class="content">
-	    <div style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 1em;">
-		<div>
-		    <input type="text" id="kword" size="40"
-			   placeholder="名称、住所、電話番号（下４桁で可）"
-			   onFocus="this.select();"
-			   onKeyPress="goSearch(event.keyCode);"
-			   style="margin-right: 1em;">
-		    <button id="btnShokuba" onClick="searchShokuba();">検索</button>
-		</div>
-		<div>
-		    <span class="navi"><a href="#koutsuyougu">交通用具へ</a></span>
-		    <span class="navi"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
-		    <span class="navi"><a href="#bus">バスへ</a></span>
-		</div>
+	<div style="display: flex; flex-direction: row;
+		    justify-content: space-between; margin-bottom: 1em;">
+	    <div>
+		<input type="text" id="kword" size="40"
+		       placeholder="名称、住所、電話番号（下４桁で可）"
+		       onFocus="this.select();"
+		       onKeyPress="doSearchShokuba(event.keyCode);"
+		       style="margin-right: 1em;">
+		<button id="btnShokuba" onClick="searchShokuba();">検索</button>
 	    </div>
 
-	    <div style="display: flex; flex-direction: row">
+	    <div>
+		<span class="navi"><a href="#yougu">交通用具へ</a></span>
+		<span class="navi"><a href="#jrsubway">ＪＲ線・地下鉄へ</a></span>
+		<span class="navi"><a href="#bus">バスへ</a></span>
+	    </div>
+	</div>
+
+	<select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
+	<div>
+	    <select id="shokuba" size="29"></select>
+	    <button onClick="move();">目的地の位置情報を出発地へセット</button>
+	</div>
+
+	<h1 id="yougu">交通用具 (<u>R</u>oute)</h1>
+	<div style="display: flex; flex-direction: row; justify-content: space-between;">
+	    <div style="display: flex; flex-direction: row;">
 		<div style="margin-right: 1em;">
-		    局など<br>
-		    <select id="kyoku" size="29"
-			    onChange="changeKyoku(this.value);"></select>
+		    <label>
+			<input name="walk" type="radio" checked/> 徒歩
+		    </label><br>
+		    <label>
+			<input name="walk" type="radio" /> 自動車
+		    </label>
 		</div>
-		<div>
-		    所属や建物<br>
-		    <select id="shokuba" size="29"
-			    style="font-family: monospace;"></select><br>
-		    <button onClick="move();">目的地の位置情報を出発地へセット</button>
-		</div>
+		<button id="btnDist" onClick="measure_distance();">距離を測る</button>
+	    </div>
+
+	    <div>
+		<span class="navi"><a href="#departure">TOP</a></span>
+		<span class="navi"><a href="#yougu">交通用具へ</a></span>
+		<span class="navi"><a href="#jrsubway">ＪＲ線・地下鉄へ</a></span>
+		<span class="navi"><a href="#bus">バスへ</a></span>
 	    </div>
 	</div>
 
-	<h1 id="koutsuyougu">交通用具 (<u>R</u>oute)</h1>
-	<div class="content">
-	    <div style="display: flex; flex-direction: row; justify-content: space-between;">
-		<div style="display: flex; flex-direction: row;">
-		    <div style="margin-right: 1em;">
-			<label>
-			    <input name="yougu" type="radio" checked/> 徒歩
-			</label><br>
-			<label>
-			    <input name="yougu" type="radio" /> 自動車
-			</label>
-		    </div>
-		    <button id="btnDist" onClick="measure_distance();">距離を測る</button>
-		</div>
-
-		<div>
-		    <span class="navi"><a href="#top">TOP</a></span>
-		    <span class="navi"><a href="#koutsuyougu">交通用具へ</a></span>
-		    <span class="navi"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
-		    <span class="navi"><a href="#bus">バスへ</a></span>
-		</div>
-	    </div>
-
-	    <div style="display: flex; flex-direction: row;">
-		<div id="directionsPanel" style="width: 200px; margin-right: 1em;"></div>
-		<div id="yougu_map" class="border" style="width: 950px; height: 660px;"></div>
-	    </div>
+	<div style="display: flex; flex-direction: row;">
+	    <div id="directionsPanel"></div>
+	    <div id="yougu_map" class="border"></div>
 	</div>
 
-	<h1 id="jrsub">ＪＲ線・地下鉄 (<u>S</u>ubway)</h1>
-	<div class="content">
-	    <div style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 1em;">
-		<div>
-		    <button onClick="dispNearStation();">近隣の駅を表示する</button>
-		</div>
-		<div>
-		    <span class="navi"><a href="#top">TOP</a></span>
-		    <span class="navi"><a href="#koutsuyougu">交通用具へ</a></span>
-		    <span class="navi"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
-		    <span class="navi"><a href="#bus">バスへ</a></span>
-		</div>
+	<h1 id="jrsubway">ＪＲ線・地下鉄 (<u>S</u>ubway)</h1>
+	<div style="display: flex; flex-direction: row;
+		    justify-content: space-between; margin-bottom: 1em;">
+	    <div>
+		<button id="btnJrSubway"
+			onClick="dispNearStation();">近隣の駅を表示する</button>
 	    </div>
-
-	    <div style="display: flex; flex-direction: row;">
-		<div id="left_station_map" class="border"
-		     style="margin: 0.5em; width: 700px; height: 600px;"></div>
-		<div id="right_station_map" class="border"
-		     style="margin: 0.5em; width: 700px; height: 600px;"></div>
+	    <div>
+		<span class="navi"><a href="#departure">TOP</a></span>
+		<span class="navi"><a href="#yougu">交通用具へ</a></span>
+		<span class="navi"><a href="#jrsubway">ＪＲ線・地下鉄へ</a></span>
+		<span class="navi"><a href="#bus">バスへ</a></span>
 	    </div>
+	</div>
+	
+	<div style="display: flex; flex-direction: row;">
+	    <div id="left_station_map" class="border"></div>
+	    <div id="right_station_map" class="border"></div>
 	</div>
 
 	<h1 id="bus" style="clear: both;">バス (<u>B</u>us)</h1>
 	<div style="text-align: right;">
-	    <span class="navi"><a href="#top">TOP</a></span>
-	    <span class="navi"><a href="#koutsuyougu">交通用具へ</a></span>
-	    <span class="navi"><a href="#jrsub">ＪＲ線・地下鉄へ</a></span>
+	    <span class="navi"><a href="#departure">TOP</a></span>
+	    <span class="navi"><a href="#yougu">交通用具へ</a></span>
+	    <span class="navi"><a href="#jrsubway">ＪＲ線・地下鉄へ</a></span>
 	    <span class="navi"><a href="#bus">バスへ</a></span>
 	</div>
 
-	<div class="content">
-	    <div style="display: flex; flex-direction: row; justify-content: flex-start;">
-		<div style="margin-right: 1em;">
-		    <label>
-			<input name="busAround" type="radio" checked /> 自宅周辺
-		    </label><br>
-		    <label>
-			<input name="busAround" type="radio" /> 職場周辺
-		    </label><br>
-		    <button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button><br>
-		    <br>
-		    <input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
-			   onFocus="this.select();"
-			   style="margin-bottom: 0.4em; ime-mode: active;"><br>
-		    <button onClick="searchNameBusStop();">名称でバス停検索</button>
-		</div>
+	<div style="display: flex; flex-direction: row; justify-content: flex-start;">
+	    <div style="margin-right: 1em;">
+		<label>
+		    <input name="busAround" type="radio" checked /> 自宅周辺
+		</label><br>
+		<label>
+		    <input name="busAround" type="radio" /> 職場周辺
+		</label><br>
+		<button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button><br>
+		<br>
+		<input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
+		       onFocus="this.select();"
+		       class="ime-active"><br>
+		<button onClick="searchNameBusStop();">名称でバス停検索</button>
+	    </div>
 
-		<div style="margin-right: 1em;">
+	    <div style="margin-right: 1em;">
 		バス停<br>
-		<select id="busStops" size="12" onChange="changeBusStop(this.value);"
-			style="width: 20em;"></select>
-		</div>
+		<select id="busStops" size="12" onChange="changeBusStop(this.value);">
+		</select>
+	    </div>
 
-		<div style="margin-right: 1em;">
+	    <div style="margin-right: 1em;">
 		選択したバス停を含む路線<img src="http://labs.google.com/ridefinder/images/mm_20_orange.png"><br>
-		<select id="busRoutes" size="12" onClick="dispBusRoute(this.value);"
-			style="width: 25em;"></select>
-		</div>
-
-		<div>
-		    <button onClick="lock();"
-			    style="margin-top: 1em; margin-bottom: 0.4em;">路線を固定する</button>
-		    <img src="http://labs.google.com/ridefinder/images/mm_20_green.png"><br>
-		    <input type="text" id="lock" disabled="disabled" size="30"
-			   style="margin-bottom: 0.4em;"><br>
-		    <button onClick="unlock();">解除</button>
-		</div>
-
+		<select id="busRoutes" size="12" onClick="dispBusRoute(this.value);">
+		</select>
 	    </div>
 
-	    <div style="display: flex; flex-direction: row;">
-		<div id="bus_map" class="border" style="width: 1000px; height: 660px; margin: 0.5em;"></div>
+	    <div>
+		<button id="btnLock" onClick="lock();">路線を固定する</button>
+		<img src="http://labs.google.com/ridefinder/images/mm_20_green.png"><br>
+		<input type="text" id="lock" disabled="disabled" size="30">
+		<br>
+		<button onClick="unlock();">解除</button>
 	    </div>
+
+	</div>
+
+	<div style="display: flex; flex-direction: row;">
+	    <div id="bus_map" class="border"></div>
 	</div>
 
 	<div style="text-align: right;">
-	    <span class="navi"><a href="#top" id="link_top">TOP</a></span>
-	    <span class="navi"><a href="#koutsuyougu" id="link_yougu">交通用具へ</a></span>
-	    <span class="navi"><a href="#jrsub" id="link_jrsub">ＪＲ線・地下鉄へ</a></span>
+	    <span class="navi"><a href="#departure" id="link_departure">TOP</a></span>
+	    <span class="navi"><a href="#yougu" id="link_yougu">交通用具へ</a></span>
+	    <span class="navi"><a href="#jrsubway" id="link_jrsubway">ＪＲ線・地下鉄へ</a></span>
 	    <span class="navi"><a href="#bus" id="link_bus">バスへ</a></span>
 	</div>
 

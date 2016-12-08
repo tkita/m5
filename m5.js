@@ -215,15 +215,13 @@ function changeKyoku ( kyoku ) {
     });
 }
 
-function goSearch ( code ) {
-    if ( code === 13 ) {
+function doSearchShokuba ( keyCode ) {
+    if ( keyCode === 13 ) {
 	if ( searchShokuba() ) {
 	    document.getElementById( "shokuba" ).focus();
 	} else {
 	    document.getElementById( "kword" ).focus();
-	}
-    }
-}
+	}}}
 
 function searchShokuba () {
     var kword = document.getElementById( "kword" ).value;
@@ -281,7 +279,7 @@ function measure_distance () {
     // 出発地点を半径１ｋｍの円で囲む
     makeCircle( map, stLat, stLng );
 
-    var col = document.getElementsByName( "yougu" )[0].checked ?
+    var col = document.getElementsByName( "walk" )[0].checked ?
 	'#FF66FF' :
 	'#00FFFF';
     var directionsRenderer = new google.maps.DirectionsRenderer(
@@ -291,7 +289,7 @@ function measure_distance () {
 			     strokeColor: col }});
     directionsRenderer.setMap( map );
 
-    var tMode = document.getElementsByName( "yougu" )[0].checked ?
+    var tMode = document.getElementsByName( "walk" )[0].checked ?
 	google.maps.DirectionsTravelMode.WALKING :
 	google.maps.DirectionsTravelMode.DRIVING;
     var request = { origin: new google.maps.LatLng( stLat, stLng ),
@@ -564,8 +562,8 @@ function init () {
     document.onkeydown = function() {
 	if ( event.ctrlKey && event.keyCode == 68 ) { // CTRL-d
 	    event.keyCode = null;
-	    document.getElementById( "link_top" ).click();
-	    document.getElementById( "paste" ).focus();
+	    document.getElementById( "link_departure" ).click();
+	    document.getElementById( "btnPaste" ).focus();
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 82 ) { // CTRL-r
 	    event.keyCode = null;
@@ -574,8 +572,8 @@ function init () {
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 83 ) { // CTRL-s
 	    event.keyCode = null;
-	    document.getElementById( "link_jrsub" ).click();
-	    document.getElementById( "btnShokuba" ).focus();
+	    document.getElementById( "link_jrsubway" ).click();
+	    document.getElementById( "btnJrSubway" ).focus();
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 66 ) { // CTRL-b
 	    event.keyCode = null;
@@ -584,9 +582,9 @@ function init () {
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 86 ) { // CTRL-v
 	    event.keyCode = null;
-	    document.getElementById( "link_top" ).click();
+	    document.getElementById( "link_departure" ).click();
 	    document.getElementById( "addr" ).value = "";
-	    document.getElementById( "paste" ).click();
+	    cbPaste();
 	    document.getElementById( "btnGeo" ).focus();
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 65 ) { // CTRL-a
