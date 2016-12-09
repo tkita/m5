@@ -42,7 +42,7 @@ function removeOptions ( sel ) {
 }
 
 function replaceZenkaku ( str ) {
-    return str.replace( /[-A-Za-z0-9]/g, function( s ) {
+    return str.replace( /[A-Za-z0-9]/g, function( s ) {
 	return String.fromCharCode( s.charCodeAt( 0 ) + 0xFEE0 );
     });
 }
@@ -127,12 +127,11 @@ function checkInData () {
 	return false;
     }
 
-    var sel = document.getElementById( "shokuba" );
-    if ( sel.selectedIndex < 0 ) {
-	alert( "目的地が選択されていません" );
-	return false;
+    var wp = hot.getDataAtRow( hot.getSelected()[0] );
+    if ( wp[3] == "" ) {
+     	alert( "目的地が選択されていません" );
+     	return false;
     }
-    var wp = sel.options[ sel.selectedIndex ].value.split( "," );
     var edLat = wp[3];
     var edLng = wp[4];
     return [ stLat, stLng, edLat, edLng, wp ];
@@ -193,26 +192,26 @@ function getGeocode () {
     setBoundArea();
 }
 
-function arrangeText ( text ) {
-    var padding = "　　　　　　　　　　　　　";
-    var ary = text.split( "," );
-    ary[0] = ( replaceZenkaku( ary[0] ) + padding ).substr( 0, 10 );
-    ary[1] = ( replaceZenkaku( ary[1] ) + padding ).substr( 0, 10 );
-    ary[2] = ( replaceZenkaku( ary[2] ) + padding ).substr( 0, 20 );
-    ary[3] = ( ary[3] + "         " ).substr( 0, 9 );
-    ary[4] = ( ary[4] + "         " ).substr( 0, 9 );
-    var result = "";
-    ary.forEach( function( e ) {
-	result = result + e + "　";
-    });
-    return result;
-}
+var columnHeader = [ '名称', '建物', '住所', 'lat', 'lng', '不便公署', '電話番号' ];
+var hot = new Handsontable( document.getElementById( 'hot' ) ,
+			    { data: [ [ '', '', '', '', '', '', '' ] ],
+			      autoColumnSize: true,
+			      colHeaders: columnHeader,
+			      currentRowClassName: 'currentRow',
+			      disableVisualSelection: 'area',
+			      outsideClickDeselects: false,
+			      readOnly: true,
+			      rowHeaders: true }
+			  );
+hot.selectCell( 0, 0 );
 
 function changeKyoku ( kyoku ) {
-    var dom = removeOptions( document.getElementById( "shokuba" ) );
-    objWorkplace[ kyoku ].forEach( function( e ) {
-	addOption( dom, e, arrangeText( e ) );
+    var data = objWorkplace[ kyoku ].map( function( e ) {
+	return e.split(",");
     });
+    hot.updateSettings( { data: data } );
+    hot.selectCell( 0, 0 );
+    document.getElementById( "kword" ).value = "";
 }
 
 function doSearchShokuba ( keyCode ) {
@@ -242,20 +241,17 @@ function searchShokuba () {
 	return false;
     }
 
-    var dom = removeOptions( document.getElementById( "shokuba" ) );
-    result.forEach( function( e ) {
-	addOption( dom, e, arrangeText( e ) );
+    var data = result.map( function( e ) {
+	return e.split(",");
     });
+    hot.updateSettings( { data: data } );
+    hot.selectCell( 0, 0 );
+    document.getElementById( "hot" ).focus();
     return true;
 }
 
 function move () {
-    var sel = document.getElementById( "shokuba" );
-    if ( sel.selectedIndex < 0 ) {
-	alert( "目的地が選択されていません" );
-	return;
-    }
-    var wp = sel.options[ sel.selectedIndex ].value.split( "," );
+    var wp = hot.getDataAtRow( hot.getSelected()[0] );
     document.getElementById( "faddr" ).innerHTML = wp[0] + " " + wp[1];
     document.getElementById( "stLat" ).innerHTML = wp[3];
     document.getElementById( "stLng" ).innerHTML = wp[4];

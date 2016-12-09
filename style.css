@@ -1,0 +1,144 @@
+@charset "UTF-8";
+h1 {
+    font-size: 1em;
+    background-color: Gainsboro;
+}
+
+h2 {
+    font-size: 1em;
+}
+
+.navi {
+    margin-right: 1em;
+}
+
+div.border {
+    border: 1px solid black;
+}
+
+div.navibox {
+    text-align: right;
+}
+
+.ime-active {
+    ime-mode: active;
+}
+
+.shortcut {
+    display: inline-block;
+}
+
+.shortcut::before { 
+    content: "(";
+}
+
+.shortcut::after { 
+    content: ")";
+}
+
+.shortcut:first-letter {
+    text-decoration: underline;
+    text-transform: capitalize;
+}
+
+#boundAddr {
+    width: 20em;
+}
+
+#kword {
+    margin-right: 1em;
+}
+
+#kyoku {
+    margin-right: 1em;
+}
+
+option:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+/* 交通用具 */
+#directionsPanel {
+    width: 200px;
+    margin-right: 1em;
+}
+
+#yougu_map {
+    width: 950px;
+    height: 660px;
+}
+	 
+/* Directions Panel */
+.adp-summary {
+    border-style: dashed;
+    border-width: 3px;
+    /* border-color:  */
+    text-align: right;
+    font-weight: bold;
+}
+
+td.adp-substep {
+    font-size: 7pt;
+}
+
+td.adp-text {
+    font-size: 8pt;
+}
+
+.adp-legal {
+    font-size: 8pt;
+}
+
+/* ＪＲ線・地下鉄 */
+#left_station_map {
+    margin: 0.5em;
+    width: 700px;
+    height: 600px;
+}
+
+#right_station_map {
+    margin: 0.5em;
+    width: 700px;
+    height: 600px;
+}
+
+/* ＪＲ線・地下鉄のフキダシ */
+.gm-style > div > div > div > div > div > div {
+    color: purple;
+    opacity: 0.7;
+}
+
+#busstopname {
+    margin-bottom: 0.4em;
+}
+
+#busStops {
+    width: 20em;
+}
+
+#busRoutes {
+    width: 25em;
+}
+
+#btnLock {
+    margin-top: 1em;
+    margin-bottom: 0.4em;
+}
+
+#lock {
+    margin-bottom: 0.4em;
+}
+
+#bus_map {
+    width: 1000px;
+    height: 660px;
+    margin: 0.5em;
+}
+
+#hot {
+    font-size: 13px;
+}
+
+.handsontable .currentRow {
+    background: #f5f5f5;
+}

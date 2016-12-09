@@ -5,8 +5,12 @@
 	<!-- <meta http-equiv="X-UA-Compatible" content="IE=11" /> -->
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
 	<title>m5</title>
-	<script type="text/jscript" src="./jquery-3.1.1.min.js"></script>
+	<link rel="stylesheet" href="./style.css">
 
+	<script src="./handsontable.full.min.js"></script>
+	<link rel="stylesheet" href="./handsontable.full.min.css">
+
+	<script type="text/jscript" src="./jquery-3.1.1.min.js"></script>
 	<script>
 	 $(function() {
 	     // #で始まるアンカーをクリックした場合に処理
@@ -21,142 +25,22 @@
 	     });
 	 });
 	</script>
-
-	<style>
-	 h1 {
-	     font-size: 1em;
-	     background-color: Gainsboro;
-	 }
-
-	 h2 {
-	     font-size: 1em;
-	 }
-
-	 .navi {
-	     margin-right: 1em;
-	 }
-
-	 div.border {
-	     border: 1px solid black;
-	 }
-
-	 .ime-active {
-	     ime-mode: active;
-	 }
-
-	 #boundAddr {
-	     width: 20em;
-	 }
-
-	 #kyoku {
-	     display: block;
-	     float: left;
-	     margin-right: 1em;
-	 }
-
-	 #shokuba {
-	     display: block;
-	     font-family: monospace;
-	 }
-
-	 /* 交通用具 */
-	 #directionsPanel {
-	     width: 200px;
-	     margin-right: 1em;
-	 }
-
-	 #yougu_map {
-	     width: 950px;
-	     height: 660px;
-	 }
-	 
-	 /* Directions Panel */
-	 .adp-summary {
-	     border-style: dashed;
-             border-width: 3px;
-             /* border-color:  */
-             text-align: right;
-             font-weight: bold;
-         }
-
-	 td.adp-substep {
-	     font-size: 7pt;
-	 }
-
-	 td.adp-text {
-	     font-size: 8pt;
-	 }
-
-	 .adp-legal {
-	     font-size: 8pt;
-	 }
-
-	 /* ＪＲ線・地下鉄 */
-	 #left_station_map {
-	     margin: 0.5em;
-	     width: 700px;
-	     height: 600px;
-	 }
-
-	 #right_station_map {
-	     margin: 0.5em;
-	     width: 700px;
-	     height: 600px;
-	 }
-
-	 /* ＪＲ線・地下鉄のフキダシ */
-	 .gm-style > div > div > div > div > div > div {
-             color: purple;
-	     opacity: 0.7;
-	 }
-
-	 #busstopname {
-	     margin-bottom: 0.4em;
-	 }
-
-	 #busStops {
-	     width: 20em;
-	 }
-
-	 #busRoutes {
-	     width: 25em;
-	 }
-
-	 #btnLock {
-	     margin-top: 1em;
-	     margin-bottom: 0.4em;
-	 }
-
-	 #lock {
-	     margin-bottom: 0.4em;
-	 }
-
-	 #bus_map{
-	     width: 1000px;
-	     height: 660px;
-	     margin: 0.5em;
-	 }
-	</style>
     </head>
 
     <body>
-	<h1 id="departure">出発地点 (<u>D</u>eparture)</h1>
+	<h1 id="departure">出発地点 <span class="shortcut">departure</span></h1>
 	<h2>住所</h2>
 	<button id="btnPaste" onClick="cbPaste();" tabindex="-1">
-	    クリップボードから貼り付け (<u>V</u>)</button>
+	    クリップボードから貼り付け <span class="shortcut">v</span></button>
 	<input type="text" id="addr" size="50" placeholder="漢字住所" class="ime-active">
 
 	<h2>Geocode 変換</h2>
-	<div style="display: flex; flex-direction: row;">
-	    <div>
-		<button id="btnGeo" onClick="getGeocode();">実行 (<u>A</u>)</button>
-	    </div>
-	    <ul>
-		<li>formatted_address = <span id="faddr"></span></li>
-		<li>lat = <span id="stLat"></span></li>
-		<li>lng = <span id="stLng"></span></li>
-	    </ul>
-	</div>
+	<button id="btnGeo" onClick="getGeocode();">実行 <span class="shortcut">a</span></button>
+	<ul>
+	    <li>formatted_address = <span id="faddr"></span></li>
+	    <li>lat = <span id="stLat"></span></li>
+	    <li>lng = <span id="stLng"></span></li>
+	</ul>
 
 	<h2>マップに表示する条丁目境界線</h2>
 	<select id="boundCity" onChange="changeCity(this.value);"></select>
@@ -169,8 +53,7 @@
 		<input type="text" id="kword" size="40"
 		       placeholder="名称、住所、電話番号（下４桁で可）"
 		       onFocus="this.select();"
-		       onKeyPress="doSearchShokuba(event.keyCode);"
-		       style="margin-right: 1em;">
+		       onKeyPress="doSearchShokuba(event.keyCode);">
 		<button id="btnShokuba" onClick="searchShokuba();">検索</button>
 	    </div>
 
@@ -181,13 +64,19 @@
 	    </div>
 	</div>
 
-	<select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
-	<div>
-	    <select id="shokuba" size="29"></select>
-	    <button onClick="move();">目的地の位置情報を出発地へセット</button>
+	<div style="display: flex; flex-direction: row;">
+	    <div style="margin-top: 2em;">
+		<select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
+	    </div>
+	    <div>
+		<div style="text-align: right; margin-bottom: 0.4em;">
+		    <button onClick="move();">目的地の位置情報を出発地へセット</button>
+		</div>
+		<div id="hot"></div>
+	    </div>
 	</div>
 
-	<h1 id="yougu">交通用具 (<u>R</u>oute)</h1>
+	<h1 id="yougu">交通用具 <span class="shortcut">route</span></h1>
 	<div style="display: flex; flex-direction: row; justify-content: space-between;">
 	    <div style="display: flex; flex-direction: row;">
 		<div style="margin-right: 1em;">
@@ -214,7 +103,7 @@
 	    <div id="yougu_map" class="border"></div>
 	</div>
 
-	<h1 id="jrsubway">ＪＲ線・地下鉄 (<u>S</u>ubway)</h1>
+	<h1 id="jrsubway">ＪＲ線・地下鉄 <span class="shortcut">subway</span></h1>
 	<div style="display: flex; flex-direction: row;
 		    justify-content: space-between; margin-bottom: 1em;">
 	    <div>
@@ -234,8 +123,8 @@
 	    <div id="right_station_map" class="border"></div>
 	</div>
 
-	<h1 id="bus" style="clear: both;">バス (<u>B</u>us)</h1>
-	<div style="text-align: right;">
+	<h1 id="bus">バス <span class="shortcut">bus</span></h1>
+	<div class="navibox">
 	    <span class="navi"><a href="#departure">TOP</a></span>
 	    <span class="navi"><a href="#yougu">交通用具へ</a></span>
 	    <span class="navi"><a href="#jrsubway">ＪＲ線・地下鉄へ</a></span>
@@ -284,7 +173,7 @@
 	    <div id="bus_map" class="border"></div>
 	</div>
 
-	<div style="text-align: right;">
+	<div class="navibox">
 	    <span class="navi"><a href="#departure" id="link_departure">TOP</a></span>
 	    <span class="navi"><a href="#yougu" id="link_yougu">交通用具へ</a></span>
 	    <span class="navi"><a href="#jrsubway" id="link_jrsubway">ＪＲ線・地下鉄へ</a></span>
