@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 var geocoder;
+var adpSummaryBorderColor;
 
 // subroutines
 
@@ -58,12 +59,18 @@ function makeMap( canvas, lat, lng, option ) {
     return new google.maps.Map( document.getElementById( canvas ), option );
 }
 
-function makeMarker( lat, lng, image, map ) {
+function makeMarker( map, lat, lng, image ) {
     var marker = new google.maps.Marker(
 	{ position: new google.maps.LatLng( lat, lng ),
 	  icon: new google.maps.MarkerImage( image ),
 	  map: map });
     return marker;
+}
+
+function attachMessage( marker, msg ) {
+    google.maps.event.addListener( marker, 'click', function( event ) {
+	new google.maps.InfoWindow( { content: msg } ).open( marker.getMap(), marker );
+    });
 }
 
 function makeCircle( map, lat, lng ) {
@@ -257,6 +264,29 @@ function move () {
     document.getElementById( "stLng" ).innerHTML = wp[4];
 }
 
+// dom の更新を監視する
+//   https://msdn.microsoft.com/ja-jp/library/dn265034(v=vs.85).aspx
+function mutationObjectCallback( mutationRecordsList ) {
+    var dom = document.getElementsByClassName( "adp-summary" )[0];
+    if ( dom ) {
+	dom.style.borderColor = adpSummaryBorderColor;	
+	var km = [].filter.call( document.getElementsByTagName( 'span' ), function( n ) {
+	    return ( n.textContent.match( / km/ ) );
+	});
+	document.getElementById( "distance" ).textContent =
+	    ( document.getElementsByName( "walk" )[0].checked ? '徒歩' : '自動車' ) +
+	    ": " + km[0].textContent;
+    }
+}
+
+var observerObject = new MutationObserver( mutationObjectCallback );
+observerObject.observe( document.getElementById( "directionsPanel" ), // target DOM
+			{ // attributes: true,
+			  // attributeFilter: ["id", "dir"],
+			  // attributeOldValue: true,
+			    childList: true
+			});
+
 function measure_distance () {
     var latlng = checkInData();
     if ( !latlng ) {
@@ -275,14 +305,16 @@ function measure_distance () {
     // 出発地点を半径１ｋｍの円で囲む
     makeCircle( map, stLat, stLng );
 
-    var col = document.getElementsByName( "walk" )[0].checked ?
-	'#FF66FF' :
-	'#00FFFF';
+    adpSummaryBorderColor = document.getElementsByName( "walk" )[0].checked ?
+	'#FF66FF' :		// この関数 measure_distance() が終了したら
+	'#00FFFF';		// mutationObjectCallback が発火する
+
+    // ルート描画
     var directionsRenderer = new google.maps.DirectionsRenderer(
 	{ draggable: true,
 	  polylineOptions: { strokeOpacity: 0.5,
 			     strokeWeight: 5,
-			     strokeColor: col }});
+			     strokeColor: adpSummaryBorderColor }});
     directionsRenderer.setMap( map );
 
     var tMode = document.getElementsByName( "walk" )[0].checked ?
@@ -295,19 +327,18 @@ function measure_distance () {
 		    travelMode: tMode
 		  };
     var directionsService = new google.maps.DirectionsService();
-    directionsService.route( request, function( result, status ) {
-	if ( status == google.maps.DirectionsStatus.OK ) {
-	    directionsRenderer.setDirections( result );
-	} else {
-	    alert( "Google Directions Service Faild：" + status );
-	}
-    });
+    directionsService.route( request,
+			     function( result, status ) {
+				 if ( status == google.maps.DirectionsStatus.OK ) {
+				     directionsRenderer.setDirections( result );
+				 } else {
+				     alert( "Google Directions Service Faild：" + status );
+				 }
+			     });
     directionsRenderer.setPanel(
 	removeAllChilds( document.getElementById( "directionsPanel" ) ) );
-	
-    drawBoundArea( map );
 
-   // document.getElementsByClassName( "adp-summary" ).style.borderColor = col;
+    drawBoundArea( map );
 }
 
 // ＪＲ線・地下鉄
@@ -331,51 +362,37 @@ function getNearStations ( lat, lng ) {
     return result.slice( 0, 5 ); // 上位５つ
 }
 
-function attachMessage( marker, msg ) {
-    google.maps.event.addListener( marker, 'click', function( event ) {
-	new google.maps.InfoWindow( { content: msg } ).open( marker.getMap(), marker );
-    });
-}
-
 function dispNearStation () {
-    var stLat, stLng, edLat, edLng;
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
     }
-    stLat = latlng[0];
-    stLng = latlng[1];
-    edLat = latlng[2];
-    edLng = latlng[3];
-    var map = dispNearStationSub( "left_station_map", stLat, stLng );
-    drawBoundArea( map );
-    drawControl( map, document.getElementById( "faddr" ).innerHTML, false, "black" );
+    var stLat = latlng[0],
+	stLng = latlng[1];
 
-    var map = dispNearStationSub( "right_station_map", edLat, edLng );
-    drawControl( map, latlng[4][0] + " " + latlng[4][1] + " " + latlng[4][2],
-		 false, "black" );
+    document.getElementById( "jrdep" ).textContent = document.getElementById( "faddr" ).textContent;
+    document.getElementById( "jrarr" ).textContent = latlng[4][0] + "　" + latlng[4][1];
+
+    var map = makeMap( "jrsubway_map", stLat, stLng, { zoom: 14 } );
+    dispNearStationSub ( map, stLat,     stLng,     "green" );
+    dispNearStationSub ( map, latlng[2], latlng[3], "red" );
+    drawBoundArea( map );
 }
 
-function dispNearStationSub ( mapDomName, lat, lng ) {
-    var map = makeMap( mapDomName, lat, lng, { zoom: 14 } );
-    makeMarker( lat, lng,
-		"https://maps.google.co.jp/mapfiles/ms/icons/" +
-		{ left_station_map: "green-dot.png",
-		  right_station_map: "red-dot.png" }[ mapDomName ],
-		map );
+function dispNearStationSub ( map, lat, lng, color ) {
+    makeMarker( map, lat, lng,
+		"https://maps.google.co.jp/mapfiles/ms/icons/" + color + "-dot.png" );
     makeCircle( map, lat, lng );
-
+    var from = new google.maps.LatLng( lat, lng );
     getNearStations( lat, lng ).forEach(
 	function( e, idx, ary ) {
-    	    var dist = google.maps.geometry.spherical.computeDistanceBetween(
-		new google.maps.LatLng( lat, lng ),
+	    var marker = makeMarker( map, e["lat"], e["lng"], "http://labs.google.com/ridefinder/images/mm_20_" + color + ".png" );
+    	    var dist = google.maps.geometry.spherical.computeDistanceBetween( from,
     		new google.maps.LatLng( e["lat"], e["lng"] ) );
-	    var marker = makeMarker( e["lat"], e["lng"], "http://labs.google.com/ridefinder/images/mm_20_orange.png", map );
     	    var str = "(" + ( idx + 1 ) + ") " + e["name"] + ": " + Math.floor( dist ) + "m";
     	    attachMessage( marker, str );
     	    google.maps.event.trigger( marker, "click" );
 	});
-    return map;
 }
 
 function getNearBusStop ( lat, lng ) {
@@ -460,7 +477,7 @@ function drawBusStops ( map, busRouteKey, image, advance ) {
 
     aryBusStop.forEach( function( e ) {
 	var s = objbusstops[ e[0] ].split( "," );
-    	var marker = makeMarker( s[0] , s[1], image, map );
+    	var marker = makeMarker( map, s[0] , s[1], image );
     	attachMessage( marker, s[2] );
 	if ( e[0] == advance ) {
 	    google.maps.event.trigger( marker, "click" );
@@ -483,10 +500,9 @@ function dispBusRoute ( busRouteKey ) {
     transitLayer.setMap( map );
 
     var url = "https://maps.google.co.jp/mapfiles/ms/icons/";
-    makeMarker( lat,       lng,       url + "green-dot.png", map );
-    makeMarker( latlng[2], latlng[3], url + "red-dot.png",   map );
-
+    makeMarker( map, lat,       lng,       url + "green-dot.png" );
     makeCircle( map, lat, lng );
+    makeMarker( map, latlng[2], latlng[3], url + "red-dot.png" );
 
     // バス停
     var url = "http://labs.google.com/ridefinder/images/";

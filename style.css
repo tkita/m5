@@ -65,10 +65,15 @@ option:nth-child(odd) {
 
 #yougu_map {
     width: 950px;
-    height: 660px;
+    height: 600px;
+    margin-bottom: 0.4em;
 }
 	 
 /* Directions Panel */
+.warnbox-content {
+    font-size: 7pt;
+}
+
 .adp-summary {
     border-style: dashed;
     border-width: 3px;
@@ -90,15 +95,9 @@ td.adp-text {
 }
 
 /* ＪＲ線・地下鉄 */
-#left_station_map {
+#jrsubway_map {
     margin: 0.5em;
-    width: 700px;
-    height: 600px;
-}
-
-#right_station_map {
-    margin: 0.5em;
-    width: 700px;
+    width: 1000px;
     height: 600px;
 }
 
@@ -131,7 +130,7 @@ td.adp-text {
 
 #bus_map {
     width: 1000px;
-    height: 660px;
+    height: 600px;
     margin: 0.5em;
 }
 
@@ -140,5 +139,5 @@ td.adp-text {
 }
 
 .handsontable .currentRow {
-    background: #f5f5f5;
+    background: MistyRose;
 }
