@@ -135,7 +135,7 @@ td.adp-text {
 
 /* ＪＲ線・地下鉄 */
 #jrsubway_map {
-    width: 1000px;
+    width: 400px;
     height: 600px;
 }
 
@@ -167,9 +167,8 @@ td.adp-text {
 }
 
 #bus_map {
-    width: 1000px;
+    width: 400px;
     height: 600px;
-    margin: 0.5em;
 }
 
 #hot {
@@ -188,6 +187,16 @@ td.adp-text {
     }
 
     #yougu_map {
+	width: 1000px;
+	height: 600px;
+    }
+
+    #jrsubway_map {
+	width: 1000px;
+	height: 600px;
+    }
+
+    #bus_map {
 	width: 1000px;
 	height: 600px;
     }
