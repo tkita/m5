@@ -542,10 +542,11 @@ function setupShokuba () {
 
 function setupBoundCity () {
     var dom = document.getElementById( "boundCity" );
-    [ "---",          "札幌市中央区", "札幌市北区",   "札幌市東区", "札幌市白石区",
-      "札幌市厚別区", "札幌市豊平区", "札幌市清田区", "札幌市南区", "札幌市西区",
-      "札幌市手稲区", "小樽市",       "岩見沢市",     "江別市",     "千歳市",
-      "恵庭市",       "北広島市",     "石狩市" ].forEach( function( e ) {
+    objBound.map( function( e ) {
+    	return e[1];
+    }).filter( function ( x, i, self ) {
+        return self.indexOf( x ) === i;
+    }).forEach( function( e ) {
 	addOption( dom, e, e );
     });
 }
