@@ -1,15 +1,50 @@
 @charset "UTF-8";
+
+/*
+ iPod Touch 6th = 1136 x 640, 326 ppi
+ */
+
+* {
+    margin: 0;
+    padding: 0
+}
+
+a {
+    text-decoration: none;
+}
+
 h1 {
-    font-size: 1em;
     background-color: Gainsboro;
+    font-size: 24px;
+    margin-bottom: 12px;
+    text-align: center;
 }
 
 h2 {
     font-size: 1em;
+    color: blue;
+}
+
+ul {
+    list-style : none;
+}
+
+.contents {
+    width: 90%;
+    margin-left: 1em;
+    margin-bottom: 1em;
+}
+
+.subcontents {
+    margin-bottom: 1em;
 }
 
 .navi {
     margin-right: 1em;
+}
+
+.navi a:hover {
+    background-color: Gainsboro;
 }
 
 div.border {
@@ -17,6 +52,7 @@ div.border {
 }
 
 div.navibox {
+    margin-bottom: 1em;
     text-align: right;
 }
 
@@ -66,7 +102,6 @@ option:nth-child(odd) {
 #yougu_map {
     width: 950px;
     height: 600px;
-    margin-bottom: 0.4em;
 }
 	 
 /* Directions Panel */
@@ -96,7 +131,6 @@ td.adp-text {
 
 /* ＪＲ線・地下鉄 */
 #jrsubway_map {
-    margin: 0.5em;
     width: 1000px;
     height: 600px;
 }

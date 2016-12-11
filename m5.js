@@ -73,6 +73,10 @@ function attachMessage( marker, msg ) {
     });
 }
 
+function separate( num ) {
+    return String( num ).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,' );
+}
+
 function makeCircle( map, lat, lng ) {
     var circleOptions = { strokeColor: "green", // "#c71585",
 			  strokeOpacity: 0.3,
@@ -389,7 +393,9 @@ function dispNearStationSub ( map, lat, lng, color ) {
 	    var marker = makeMarker( map, e["lat"], e["lng"], "http://labs.google.com/ridefinder/images/mm_20_" + color + ".png" );
     	    var dist = google.maps.geometry.spherical.computeDistanceBetween( from,
     		new google.maps.LatLng( e["lat"], e["lng"] ) );
-    	    var str = "(" + ( idx + 1 ) + ") " + e["name"] + ": " + Math.floor( dist ) + "m";
+    	    var str = "(" + ( idx + 1 ) + ") " +
+		e["name"] + ": " +
+		separate( Math.floor( dist ) ) + "m";
     	    attachMessage( marker, str );
     	    google.maps.event.trigger( marker, "click" );
 	});
