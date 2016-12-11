@@ -77,6 +77,10 @@ div.navibox {
     text-transform: capitalize;
 }
 
+#btnPaste {
+    display: none;
+}
+
 #boundAddr {
     width: 20em;
 }
@@ -100,7 +104,7 @@ option:nth-child(odd) {
 }
 
 #yougu_map {
-    width: 950px;
+    width: 400px;
     height: 600px;
 }
 	 
@@ -174,4 +178,18 @@ td.adp-text {
 
 .handsontable .currentRow {
     background: MistyRose;
+}
+
+
+/* 1024 ピクセル以上の場合 */
+@media screen and ( min-width: 1024px ) {
+    #btnPaste {
+	display: inline;
+    }
+
+    #yougu_map {
+	width: 1000px;
+	height: 600px;
+    }
+
 }
