@@ -212,7 +212,9 @@ var hot = new Handsontable( document.getElementById( 'hot' ) ,
 			      disableVisualSelection: 'area',
 			      outsideClickDeselects: false,
 			      readOnly: true,
-			      rowHeaders: true }
+			      rowHeaders: true,
+			      stretchH: 'all',
+			    }
 			  );
 hot.selectCell( 0, 0 );
 
@@ -220,9 +222,20 @@ function changeKyoku ( kyoku ) {
     var data = objWorkplace[ kyoku ].map( function( e ) {
 	return e.split(",");
     });
-    hot.updateSettings( { data: data } );
+    hot.updateSettings( { data: data,
+			  // width: 200,
+			  // height: 200
+			} );
     hot.selectCell( 0, 0 );
     document.getElementById( "kword" ).value = "";
+
+    // $( document ).ready ( function() {
+    // 	$( window ).resize( function() {
+    //         hot.updateSettings( {
+    // 		width: $( 'hot' ).width()
+    //         });
+    // 	});
+    // });
 }
 
 function doSearchShokuba ( keyCode ) {
@@ -579,10 +592,19 @@ function init () {
     geocoder = new google.maps.Geocoder();
 
     document.onkeydown = function() {
-	if ( event.ctrlKey && event.keyCode == 68 ) { // CTRL-d
+	if ( event.ctrlKey && event.keyCode == 66 ) { // CTRL-b
+	    event.keyCode = null;
+	    document.getElementById( "link_bus" ).click();
+	    document.getElementById( "btnBus" ).focus();
+	    return false;
+	} else if ( event.ctrlKey && event.keyCode == 68 ) { // CTRL-d
 	    event.keyCode = null;
 	    document.getElementById( "link_departure" ).click();
 	    document.getElementById( "btnPaste" ).focus();
+	    return false;
+	} else if ( event.ctrlKey && event.keyCode == 71 ) { // CTRL-g
+	    event.keyCode = null;
+	    document.getElementById( "btnGeo" ).click();
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 82 ) { // CTRL-r
 	    event.keyCode = null;
@@ -594,10 +616,9 @@ function init () {
 	    document.getElementById( "link_jrsubway" ).click();
 	    document.getElementById( "btnJrSubway" ).focus();
 	    return false;
-	} else if ( event.ctrlKey && event.keyCode == 66 ) { // CTRL-b
+	} else if ( event.ctrlKey && event.keyCode == 84 ) { // CTRL-t
 	    event.keyCode = null;
-	    document.getElementById( "link_bus" ).click();
-	    document.getElementById( "btnBus" ).focus();
+	    document.getElementById( "link_top" ).click();
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 86 ) { // CTRL-v
 	    event.keyCode = null;
@@ -605,10 +626,6 @@ function init () {
 	    document.getElementById( "addr" ).value = "";
 	    cbPaste();
 	    document.getElementById( "btnGeo" ).focus();
-	    return false;
-	} else if ( event.ctrlKey && event.keyCode == 65 ) { // CTRL-a
-	    event.keyCode = null;
-	    document.getElementById( "btnGeo" ).click();
 	    return false;
 	}
     }

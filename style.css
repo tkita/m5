@@ -30,7 +30,6 @@ ul {
 }
 
 .contents {
-    width: 90%;
     margin-left: 1em;
     margin-bottom: 1em;
 }
@@ -77,9 +76,9 @@ div.navibox {
     text-transform: capitalize;
 }
 
-#btnPaste {
-    display: none;
-}
+/* #btnPaste {        */
+/*     display: none; */
+/* }                  */
 
 #boundAddr {
     width: 20em;
@@ -99,12 +98,11 @@ option:nth-child(odd) {
 
 /* 交通用具 */
 #directionsPanel {
-    width: 200px;
+    width: 20vw;
 }
 
 #yougu_map {
-    width: 400px;
-    height: 600px;
+    height: 80vh;
 }
 	 
 /* Directions Panel */
@@ -115,7 +113,6 @@ option:nth-child(odd) {
 .adp-summary {
     border-style: dashed;
     border-width: 3px;
-    /* border-color:  */
     text-align: right;
     font-weight: bold;
 }
@@ -134,8 +131,8 @@ td.adp-text {
 
 /* ＪＲ線・地下鉄 */
 #jrsubway_map {
-    width: 400px;
-    height: 600px;
+    /* width: 95%; */
+    height: 80vh;
 }
 
 /* ＪＲ線・地下鉄のフキダシ */
@@ -149,7 +146,7 @@ td.adp-text {
 }
 
 #busStops {
-    width: 20em;
+    width: 100%;
 }
 
 #busRoutes {
@@ -166,12 +163,15 @@ td.adp-text {
 }
 
 #bus_map {
-    width: 400px;
-    height: 600px;
+    /* width: 95%; */
+    height: 60vh;
 }
 
 #hot {
     font-size: 13px;
+    height: 50vh;
+    overflow: hidden;
+    width: 100%;
 }
 
 .handsontable .currentRow {
@@ -179,25 +179,34 @@ td.adp-text {
 }
 
 
-/* 1024 ピクセル以上の場合 */
-@media screen and ( min-width: 1024px ) {
-    #btnPaste {
-	display: inline;
-    }
+/* 640 ピクセル以上の場合 */
+@media screen and ( min-width: 640px ) {
+
+    /* #btnPaste {       */
+    /* 	display: inline; */
+    /* }                 */
 
     #yougu_map {
-	width: 1000px;
-	height: 600px;
+	/* width: 1000px; */
+	height: 80vh;
     }
 
     #jrsubway_map {
-	width: 1000px;
-	height: 600px;
+	/* width: 95%; */
+	/* height: 600px; */
     }
 
     #bus_map {
-	width: 1000px;
-	height: 600px;
+	/* width: 95%; */
+	/* height: 600px; */
     }
 
+    #groupkyoku {
+	display: flex;
+	flex-direction: row;
+    }
+
+    #groupbusstop {
+	float: left;
+    }
 }
