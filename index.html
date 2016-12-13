@@ -38,26 +38,24 @@
 	</div>
 
 	<div class="contents">
-	    <div style="display: flex; flex-direction: row;
-			justify-content: space-between; margin-bottom: 1em;">
-		<div>
-		    <input type="text" id="kword" size="40"
-			   placeholder="名称、住所、電話番号（下４桁で可）"
-			   onFocus="this.select();"
-			   onKeyPress="doSearchShokuba(event.keyCode);">
-		    <button id="btnShokuba" onClick="searchShokuba();">検索</button>
-		</div>
-		<div>
-		    <button onClick="move();">目的地の位置情報を出発地へセット</button>
-		</div>
-	    </div> <!-- end flex -->
-
-	    <div id="groupkyoku" style="display: flex; flex-direction: row;">
-		<div>
-		    <select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
-		</div>
-		<div id="hot" style="flex-grow: 1;"></div>
+	    <div>
+		<input type="text" id="kword"
+		       placeholder="名称、住所、電話番号（下４桁で可）"
+		       onFocus="this.select();"
+		       onKeyPress="doSearchShokuba(event.keyCode);">
 	    </div>
+	    <div style="text-align: right;">
+		<button id="btnShokuba" onClick="searchShokuba();">検索</button>
+	    </div>
+	    <div>
+		<select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
+	    </div>
+
+	    <div style="text-align: right;">
+		<button onClick="move();">目的地の位置情報を出発地へセット</button>
+	    </div>
+	    <div id="hot" style="flex-grow: 1;"></div>
+
 	</div> <!-- end contents -->
 
 	<h1 id="departure">出発地点 <span class="shortcut">departure</span></h1>
@@ -74,7 +72,7 @@
 	    <div class="subcontents">
 	    <button id="btnPaste" onClick="cbPaste();" tabindex="-1">
 		クリップボードから貼り付け <span class="shortcut">v</span></button>
-	    <input type="text" id="addr" size="50" placeholder="漢字住所" class="ime-active">
+	    <input type="text" id="addr" placeholder="漢字住所" class="ime-active">
 	    </div>
 
 	    <h2>Geocode 変換</h2>
