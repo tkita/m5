@@ -214,6 +214,7 @@ var hot = new Handsontable( document.getElementById( 'hot' ) ,
 			      readOnly: true,
 			      rowHeaders: true,
 			      stretchH: 'all',
+			      minSpareRows: 10
 			    }
 			  );
 hot.selectCell( 0, 0 );
@@ -223,19 +224,9 @@ function changeKyoku ( kyoku ) {
 	return e.split(",");
     });
     hot.updateSettings( { data: data,
-			  // width: 200,
-			  // height: 200
 			} );
     hot.selectCell( 0, 0 );
     document.getElementById( "kword" ).value = "";
-
-    // $( document ).ready ( function() {
-    // 	$( window ).resize( function() {
-    //         hot.updateSettings( {
-    // 		width: $( 'hot' ).width()
-    //         });
-    // 	});
-    // });
 }
 
 function doSearchShokuba ( keyCode ) {
@@ -557,6 +548,7 @@ function setupShokuba () {
     Object.keys( objWorkplace ).forEach( function( e ) {
 	addOption( dom, e, e );
     });
+    dom.selectedIndex = 0;
 }
 
 function setupBoundCity () {
@@ -568,6 +560,7 @@ function setupBoundCity () {
     }).forEach( function( e ) {
 	addOption( dom, e, e );
     });
+    // dom.selectedIndex = 1;
 }
 
 function changeCity ( city ) {
@@ -601,6 +594,10 @@ function init () {
 	    event.keyCode = null;
 	    document.getElementById( "link_departure" ).click();
 	    document.getElementById( "btnPaste" ).focus();
+	    return false;
+	} else if ( event.ctrlKey && event.keyCode == 70 ) { // CTRL-f
+	    event.keyCode = null;
+	    document.getElementById( "kword" ).focus();
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 71 ) { // CTRL-g
 	    event.keyCode = null;

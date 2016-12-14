@@ -6,12 +6,12 @@
 	<meta name="viewport"
 	      content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
 	<title>m5</title>
-	<link rel="stylesheet" href="./style.css">
+	<link rel="stylesheet" href="./resources/style.css">
 
-	<script src="./handsontable.full.min.js"></script>
-	<link rel="stylesheet" href="./handsontable.full.min.css">
+	<script src="./lib/handsontable.full.min.js"></script>
+	<link rel="stylesheet" href="./lib/handsontable.full.min.css">
+	<script type="text/jscript" src="./lib/jquery-3.1.1.min.js"></script>
 
-	<script type="text/jscript" src="./jquery-3.1.1.min.js"></script>
 	<script>
 	 $(function() {
 	     // #で始まるアンカーをクリックした場合に処理
@@ -30,43 +30,29 @@
 
     <body>
 	<h1 id="top">目的地 <span class="shortcut">top</span></h1>
-	<div class="navibox">
-	    <span class="navi"><a href="#departure">出発地点</a></span>
-	    <span class="navi"><a href="#yougu">交通用具</a></span>
-	    <span class="navi"><a href="#jrsubway">ＪＲ線・地下鉄</a></span>
-	    <span class="navi"><a href="#bus">バス</a></span>
-	</div>
-
 	<div class="contents">
-	    <div>
-		<input type="text" id="kword"
-		       placeholder="名称、住所、電話番号（下４桁で可）"
-		       onFocus="this.select();"
-		       onKeyPress="doSearchShokuba(event.keyCode);">
-	    </div>
-	    <div style="text-align: right;">
-		<button id="btnShokuba" onClick="searchShokuba();">検索</button>
-	    </div>
-	    <div>
-		<select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
-	    </div>
+	    <div id="groupkyoku">
+		<div style="margin-right: 0.2em;">
+		    <select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
+		</div>
+		<div id="hot"></div>
+	    </div> <!-- end groupkyoku -->
 
-	    <div style="text-align: right;">
-		<button onClick="move();">目的地の位置情報を出発地へセット</button>
+	    <div style="display: flex; flex-direction: row; justify-content: flex-end;">
+		<div style="margin-right: 2em;">
+		    <input type="text" id="kword"
+			   placeholder="名称、住所、電話番号"
+			   onFocus="this.select();"
+			   onKeyPress="doSearchShokuba(event.keyCode);">
+		    <button id="btnShokuba" onClick="searchShokuba();">検索</button>
+		</div>
+		<div>
+		    <button onClick="move();">目的地の位置情報を出発地へセット</button>
+		</div>
 	    </div>
-	    <div id="hot" style="flex-grow: 1;"></div>
-
 	</div> <!-- end contents -->
 
 	<h1 id="departure">出発地点 <span class="shortcut">departure</span></h1>
-	<div class="navibox">
-	    <span class="navi"><a href="#top">TOP</a></span>
-	    <span class="navi"><a href="#departure">出発地点</a></span>
-	    <span class="navi"><a href="#yougu">交通用具</a></span>
-	    <span class="navi"><a href="#jrsubway">ＪＲ線・地下鉄</a></span>
-	    <span class="navi"><a href="#bus">バス</a></span>
-	</div>
-
 	<div class="contents">
 	    <h2>住所</h2>
 	    <div class="subcontents">
@@ -93,17 +79,9 @@
 	</div>
 
 	<h1 id="yougu">交通用具 <span class="shortcut">route</span></h1>
-	<div class="navibox">
-	    <span class="navi"><a href="#top">TOP</a></span>
-	    <span class="navi"><a href="#departure">出発地点</a></span>
-	    <span class="navi"><a href="#yougu">交通用具</a></span>
-	    <span class="navi"><a href="#jrsubway">ＪＲ線・地下鉄</a></span>
-	    <span class="navi"><a href="#bus">バス</a></span>
-	</div>
-
 	<div class="contents">
 	    <div style="display: flex; flex-direction: row; margin-bottom: 1em;">
-		<div style="margin-right: 1em;">  <!-- 上 右 下 左 -->
+		<div style="margin-right: 1em;">
 		    <label>
 			<input name="walk" type="radio" checked/> 徒歩
 		    </label><br>
@@ -124,45 +102,33 @@
 	</div>
 
 	<h1 id="jrsubway">ＪＲ線・地下鉄 <span class="shortcut">subway</span></h1>
-	<div class="navibox">
-	    <span class="navi"><a href="#top">TOP</a></span>
-	    <span class="navi"><a href="#departure">出発地点</a></span>
-	    <span class="navi"><a href="#yougu">交通用具</a></span>
-	    <span class="navi"><a href="#jrsubway">ＪＲ線・地下鉄</a></span>
-	    <span class="navi"><a href="#bus">バス</a></span>
-	</div>
-
 	<div class="contents">
 	    <div style="margin-bottom: 1em;">
 		<button id="btnJrSubway" onClick="dispNearStation();">近隣の駅を表示する</button>
 	    </div>
 
 	    <div style="display: flex; flex-direction: column;">
-		<div>
-		    <img src="https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png"
-			 style="height: 1em;">
-		    <span id="jrdep"></span>
-		    <img src="https://maps.google.co.jp/mapfiles/ms/icons/red-dot.png"
-			 style="height: 1em;">
-		    <span id="jrarr"></span>
+		<div style="display: flex; flex-direction: row; justify-content: space-between;">
+		    <div style="margin-right: 1em;">
+			<img src="https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png"
+			     style="height: 1em;">
+			<span id="jrdep"></span>
+		    </div>
+		    <div>
+			<img src="https://maps.google.co.jp/mapfiles/ms/icons/red-dot.png"
+			     style="height: 1em;">
+			<span id="jrarr"></span>
+		    </div>
 		</div>
 		<div id="jrsubway_map" class="border"></div>
 	    </div> <!-- end flex -->
 	</div> <!-- end contents -->
 
 	<h1 id="bus">バス <span class="shortcut">bus</span></h1>
-	<div class="navibox">
-	    <span class="navi"><a href="#top">TOP</a></span>
-	    <span class="navi"><a href="#departure">出発地点</a></span>
-	    <span class="navi"><a href="#yougu">交通用具</a></span>
-	    <span class="navi"><a href="#jrsubway">ＪＲ線・地下鉄</a></span>
-	    <span class="navi"><a href="#bus">バス</a></span>
-	</div>
-
 	<div class="contents">
-	    <div id="groupbusstop" style="margin-bottom: 1em; padding-right: 1em;">
+	    <div id="groupbusstop">
 		<div style="display: flex; flex-direction: row;">
-		    <div class="border" style="padding: 0.5em;">
+		    <div style="padding: 0.5em; background: rgba(143, 201, 248, 1);">
 			<label>
 			    <input name="busAround" type="radio" checked /> 自宅周辺
 			</label><br>
@@ -172,7 +138,7 @@
 			<button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button><br>
 		    </div>
 
-		    <div class="border" style="padding: 0.5em;">
+		    <div style="padding: 0.5em; background: rgba(127, 221, 233, 1);">
 			<input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
 			       onFocus="this.select();"
 			       class="ime-active"><br>
@@ -181,15 +147,14 @@
 		</div> <!-- end flex -->
 
 		<div>
-		    <select id="busStops" size="12" onChange="changeBusStop(this.value);">
-		    </select>
+		    <select id="busStops" size="7" onChange="changeBusStop(this.value);"></select>
 		</div>
 	    </div> <!-- end groupbusstop -->
 
-	    <div id="groupbusroute" style="margin-bottom: 1em;">
+	    <div id="groupbusroute">
 		<div>
 		    選択したバス停を含む路線<img src="http://labs.google.com/ridefinder/images/mm_20_orange.png" style="height: 1em;"><br>
-		    <select id="busRoutes" size="12" onClick="dispBusRoute(this.value);">
+		    <select id="busRoutes" size="7" onClick="dispBusRoute(this.value);">
 		    </select>
 		</div>
 
@@ -205,21 +170,21 @@
 	</div> <!-- end contents -->
 
 	<div class="navibox">
-	    <span class="navi"><a href="#top"       id="link_top">TOP</a></span>
-	    <span class="navi"><a href="#departure" id="link_departure">出発地点</a></span>
-	    <span class="navi"><a href="#yougu"     id="link_yougu">交通用具</a></span>
-	    <span class="navi"><a href="#jrsubway"  id="link_jrsubway">ＪＲ線・地下鉄</a></span>
-	    <span class="navi"><a href="#bus"       id="link_bus">バス</a></span>
+	    <span class="navi"><a href="#top" id="link_top">TOP<span class="shortcut">t</span></a></span>
+	    <span class="navi"><a href="#departure" id="link_departure">出発地点<span class="shortcut">d</span></a></span>
+	    <span class="navi"><a href="#yougu" id="link_yougu">交通用具<span class="shortcut">r</span></a></span>
+	    <span class="navi"><a href="#jrsubway" id="link_jrsubway">ＪＲ線・地下鉄<span class="shortcut">s</span></a></span>
+	    <span class="navi"><a href="#bus" id="link_bus">バス<span class="shortcut">b</span></a></span>
 	</div>
 
-	<script type="text/jscript" src="./objwp.js"></script>
-	<script type="text/jscript" src="./objstations.js"></script>
-	<script type="text/jscript" src="./objbusstops.js"></script>
-	<script type="text/jscript" src="./objbusstoproute.js"></script>
-	<script type="text/jscript" src="./objbusroute.js"></script>
-	<script type="text/jscript" src="./objbound.js"></script>
-	<script type="text/jscript" src="./objboundline.js"></script>
-	<script type="text/jscript" src="./m5.js"></script>
+	<script type="text/jscript" src="./data/objwp.js"></script>
+	<script type="text/jscript" src="./data/objstations.js"></script>
+	<script type="text/jscript" src="./data/objbusstops.js"></script>
+	<script type="text/jscript" src="./data/objbusstoproute.js"></script>
+	<script type="text/jscript" src="./data/objbusroute.js"></script>
+	<script type="text/jscript" src="./data/objbound.js"></script>
+	<script type="text/jscript" src="./data/objboundline.js"></script>
+	<script type="text/jscript" src="./resources/m5.js"></script>
 	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
 
     </body>

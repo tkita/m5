@@ -1,37 +1,50 @@
 @charset "UTF-8";
 
-/*
- iPod Touch 6th = 1136 x 640, 326 ppi
- */
-
 * {
     margin: 0;
-    padding: 0
+    padding: 0;
+}
+
+body {
+    background-color: white;
+
 }
 
 a {
     text-decoration: none;
+    color: white;
 }
 
 h1 {
-    background-color: Gainsboro;
+    background-color: rgba(77, 181, 171, 1);
+    /* border-radius: 6px 6px 0px 0px; */
+    color: white;
     font-size: 24px;
-    margin-bottom: 12px;
     text-align: center;
+    
 }
 
 h2 {
     font-size: 1em;
-    color: blue;
 }
 
 ul {
     list-style : none;
 }
 
+select {
+    border: none;
+}
+
+button {
+    padding: 0.2em;
+}
+
 .contents {
-    margin-left: 1em;
-    margin-bottom: 1em;
+    background-color: rgba(187, 169, 163, 1);
+    box-shadow: 0px 5px 10px -5px rgba( 0, 0, 0, 0.8 );
+    margin-bottom: 0.5em;
+    padding: 0.5em 0.2em 1em 0.2em;
 }
 
 .subcontents {
@@ -39,23 +52,26 @@ ul {
 }
 
 div.navibox {
-    margin-bottom: 1em;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    background: black;
+    border-radius: 6px;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    text-align: center;
+    width: 100%;
 }
 
 .navi {
     font-size: x-small;
-    /* margin-right: 1em; */
+    margin-right: 2em;
 }
 
 .navi a:hover {
-    background-color: Gainsboro;
+    background-color: gray;
 }
 
 div.border {
-    border: 1px solid black;
+    border: 1px solid rgba(140, 110, 99, 1);
 }
 
 .ime-active {
@@ -79,20 +95,31 @@ div.border {
     text-transform: capitalize;
 }
 
-/* #btnPaste {        */
-/*     display: none; */
-/* }                  */
+#kword {
+    font-size: 16px;
+}
+
+#kyoku {
+    font-size: 16px;
+    width: 110px;
+}
+
+#btnPaste {
+    display: none;
+}
 
 #addr {
+    font-size: 16px;
     width: 90%;
+}
+
+#boundCity {
+    font-size: 16px;
 }
 
 #boundAddr {
+    font-size: 16px;
     width: 20em;
-}
-
-#kword {
-    width: 90%;
 }
 
 option:nth-child(odd) {
@@ -101,11 +128,17 @@ option:nth-child(odd) {
 
 /* 交通用具 */
 #directionsPanel {
+    margin-right: 0.2em;
     width: 20vw;
 }
 
 #yougu_map {
+    border-radius: 6px;
     height: 80vh;
+}
+
+#distance {
+    text-align: center;
 }
 	 
 /* Directions Panel */
@@ -114,10 +147,15 @@ option:nth-child(odd) {
 }
 
 .adp-summary {
+    background: rgba(237, 237, 237, 1);
     border-style: dashed;
     border-width: 3px;
     text-align: right;
     font-weight: bold;
+}
+
+.adp-directions {
+    background: rgba(237, 237, 237, 1);
 }
 
 td.adp-substep {
@@ -134,8 +172,16 @@ td.adp-text {
 
 /* ＪＲ線・地下鉄 */
 #jrsubway_map {
-    /* width: 95%; */
+    border-radius: 6px;
     height: 80vh;
+}
+
+#jrdep {
+    font-size: small;
+}
+
+#jrarr {
+    font-size: small;
 }
 
 /* ＪＲ線・地下鉄のフキダシ */
@@ -145,14 +191,17 @@ td.adp-text {
 }
 
 #busstopname {
+    font-size: 16px;
     margin-bottom: 0.4em;
 }
 
 #busStops {
+    font-size: 16px;
     width: 100%;
 }
 
 #busRoutes {
+    font-size: 16px;
     width: 19em;
 }
 
@@ -166,13 +215,15 @@ td.adp-text {
 }
 
 #bus_map {
-    /* width: 95%; */
+    border-radius: 6px;
     height: 60vh;
 }
 
 #hot {
+    flex-grow: 1;
     font-size: 13px;
-    height: 50vh;
+    height: 38vh;
+    margin-bottom: 0.5em;
     overflow: hidden;
     width: 100%;
 }
@@ -181,34 +232,55 @@ td.adp-text {
     background: MistyRose;
 }
 
+#groupbusstop {
+    margin-bottom: 0.5em;
+    padding-right: 1em;
+}
 
 /* 640 ピクセル以上の場合 */
 @media screen and ( min-width: 640px ) {
-
-    div.navibox {
-	justify-content: space-around;
-    }
 
     .navi {
 	font-size: medium;
     }
 
+    #groupkyoku {
+	display: flex;
+	flex-direction: row;
+    }
+
+    #hot {
+	height: 60vh;
+    }
+
+    #btnPaste {
+	display: inline;
+    }
+
     #yougu_map {
-	/* width: 1000px; */
 	height: 80vh;
     }
 
     #jrsubway_map {
-	/* width: 95%; */
-	/* height: 600px; */
+    }
+
+    #jrdep {
+	font-size: medium;
+    }
+
+    #jrarr {
+	font-size: medium;
     }
 
     #bus_map {
-	/* width: 95%; */
-	/* height: 600px; */
     }
 
     #groupbusstop {
+	
 	float: left;
+    }
+
+    #groupbusroute {
+	margin-bottom: 0.5em;
     }
 }
