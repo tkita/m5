@@ -70,29 +70,16 @@ div.navibox {
     background-color: gray;
 }
 
+.shortcut {
+    display: none;
+}
+
 div.border {
     border: 1px solid rgba(140, 110, 99, 1);
 }
 
 .ime-active {
     ime-mode: active;
-}
-
-.shortcut {
-    display: inline-block;
-}
-
-.shortcut::before { 
-    content: "(";
-}
-
-.shortcut::after { 
-    content: ")";
-}
-
-.shortcut:first-letter {
-    text-decoration: underline;
-    text-transform: capitalize;
 }
 
 #kword {
@@ -243,6 +230,23 @@ td.adp-text {
     .navi {
 	font-size: medium;
     }
+
+.shortcut {
+    display: inline-block;
+}
+
+.shortcut::before { 
+    content: "(";
+}
+
+.shortcut::after { 
+    content: ")";
+}
+
+.shortcut:first-letter {
+    text-decoration: underline;
+    text-transform: capitalize;
+}
 
     #groupkyoku {
 	display: flex;
