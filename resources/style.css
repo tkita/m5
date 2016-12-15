@@ -16,12 +16,11 @@ a {
 }
 
 h1 {
-    background-color: rgba(77, 181, 171, 1);
-    /* border-radius: 6px 6px 0px 0px; */
+    background-color: rgba( 77, 181, 171, 1 );
+    border-radius: 6px 6px 0px 0px;
     color: white;
     font-size: 24px;
-    text-align: center;
-    
+    text-align: center;    
 }
 
 h2 {
@@ -48,30 +47,33 @@ button {
 }
 
 .subcontents {
-    margin-bottom: 1em;
+    margin-left: 1em;
 }
 
 div.navibox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     background: black;
     border-radius: 6px;
+    font-size: small;
+
     position: fixed;
-    bottom: 0px;
+    bottom: 0.5em;
     left: 0px;
-    text-align: center;
     width: 100%;
+    z-index: 200;
 }
 
-.navi {
-    font-size: x-small;
-    margin-right: 2em;
+div.navibox a {
+    flex-grow: 1;
+    display: block;
+    text-align: center;
+    color: gray;
 }
 
-.navi a:hover {
-    background-color: gray;
-}
-
-.shortcut {
-    display: none;
+div.navibox a:hover {
+    color: white;
 }
 
 div.border {
@@ -80,6 +82,16 @@ div.border {
 
 .ime-active {
     ime-mode: active;
+}
+
+.shortcut {
+    display: none;
+}
+
+#arrive {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 #kword {
@@ -102,6 +114,7 @@ div.border {
 
 #boundCity {
     font-size: 16px;
+    margin-bottom: 0.2em;
 }
 
 #boundAddr {
@@ -227,26 +240,26 @@ td.adp-text {
 /* 640 ピクセル以上の場合 */
 @media screen and ( min-width: 640px ) {
 
-    .navi {
-	font-size: medium;
+    .shortcut {
+	display: inline-block;
     }
 
-.shortcut {
-    display: inline-block;
-}
+    .shortcut::before { 
+	content: "(";
+    }
 
-.shortcut::before { 
-    content: "(";
-}
+    .shortcut::after { 
+	content: ")";
+    }
 
-.shortcut::after { 
-    content: ")";
-}
+    .shortcut:first-letter {
+	text-decoration: underline;
+	text-transform: capitalize;
+    }
 
-.shortcut:first-letter {
-    text-decoration: underline;
-    text-transform: capitalize;
-}
+    #arrive {
+	flex-direction: row;
+    }
 
     #groupkyoku {
 	display: flex;
@@ -286,5 +299,9 @@ td.adp-text {
 
     #groupbusroute {
 	margin-bottom: 0.5em;
+    }
+
+    div.navibox {
+	font-size: medium;
     }
 }
