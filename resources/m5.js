@@ -474,16 +474,6 @@ function changeBusStop ( id ) {
 }
 
 function drawBusRoute ( map, route, color ) {
-    // objBusRoute[ route.replace( ",", "" ) ].forEach( function( e ) {
-    // 	var path = e.split( " " ).map( function( x ) {
-    // 	    var z = x.split( "," );
-    // 	    return { lng: Number( z[0] ),
-    // 		     lat: Number( z[1] ) };
-    // 	});
-    // 	drawPolyline( map, path, { strokeColor: color,
-    // 				   strokeOpacity: 0.5,
-    // 				   strokeWeight: 3 } );
-    // });
     var url = 'https://tkita.github.io/m5/data/' + route.replace( ",", "" ) + '.kml';
     var kml = new google.maps.KmlLayer( url );
     kml.setMap( map );
