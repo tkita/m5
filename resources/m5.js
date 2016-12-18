@@ -38,6 +38,11 @@ function getOptionValue ( domId ) {
     return sel.options[ sel.selectedIndex ].value;
 }
 
+function getOptionText ( domId ) {
+    var sel = document.getElementById( domId );
+    return sel.options[ sel.selectedIndex ].text;
+}
+
 function removeOptions ( sel ) {
     while ( sel.options.length ) {
 	sel.remove(0);
@@ -521,11 +526,11 @@ function dispBusRoute ( busRouteKey ) {
     drawBusRoute( map, busRouteKey )
 
     var sel = document.getElementById( "busRoutes" );
-    drawControl( map, sel.options[ sel.selectedIndex ].text,
-		 false, "orange" );
+    drawControl( map, getOptionText( "busRoutes" ), false, "orange" );
 
     // 路線を固定
-    busRouteKey = document.getElementById( "lock" ).value;
+    busRouteKey = document.getElementById( "lock" ).value.split( "," );
+    busRouteKey = busRouteKey[1] + "," + busRouteKey[2];
     if ( busRouteKey != "" ) {
 	drawBusRoute ( map, busRouteKey )
 	drawBusStops( map, busRouteKey, url + "mm_20_green.png", false );
@@ -535,7 +540,7 @@ function dispBusRoute ( busRouteKey ) {
 }
 
 function lock () {
-    document.getElementById( "lock" ).value = getOptionValue( "busRoutes" );
+    document.getElementById( "lock" ).value = getOptionText( "busRoutes" ) + "," + getOptionValue( "busRoutes" );
 }
 
 function unlock () {
