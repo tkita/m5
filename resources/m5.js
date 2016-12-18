@@ -473,8 +473,8 @@ function changeBusStop ( id ) {
     });
 }
 
-function drawBusRoute ( map, route, color ) {
-    var url = 'https://tkita.github.io/m5/data/' + route.replace( ",", "" ) + '.kml';
+function drawBusRoute ( map, route ) {
+    var url = 'https://tkita.github.io/m5/data-kml/' + route.replace( ",", "" ) + '.kml';
     var kml = new google.maps.KmlLayer( url );
     kml.setMap( map );
 }
@@ -518,7 +518,7 @@ function dispBusRoute ( busRouteKey ) {
 		  getOptionValue( "busStops" ) );
 
     // バス路線
-    drawBusRoute( map, busRouteKey, "#FF0000" )
+    drawBusRoute( map, busRouteKey )
 
     var sel = document.getElementById( "busRoutes" );
     drawControl( map, sel.options[ sel.selectedIndex ].text,
@@ -527,7 +527,7 @@ function dispBusRoute ( busRouteKey ) {
     // 路線を固定
     busRouteKey = document.getElementById( "lock" ).value;
     if ( busRouteKey != "" ) {
-	drawBusRoute ( map, busRouteKey, "#00FF00" )
+	drawBusRoute ( map, busRouteKey )
 	drawBusStops( map, busRouteKey, url + "mm_20_green.png", false );
 	drawControl( map, busRouteKey, google.maps.ControlPosition.BOTTOM_CENTER,
 		     "green" );
