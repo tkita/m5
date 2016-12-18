@@ -3,10 +3,13 @@ var geocoder;
 var adpSummaryBorderColor;
 
 // subroutines
+function setInnerHTML ( domName, text ) {
+    document.getElementById( domName ).innerHTML = text;
+}
 
 function clearGeocodeResult () {
     [ "faddr", "stLat", "stLng" ].forEach( function( elm ) {
-	document.getElementById( elm ).innerHTML = "";
+	setInnerHTML( elm, "" );
     });
 }
 
@@ -131,8 +134,8 @@ function drawControl ( map, str, pos, color ) {
 }
 
 function checkInData () {
-    var stLat = document.getElementById( "stLat" ).innerHTML;
-    var stLng = document.getElementById( "stLng" ).innerHTML;
+    var stLat = document.getElementById( "stLat" ).innerText;
+    var stLng = document.getElementById( "stLng" ).innerText;
     if( stLat == "" ) {
 	alert( "出発地点が未入力です" );
 	return false;
@@ -192,11 +195,10 @@ function getGeocode () {
 	{ address: addr },
 	function( results, status ) {
 	    if ( status == google.maps.GeocoderStatus.OK ) {
-		document.getElementById( "faddr" ).innerHTML =
-		    results[0].formatted_address;
+		setInnerHTML( "faddr", results[0].formatted_address );
 		var l = results[0].geometry.location;
-		document.getElementById( "stLat" ).innerHTML = l.lat();
-		document.getElementById( "stLng" ).innerHTML = l.lng();
+		setInnerHTML( "stLat", l.lat() );
+		setInnerHTML( "stLng", l.lng() );
 	    } else {
 		alert( "Google Geocoder Faild：" + status );
 	    }});
@@ -267,9 +269,9 @@ function searchShokuba () {
 
 function move () {
     var wp = hot.getDataAtRow( hot.getSelected()[0] );
-    document.getElementById( "faddr" ).innerHTML = wp[0] + " " + wp[1];
-    document.getElementById( "stLat" ).innerHTML = wp[3];
-    document.getElementById( "stLng" ).innerHTML = wp[4];
+    setInnerHTML( "faddr", wp[0] + " " + wp[1] );
+    setInnerHTML( "stLat", wp[3] );
+    setInnerHTML( "stLng", wp[4] );
 }
 
 // dom の更新を監視する
@@ -448,26 +450,31 @@ function searchNearBusStop () {
 function searchNameBusStop () {
     var kword = document.getElementById( "busstopname" ).value;
     var result = Object.keys( objbusstops ).filter( function( id ) {
-	return ( objbusstops[ id ].split(",")[2].indexOf( kword ) > -1 )
+	return ( objbusstops[ id ].split( ",") [2].indexOf( kword ) > -1 )
     });
     var sel = removeOptions( document.getElementById( "busStops" ) );
     result.forEach( function( id ) {
-	addOption( sel, id, objbusstops[ id ].split(",")[2] );
+	addOption( sel, id, objbusstops[ id ].split( "," )[2] );
     });
 }
 
 function changeBusStop ( id ) {
     var sel = removeOptions( document.getElementById( "busRoutes" ) );
-    var result = objBusStopRoute.filter( function( e ) {
-    	return ( id == e[0] );
-    });
-    result.forEach( function( e ) {
-	addOption( sel, e[1] + e[2], e[2] + "（" + e[1] + "）" );
+    var aryCompany = Object.keys( objBusStopRoute ); 
+    aryCompany.forEach( function ( c ) {
+	var aryRoute = Object.keys( objBusStopRoute[ c ].route );
+	aryRoute.forEach( function ( r ) {
+	    if ( objBusStopRoute[ c ].route[ r ].data.indexOf( id ) > -1 ) {
+		addOption( sel,
+			   [ c, r ],
+			   objBusStopRoute[ c ].route[ r ].name + "(" + objBusStopRoute[ c ].company + ")" );
+	    }
+	});
     });
 }
 
 function drawBusRoute ( map, route, color ) {
-    objBusRoute[ route ].forEach( function( e ) {
+    objBusRoute[ route.replace( ",", "" ) ].forEach( function( e ) {
 	var path = e.split( " " ).map( function( x ) {
 	    var z = x.split( "," );
 	    return { lng: Number( z[0] ),
@@ -481,15 +488,13 @@ function drawBusRoute ( map, route, color ) {
 
 function drawBusStops ( map, busRouteKey, image, advance ) {
     // バス路線に含まれるバス停を抽出
-    var aryBusStop = objBusStopRoute.filter( function( e ) {
-	return ( e[1] + e[2] == busRouteKey );
-    });
-
+    key = busRouteKey.split( "," );
+    var aryBusStop = objBusStopRoute[ key[0] ][ key[1] ];
     aryBusStop.forEach( function( e ) {
-	var s = objbusstops[ e[0] ].split( "," );
+	var s = objbusstops[ e ].split( "," );
     	var marker = makeMarker( map, s[0] , s[1], image );
     	attachMessage( marker, s[2] );
-	if ( e[0] == advance ) {
+	if ( e == advance ) {
 	    google.maps.event.trigger( marker, "click" );
 	}	
     });
@@ -555,12 +560,11 @@ function setupBoundCity () {
     var dom = document.getElementById( "boundCity" );
     objBound.map( function( e ) {
     	return e[1];
-    }).filter( function ( x, i, self ) {
+    }).filter( function( x, i, self ) {
         return self.indexOf( x ) === i;
     }).forEach( function( e ) {
 	addOption( dom, e, e );
     });
-    // dom.selectedIndex = 1;
 }
 
 function changeCity ( city ) {
