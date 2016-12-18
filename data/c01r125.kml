@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+
+  <!-- 出典  国土数値情報（バスルート）　国土交通省                  -->
+  <!--   http://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N07.html  -->
+  <!-- 国土情報利用約款                                              -->
+  <!--   http://nlftp.mlit.go.jp/ksj/other/yakkan.html               -->
+
+  <Document>
+    <Folder>
+      <name>N07</name>
+
+  <Placemark>
+	<Style><LineStyle><color>4fff00ff</color><width>3</width></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#N07">
+		<SimpleData name="N07_001">1</SimpleData>
+		<SimpleData name="N07_002">JR北海道バス（株）</SimpleData>
+		<SimpleData name="N07_003">星91山口</SimpleData>
+		<SimpleData name="N07_004">1.0</SimpleData>
+		<SimpleData name="N07_005">1.0</SimpleData>
+		<SimpleData name="N07_006">1.0</SimpleData>
+	</SchemaData></ExtendedData>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>141.19918984,43.14466956,0 141.20244806,43.14487222,0 141.20276694,43.14489528,0 141.20287722,43.14490278,0 141.20322361000001,43.14492417,0 141.20498996000001,43.1448875,0 141.20816083,43.14509194,0 141.20844556,43.14510222,0 141.20862222,43.14330694,0 141.20867611,43.14260333,0 141.20869139000001,43.14254694,0 141.20876056,43.14166917,0 141.20877583000001,43.14148917,0 141.20880667,43.14121889,0 141.20880667,43.14117944,0 141.20883722,43.1409375,0 141.20886028000001,43.14059972,0 141.20892167,43.13999222,0 141.20899111,43.13922667,0 141.20905250000001,43.13848361,0 141.20910639,43.13787583,0 141.20921389,43.13684028,0 141.20926750000001,43.13628306,0 141.20927025,43.13616809,0 141.20935222,43.13539944,0 141.20939056,43.13498889,0 141.20940583000001,43.1348875,0 141.20946722,43.13416139,0 141.20952139,43.13363222,0 141.2095675,43.13317639,0 141.2096775,43.13231167,0 141.21013551,43.13236257,0</coordinates></LineString>
+  </Placemark></Folder>
+      <Schema name="N07" id="N07">
+      <SimpleField name="N07_001" type="int">    </SimpleField>
+      <SimpleField name="N07_002" type="string"> </SimpleField>
+      <SimpleField name="N07_003" type="string"> </SimpleField>
+      <SimpleField name="N07_004" type="float">  </SimpleField>
+      <SimpleField name="N07_005" type="float">  </SimpleField>
+      <SimpleField name="N07_006" type="float">  </SimpleField>
+      <SimpleField name="N07_007" type="string"> </SimpleField>
+    </Schema>
+  </Document>
+</kml>

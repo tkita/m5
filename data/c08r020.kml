@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+
+  <!-- 出典  国土数値情報（バスルート）　国土交通省                  -->
+  <!--   http://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N07.html  -->
+  <!-- 国土情報利用約款                                              -->
+  <!--   http://nlftp.mlit.go.jp/ksj/other/yakkan.html               -->
+
+  <Document>
+    <Folder>
+      <name>N07</name>
+
+  <Placemark>
+	<Style><LineStyle><color>4fff00ff</color><width>3</width></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#N07">
+		<SimpleData name="N07_001">1</SimpleData>
+		<SimpleData name="N07_002">北海道中央バス（株）</SimpleData>
+		<SimpleData name="N07_003">188　サッポロビール園・アリオ線</SimpleData>
+		<SimpleData name="N07_004">23.5</SimpleData>
+		<SimpleData name="N07_005">35.0</SimpleData>
+		<SimpleData name="N07_006">35.0</SimpleData>
+	</SchemaData></ExtendedData>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>141.3506218,43.06967534,0 141.3508,43.06972806,0 141.35081417000001,43.06978667,0 141.35085333000001,43.06982972,0 141.35091306000001,43.06987528,0 141.35097306,43.06990639,0 141.3510225,43.06992583,0 141.35108778,43.06994806,0 141.35116194,43.06996639,0 141.35127889,43.06998222,0 141.35119556000001,43.07036028,0 141.35278389000001,43.07057583,0 141.35440111,43.07079389,0 141.35455444,43.070805,0 141.35465389000001,43.07082333,0 141.35486139,43.07086139,0 141.35641028000001,43.07107,0 141.35745775000001,43.07124155,0 141.35796694000001,43.0712725,0 141.35937778,43.07146389,0 141.35952361,43.07148639,0 141.3604411,43.07164411,0 141.36112639000001,43.07170583,0 141.36144083,43.07175111,0 141.36192389000001,43.07181861,0 141.36378056000001,43.07207222,0 141.36384972,43.07208028,0 141.36420917000001,43.0721225,0 141.36446575,43.07218861,0 141.36520583000001,43.07226333,0 141.36642528,43.07242639,0 141.36677194000001,43.07250725,0 141.3667342,43.0723429,0 141.3667844,43.07192305,0 141.367097,43.07194131,0 141.36712496000001,43.07178983,0</coordinates></LineString>
+  </Placemark></Folder>
+      <Schema name="N07" id="N07">
+      <SimpleField name="N07_001" type="int">    </SimpleField>
+      <SimpleField name="N07_002" type="string"> </SimpleField>
+      <SimpleField name="N07_003" type="string"> </SimpleField>
+      <SimpleField name="N07_004" type="float">  </SimpleField>
+      <SimpleField name="N07_005" type="float">  </SimpleField>
+      <SimpleField name="N07_006" type="float">  </SimpleField>
+      <SimpleField name="N07_007" type="string"> </SimpleField>
+    </Schema>
+  </Document>
+</kml>

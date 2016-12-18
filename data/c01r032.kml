@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+
+  <!-- 出典  国土数値情報（バスルート）　国土交通省                  -->
+  <!--   http://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N07.html  -->
+  <!-- 国土情報利用約款                                              -->
+  <!--   http://nlftp.mlit.go.jp/ksj/other/yakkan.html               -->
+
+  <Document>
+    <Folder>
+      <name>N07</name>
+
+  <Placemark>
+	<Style><LineStyle><color>4fff00ff</color><width>3</width></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#N07">
+		<SimpleData name="N07_001">1</SimpleData>
+		<SimpleData name="N07_002">JR北海道バス（株）</SimpleData>
+		<SimpleData name="N07_003">円11西25丁目</SimpleData>
+		<SimpleData name="N07_004">19.0</SimpleData>
+		<SimpleData name="N07_005">16.5</SimpleData>
+		<SimpleData name="N07_006">16.5</SimpleData>
+	</SchemaData></ExtendedData>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>141.31732335000001,43.05592707,0 141.31737444000001,43.05547528,0 141.31745917000001,43.05548889,0 141.31858556,43.05563639,0 141.31884306000001,43.05567,0 141.31893417000001,43.05568194,0 141.31926917000001,43.05572694,0 141.31958028,43.05576861,0 141.31982472000001,43.05580139,0 141.32039944,43.05587833,0 141.32038887,43.05579527,0 141.32063722000001,43.05494944,0 141.32076778000001,43.05437,0 141.32088306,43.05386333,0 141.32099028,43.053385,0 141.32109778,43.05295722,0 141.32122524,43.05249484,0 141.32123583000001,43.05231556,0 141.32135083,43.0518375,0 141.32147361,43.05131389,0 141.32155778000001,43.05095361,0 141.32161917,43.05077361,0 141.32172508,43.0504076,0 141.32182639000001,43.04993528,0 141.32207194,43.04895,0 141.32210278,43.04887139,0 141.3222813,43.04827121,0 141.322325,43.04818472,0 141.32247861,43.04768944,0 141.32265667,43.04713,0 141.32279694,43.04668778,0 141.32286972,43.04656944,0 141.32288111,43.04654972,0 141.3228925,43.04653,0 141.32331444,43.04595583,0 141.32351389,43.04567472,0 141.3235675,43.04561833,0 141.32364693,43.04556269,0 141.32420417,43.04475167,0 141.32438056000001,43.04452083,0 141.32471028000001,43.04405917,0 141.32504778000001,43.043615,0 141.32543111000001,43.04308583,0 141.32596806000001,43.04248361,0 141.32602553000001,43.04244757,0 141.32675028,43.0416225,0 141.32770889,43.04056444,0 141.32825333,43.03996806,0 141.32819221,43.03987128,0 141.32687306,43.03921944,0 141.32659016,43.03949734,0</coordinates></LineString>
+  </Placemark></Folder>
+      <Schema name="N07" id="N07">
+      <SimpleField name="N07_001" type="int">    </SimpleField>
+      <SimpleField name="N07_002" type="string"> </SimpleField>
+      <SimpleField name="N07_003" type="string"> </SimpleField>
+      <SimpleField name="N07_004" type="float">  </SimpleField>
+      <SimpleField name="N07_005" type="float">  </SimpleField>
+      <SimpleField name="N07_006" type="float">  </SimpleField>
+      <SimpleField name="N07_007" type="string"> </SimpleField>
+    </Schema>
+  </Document>
+</kml>
