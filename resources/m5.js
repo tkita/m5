@@ -484,8 +484,9 @@ function drawBusRoute ( map, route, color ) {
     // 				   strokeOpacity: 0.5,
     // 				   strokeWeight: 3 } );
     // });
-    var aa = new google.maps.KmlLayer( 'https://tkita.github.io/m5/data/c01r001.kml' );
-    aa.setMap( map );
+    var url = 'https://tkita.github.io/m5/data/' + route.replace( ",", "" ) + '.kml';
+    var kml = new google.maps.KmlLayer( url );
+    kml.setMap( map );
 }
 
 function drawBusStops ( map, busRouteKey, image, advance ) {
