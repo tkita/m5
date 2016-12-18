@@ -474,22 +474,24 @@ function changeBusStop ( id ) {
 }
 
 function drawBusRoute ( map, route, color ) {
-    objBusRoute[ route.replace( ",", "" ) ].forEach( function( e ) {
-	var path = e.split( " " ).map( function( x ) {
-	    var z = x.split( "," );
-	    return { lng: Number( z[0] ),
-		     lat: Number( z[1] ) };
-	});
-	drawPolyline( map, path, { strokeColor: color,
-				   strokeOpacity: 0.5,
-				   strokeWeight: 3 } );
-    });
+    // objBusRoute[ route.replace( ",", "" ) ].forEach( function( e ) {
+    // 	var path = e.split( " " ).map( function( x ) {
+    // 	    var z = x.split( "," );
+    // 	    return { lng: Number( z[0] ),
+    // 		     lat: Number( z[1] ) };
+    // 	});
+    // 	drawPolyline( map, path, { strokeColor: color,
+    // 				   strokeOpacity: 0.5,
+    // 				   strokeWeight: 3 } );
+    // });
+    var aa = new google.maps.KmlLayer( 'https://tkita.github.io/m5/data/c01r001.kml' );
+    aa.setMap( map );
 }
 
 function drawBusStops ( map, busRouteKey, image, advance ) {
     // バス路線に含まれるバス停を抽出
     key = busRouteKey.split( "," );
-    var aryBusStop = objBusStopRoute[ key[0] ][ key[1] ];
+    var aryBusStop = objBusStopRoute[ key[0] ].route[ key[1] ].data;
     aryBusStop.forEach( function( e ) {
 	var s = objbusstops[ e ].split( "," );
     	var marker = makeMarker( map, s[0] , s[1], image );
@@ -526,6 +528,7 @@ function dispBusRoute ( busRouteKey ) {
 
     // バス路線
     drawBusRoute( map, busRouteKey, "#FF0000" )
+
     var sel = document.getElementById( "busRoutes" );
     drawControl( map, sel.options[ sel.selectedIndex ].text,
 		 false, "orange" );
