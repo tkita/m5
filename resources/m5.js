@@ -19,11 +19,12 @@ function cbPaste () {
     document.getElementById( "btnGeo" ).focus();
 }
 
-function removeAllChilds ( e ) {
-    while ( e.firstChild ) {
-	e.removeChild( e.firstChild );
+function removeAllChilds ( id ) {
+    var dom = document.getElementById( id );
+    while ( dom.firstChild ) {
+	dom.removeChild( dom.firstChild );
     }
-    return e;
+    return dom;
 }
 
 function addOption ( sel, value, text ) {
@@ -43,7 +44,8 @@ function getOptionText ( domId ) {
     return sel.options[ sel.selectedIndex ].text;
 }
 
-function removeOptions ( sel ) {
+function removeOptions ( id ) {
+    var sel = document.getElementById( id );
     while ( sel.options.length ) {
 	sel.remove(0);
     }
@@ -64,7 +66,7 @@ function makeMap( canvas, lat, lng, option ) {
       [ 'mapTypeId' , google.maps.MapTypeId.ROADMAP ] ].forEach( function( e ) {
 	  option[ e[0] ] = e[1];
       });
-    return new google.maps.Map( document.getElementById( canvas ), option );
+    return new google.maps.Map( removeAllChilds( canvas ), option );
 }
 
 function makeMarker( map, lat, lng, image ) {
@@ -350,9 +352,7 @@ function measure_distance () {
 				     alert( "Google Directions Service Faild：" + status );
 				 }
 			     });
-    directionsRenderer.setPanel(
-	removeAllChilds( document.getElementById( "directionsPanel" ) ) );
-
+    directionsRenderer.setPanel( removeAllChilds( "directionsPanel" ) );
     drawBoundArea( map );
 }
 
@@ -446,7 +446,7 @@ function searchNearBusStop () {
 	lat = latlng[2];
 	lng = latlng[3];
     }
-    var sel = removeOptions( document.getElementById( "busStops" ) );
+    var sel = removeOptions( "busStops" );
     getNearBusStop( lat, lng ).forEach( function( e ) {
 	addOption( sel, e['id'], e['name'] );
     });
@@ -457,14 +457,14 @@ function searchNameBusStop () {
     var result = Object.keys( objbusstops ).filter( function( id ) {
 	return ( objbusstops[ id ].split( ",") [2].indexOf( kword ) > -1 )
     });
-    var sel = removeOptions( document.getElementById( "busStops" ) );
+    var sel = removeOptions( "busStops" );
     result.forEach( function( id ) {
 	addOption( sel, id, objbusstops[ id ].split( "," )[2] );
     });
 }
 
 function changeBusStop ( id ) {
-    var sel = removeOptions( document.getElementById( "busRoutes" ) );
+    var sel = removeOptions( "busRoutes" );
     var aryCompany = Object.keys( objBusStopRoute ); 
     aryCompany.forEach( function ( c ) {
 	var aryRoute = Object.keys( objBusStopRoute[ c ].route );
@@ -575,7 +575,7 @@ function changeCity ( city ) {
 	if ( a[4] > b[4] ) return 1;
 	return 0;
     });
-    var sel = removeOptions( document.getElementById( "boundAddr" ) );
+    var sel = removeOptions( "boundAddr" );
     addr.forEach( function( e ) {
 	addOption( sel, e[0], e[2] );
     });
