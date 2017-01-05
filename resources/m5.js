@@ -401,7 +401,7 @@ function dispNearStationSub ( map, lat, lng, color ) {
     var from = new google.maps.LatLng( lat, lng );
     getNearStations( lat, lng ).forEach(
 	function( e, idx, ary ) {
-	    var marker = makeMarker( map, e["lat"], e["lng"], "https://labs.google.com/ridefinder/images/mm_20_" + color + ".png" );
+	    var marker = makeMarker( map, e["lat"], e["lng"], "http://labs.google.com/ridefinder/images/mm_20_" + color + ".png" );
     	    var dist = google.maps.geometry.spherical.computeDistanceBetween( from,
     		new google.maps.LatLng( e["lat"], e["lng"] ) );
     	    var str = "(" + ( idx + 1 ) + ") " +
