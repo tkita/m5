@@ -518,7 +518,7 @@ function dispBusRoute ( busRouteKey ) {
     makeMarker( map, latlng[2], latlng[3], url + "red-dot.png" );
 
     // バス停
-    var url = "https://labs.google.com/ridefinder/images/";
+    var url = "http://labs.google.com/ridefinder/images/";
     drawBusStops( map, busRouteKey, url + "mm_20_orange.png", getOptionValue( "busStops" ) );
 
     // バス路線
@@ -528,9 +528,10 @@ function dispBusRoute ( busRouteKey ) {
     drawControl( map, getOptionText( "busRoutes" ), false, "orange" );
 
     // 路線を固定
-    busRouteKey = document.getElementById( "lock" ).value.split( "," );
-    busRouteKey = busRouteKey[1] + "," + busRouteKey[2];
+    busRouteKey = document.getElementById( "lock" ).value;
     if ( busRouteKey != "" ) {
+	busRouteKey = busRouteKey.split( "," );
+	busRouteKey = busRouteKey[1] + "," + busRouteKey[2];
 	drawBusRoute( map, busRouteKey )
 	drawBusStops( map, busRouteKey, url + "mm_20_green.png", false );
 	drawControl( map, busRouteKey, google.maps.ControlPosition.BOTTOM_CENTER, "green" );
