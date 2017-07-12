@@ -116,7 +116,7 @@
 	     param['lang']        = '';
 
 	     $.ajax({
-		 url: 'http://ekibus-api.city.sapporo.jp/get_route_prediction',
+		 url: 'https://ekibus-api.city.sapporo.jp/get_route_prediction',
 		 type: 'POST',
 		 data: param,
 		 dataType: 'text',
@@ -165,7 +165,7 @@
 	     param['lang']               = '';
 
 	     $.ajax({
-		 url: 'http://ekibus-api.city.sapporo.jp/get_search_result',
+		 url: 'https://ekibus-api.city.sapporo.jp/get_search_result',
 		 type: 'POST',
 		 data: param,
 		 dataType: 'text',
@@ -252,7 +252,7 @@
 	     param['lang']               = '';
 
 	     $.ajax({
-		 url: 'http://ekibus-api.city.sapporo.jp/get_time_table',
+		 url: 'https://ekibus-api.city.sapporo.jp/get_time_table',
 		 type: 'POST',
 		 data: param,
 		 dataType: 'text',
@@ -320,7 +320,7 @@
 	     param['lang']    = '';
 
 	     var obj = JSON.parse(
-		 $.ajax( { url: 'http://ekibus-api.city.sapporo.jp/get_route_station',
+		 $.ajax( { url: 'https://ekibus-api.city.sapporo.jp/get_route_station',
 			   type: 'POST',
 			   data: param,
 			   dataType: 'text',
