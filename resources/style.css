@@ -126,6 +126,12 @@ option:nth-child(odd) {
     background: #f5f5f5;
 }
 
+/*  */
+#touhyou_map {
+    border-radius: 6px;
+    height: 80vh;
+}
+
 /* 交通用具 */
 #directionsPanel {
     margin-right: 0.2em;
