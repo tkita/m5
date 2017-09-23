@@ -143,7 +143,7 @@ function drawControl ( map, str, pos, color ) {
 function checkInData () {
     var stLat = document.getElementById( 'stLat' ).innerText;
     var stLng = document.getElementById( 'stLng' ).innerText;
-    if( stLat == '' ) {
+    if ( stLat == '' ) {
 	alert( '出発地点が未入力です' );
 	return false;
     }
@@ -369,11 +369,13 @@ function getNearStations ( lat, lng ) {
 		     lng:  s[3],
 		     dist: h1 * h1 + h2 * h2 };
 	});
+
     result.sort( function( a, b ) {
 	if ( a.dist < b.dist ) return -1;
 	if ( a.dist > b.dist ) return 1;
 	return 0;
     });
+
     return result.slice( 0, 5 ); // 上位５つ
 }
 
@@ -630,14 +632,39 @@ function init () {
     }
 }
 
+function getNearTouhyou ( lat, lng ) {
+    var result = objWorkplace.map(
+	function( s ) {
+	    var h1 = Math.abs( lat - s[3] );
+	    var h2 = Math.abs( lng - s[4] );
+	    return { id:   s[0],
+		     name: s[1],
+		     lat:  s[3],
+		     lng:  s[4],
+		     dist: h1 * h1 + h2 * h2 };
+	});
+
+    result.sort( function( a, b ) {
+	if ( a.dist < b.dist ) return -1;
+	if ( a.dist > b.dist ) return 1;
+	return 0;
+    });
+
+    return result.slice( 0, 5 ); // 上位５つ
+}
+
 function dispNearTouhyou () {
-    var latlng = checkInData();
-    if ( !latlng ) {
+    var stLat = document.getElementById( 'stLat' ).innerText;
+    var stLng = document.getElementById( 'stLng' ).innerText;
+    if ( stLat == '' ) {
+	alert( '自宅・出発地点が未入力です' );
 	return false;
     }
-    var stLat = latlng[0],
-	stLng = latlng[1];
     var map = makeMap( 'touhyou_map', stLat, stLng, { zoom: 14 } );
     drawBoundArea( map );
     makeMarker( map, stLat, stLng, 'https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png' );
+    getNearTouhyou( stLat, stLng ).forEach(
+        function( e, idx, ary ) {
+            var marker = makeMarker( map, e['lat'], e['lng'], 'https://maps.google.co.jp/mapfiles/ms/icons/red-dot.png' );
+    });
 }
