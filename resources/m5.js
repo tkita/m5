@@ -633,7 +633,7 @@ function init () {
 }
 
 function getNearTouhyou ( lat, lng ) {
-    var result = objWorkplace.map(
+    var result = objWorkplace['中央'].map(
 	function( s ) {
 	    var h1 = Math.abs( lat - s[3] );
 	    var h2 = Math.abs( lng - s[4] );
