@@ -212,7 +212,7 @@ function getGeocode () {
     setBoundArea();
 }
 
-var columnHeader = [ '名称', '建物', '住所', 'lat', 'lng', 'dmy', '電話番号' ];
+var columnHeader = [ 'No.', '名称', '住所', 'lat', 'lng', 'dmy', '電話番号' ];
 var hot = new Handsontable( document.getElementById( 'hot' ) ,
 			    { data: [ [ '', '', '', '', '', '', '' ] ],
 			      autoColumnSize: true,
