@@ -676,19 +676,4 @@ function dispNearTouhyou () {
     var nearTouhyou = getNearTouhyou( stLat, stLng );
     drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red-dot', true );
     drawTouhyouMarker( map, nearTouhyou.slice( 6    ), 'purple', false );
-
-    // nearTouhyou.slice( 0, 5 ).forEach(
-    //     function( e, idx, ary ) {
-    //         var marker = makeMarker( map, e['lat'], e['lng'],
-    //                                  'https://maps.google.co.jp/mapfiles/ms/icons/red-dot.png' );
-    //         attachMessage( marker, e['name'] );
-    //         google.maps.event.trigger( marker, 'click' );
-    //     });
-
-    // nearTouhyou.slice( 6 ).forEach(
-    //     function( e, idx, ary ) {
-    //         var marker = makeMarker( map, e['lat'], e['lng'],
-    //                                  'http://maps.google.co.jp/mapfiles/ms/icons/purple.png' );
-    //         attachMessage( marker, e['name'] );
-    //     });
 }
