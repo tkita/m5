@@ -663,10 +663,19 @@ function dispNearTouhyou () {
     makeMarker( map, stLat, stLng, 'https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png' );
 
     var nearTouhyou = getNearTouhyou( stLat, stLng );
-    console.info( nearTouhyou );
     nearTouhyou.slice( 0, 5 ).forEach(
         function( e, idx, ary ) {
             var marker = makeMarker( map, e['lat'], e['lng'],
                                      'https://maps.google.co.jp/mapfiles/ms/icons/red-dot.png' );
+            attachMessage( marker, e['name'] );
+            google.maps.event.trigger( marker, 'click' );
         });
+
+    nearTouhyou.slice( 6 ).forEach(
+        function( e, idx, ary ) {
+            var marker = makeMarker( map, e['lat'], e['lng'],
+                                     'http://maps.google.co.jp/mapfiles/ms/icons/purple.png' );
+            attachMessage( marker, e['name'] );
+        });
+
 }
