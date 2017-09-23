@@ -643,14 +643,11 @@ function getNearTouhyou ( lat, lng ) {
 		     lng:  s[4],
 		     dist: h1 * h1 + h2 * h2 };
 	});
-
-    result.sort( function( a, b ) {
+    return result.sort( function( a, b ) {
 	if ( a.dist < b.dist ) return -1;
 	if ( a.dist > b.dist ) return 1;
 	return 0;
     });
-
-    return result.slice( 0, 5 ); // 上位５つ
 }
 
 function dispNearTouhyou () {
@@ -663,8 +660,12 @@ function dispNearTouhyou () {
     var map = makeMap( 'touhyou_map', stLat, stLng, { zoom: 14 } );
     drawBoundArea( map );
     makeMarker( map, stLat, stLng, 'https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png' );
-    getNearTouhyou( stLat, stLng ).forEach(
+
+    var nearTouhyou = getNearTouhyou( stLat, stLng );
+    console.info( nearTouhyou );
+    nearTouhyou.slice( 0, 5 ).forEach(
         function( e, idx, ary ) {
-            var marker = makeMarker( map, e['lat'], e['lng'], 'https://maps.google.co.jp/mapfiles/ms/icons/red-dot.png' );
-    });
+            var marker = makeMarker( map, e['lat'], e['lng'],
+                                     'https://maps.google.co.jp/mapfiles/ms/icons/red-dot.png' );
+        });
 }
