@@ -554,6 +554,7 @@ function setupShokuba () {
 	addOption( dom, e, e );
     });
     dom.selectedIndex = 0;
+    changeKyoku( Object.keys( objWorkplace )[0] );
 }
 
 function setupBoundCity () {
@@ -675,5 +676,5 @@ function dispNearTouhyou () {
 
     var nearTouhyou = getNearTouhyou( stLat, stLng );
     drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red-dot', true );
-    drawTouhyouMarker( map, nearTouhyou.slice( 6    ), 'purple', false );
+    drawTouhyouMarker( map, nearTouhyou.slice( 5    ), 'purple', false );
 }
