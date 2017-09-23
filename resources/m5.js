@@ -631,5 +631,13 @@ function init () {
 }
 
 function dispNearTouhyou () {
-    alert( 'test' );
+    var latlng = checkInData();
+    if ( !latlng ) {
+	return false;
+    }
+    var stLat = latlng[0],
+	stLng = latlng[1];
+    var map = makeMap( 'touhyou_map', stLat, stLng, { zoom: 14 } );
+    drawBoundArea( map );
+    makeMarker( map, stLat, stLng, 'https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png' );
 }
