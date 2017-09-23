@@ -635,12 +635,13 @@ function init () {
 function getNearTouhyou ( lat, lng ) {
     var result = objWorkplace['中央'].map(
 	function( s ) {
-	    var h1 = Math.abs( lat - s[3] );
-	    var h2 = Math.abs( lng - s[4] );
-	    return { id:   s[0],
-		     name: s[1],
-		     lat:  s[3],
-		     lng:  s[4],
+            var e = s.split( ',' );
+	    var h1 = Math.abs( lat - e[3] );
+	    var h2 = Math.abs( lng - e[4] );
+	    return { id:   e[0],
+		     name: e[1],
+		     lat:  e[3],
+		     lng:  e[4],
 		     dist: h1 * h1 + h2 * h2 };
 	});
     return result.sort( function( a, b ) {
