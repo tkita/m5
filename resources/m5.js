@@ -651,12 +651,17 @@ function getNearTouhyou ( lat, lng ) {
     });
 }
 
-function drawTouhyouMarker ( map, ary, color, disp ) {
+function drawTouhyouMarker ( map, ary, color, from, tooltip ) {
     ary.forEach( function( e, idx, ary ) {
         var marker = makeMarker( map, e['lat'], e['lng'],
                                  'https://maps.google.co.jp/mapfiles/ms/icons/' + color + '.png' );
-        attachMessage( marker, '(' + e['id'] + ') ' + e['name'] );
-        if ( disp ) {
+        var dist = google.maps.geometry.spherical.computeDistanceBetween( from,
+                                          new google.maps.LatLng( e['lat'], e['lng'] ) );
+        attachMessage( marker, '(' + e['id'] + ') ' + e['name'] +
+                       '<br>' +
+                       separate( Math.floor( dist ) ) + 'm'
+                     );
+        if ( tooltip ) {
             google.maps.event.trigger( marker, 'click' );
         }
     });
@@ -673,7 +678,8 @@ function dispNearTouhyou () {
     drawBoundArea( map );
     makeMarker( map, stLat, stLng, 'https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png' );
 
+    var from = new google.maps.LatLng( stLat, stLng );
     var nearTouhyou = getNearTouhyou( stLat, stLng );
-    drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red-dot', true );
-    drawTouhyouMarker( map, nearTouhyou.slice( 5    ), 'purple', false );
+    drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red-dot', from, true );
+    drawTouhyouMarker( map, nearTouhyou.slice( 5    ), 'purple', from, false );
 }
