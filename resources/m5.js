@@ -212,11 +212,10 @@ function getGeocode () {
     setBoundArea();
 }
 
-var columnHeader = [ '名称', '建物', '住所', 'lat', 'lng', 'dmy', '電話番号' ];
 var hot = new Handsontable( document.getElementById( 'hot' ) ,
 			    { data: [ [ '', '', '', '', '', '', '' ] ],
 			      autoColumnSize: true,
-			      colHeaders: columnHeader,
+			      colHeaders: columnHeader, // 別ファイルで定義
 			      currentRowClassName: 'currentRow',
 			      disableVisualSelection: 'area',
 			      outsideClickDeselects: false,
