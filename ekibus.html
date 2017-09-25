@@ -93,7 +93,7 @@
 	 function format () {
 	     var args = Array.prototype.slice.call( arguments, 0 );
 	     var str = args.shift();
-	     args.forEach( function (e) {
+	     args.forEach( function(e) {
 		 str = str.replace( '$$$', e );
              });
              return str;
@@ -121,11 +121,11 @@
 		 data: param,
 		 dataType: 'text',
 	     })
-	      .done( function ( res, status, xhr ) {
+	      .done( function( res, status, xhr ) {
 		  var obj = JSON.parse( res );
 		  if ( obj.result == 0 ) {
 		      clearOption( dom );
-		      obj.route_prediction.forEach( function(e){
+		      obj.route_prediction.forEach( function(e) {
 			  addOption( dom, e.station_id, e.company_id, e.name );
 		      });
 		  }
@@ -170,7 +170,7 @@
 		 data: param,
 		 dataType: 'text',
 	     })
-	      .done( function ( res, status, xhr ) {
+	      .done( function( res, status, xhr ) {
 		  var obj = JSON.parse( res );
 		  drawTable( obj.search_result.route );
 	      });
@@ -182,14 +182,14 @@
 	     var tbl = document.createElement( 'table' );
 
 	     var thead = document.createElement( 'thead' );
-	     [ '片道金額', '所要時間', '経路' ].forEach( function (e) {
+	     [ '片道金額', '所要時間', '経路' ].forEach( function(e) {
 		 var th = document.createElement( 'th' );
 		 th.appendChild( document.createTextNode( e ) );
 		 thead.appendChild( th );
 	     });
 	     tbl.appendChild( thead );
 
-	     ary.forEach( function (e) {
+	     ary.forEach( function(e) {
 		 var tr = document.createElement( 'tr' );
 
 		 // 片道金額
@@ -207,7 +207,7 @@
 		 // 経路
 		 var td = document.createElement( 'td' );
 		 var ul = document.createElement( 'ul' );
-		 e.route_list.forEach( function (r) {
+		 e.route_list.forEach( function(r) {
 		     var li = document.createElement( 'li' );
 
 		     var connect = r.connect_flag == 1 ? '（乗継）' : ' - ';
@@ -257,22 +257,20 @@
 		 data: param,
 		 dataType: 'text',
 	     })
-	      .done( function ( res, status, xhr ) {
+	      .done( function( res, status, xhr ) {
 		  var obj = JSON.parse( res );
 		  dispTimeTable( obj, from_id, from_name, to_id, to_name );
 	      });
 	 }
 
 	 function dispTimeTable ( obj, from_id, from_name, to_id, to_name ) {
-//	     console.info( '** function dispTimeTable **' );
-//	     console.info( obj );
 	     var objTimeTable = obj.time_table[0]; // dia_flg = 1
              var aryHeader = objTimeTable.header_table;
              var company = objTimeTable.company_name;
              var aryTimes = objTimeTable.times;
 
              var dl = document.createElement( 'dl' );
-             aryHeader.forEach( function (e) {
+             aryHeader.forEach( function(e) {
 		 var dt = document.createElement( 'dt' );
 		 dt.appendChild( document.createTextNode( format( '$$$＠$$$',
 								  e.line_name,
@@ -291,9 +289,9 @@
 		 dl.appendChild( dd );
 
 		 var tt = '';
-		 aryTimes.filter( function (t) {
+		 aryTimes.filter( function(t) {
 		     return ( t.course_id == e.course_id )
-		 }).forEach( function (e) {
+		 }).forEach( function(e) {
 		     tt = tt + e.time + ' / ';
 		 });
 		 var dd = document.createElement( 'dd' );
@@ -313,7 +311,6 @@
 	 }
 
 	 function showLine ( line_id, from_id, to_id ) {
-//	     console.info( '** function showLine **' );
 	     var param = {};
 	     param['kind']    = 0;
 	     param['line_id'] = line_id;
@@ -327,7 +324,7 @@
 			   async: false      // デフォルトは非同期
 		 } ).responseText );
 
-	     var center = obj.route_station[0].station_list.filter( function (s) {
+	     var center = obj.route_station[0].station_list.filter( function(s) {
 		 return ( s.station_id == from_id );
 	     });
 	     var dom = removeAllChilds( line_id );
@@ -337,8 +334,8 @@
 							lng: Number( center[0].lon ) },
 					      zoom: 13 } );
 
-	     obj.route_station.forEach( function (route) {
-		 var path = route.station_list.map( function (r) {
+	     obj.route_station.forEach( function( route ) {
+		 var path = route.station_list.map( function(r) {
 		     return { lat: Number( r.lat ),
 			      lng: Number( r.lon ) }
 		 });
@@ -348,12 +345,11 @@
 							    path: path } );
 		 polyline.setMap( map );
 
-//		 console.info( route.station_list );
-		 route.station_list.forEach( function (s) {
+		 route.station_list.forEach( function(s) {
 		     var marker = new google.maps.Marker(
 			 { position: { lat: Number( s.lat ),
 				       lng: Number( s.lon ) },
-			   icon: 'https://tkita.github.io/m5/mm_20_orange.png',
+			   icon: 'https://tkita.github.io/m5/resources/mm_20_orange.png',
 			   map: map });
 		     google.maps.event.addListener( marker, 'click', function( event ) {
 			 new google.maps.InfoWindow( { content: s.name } )

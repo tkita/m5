@@ -282,13 +282,14 @@ function move () {
 
 // dom の更新を監視する
 //   https://msdn.microsoft.com/ja-jp/library/dn265034(v=vs.85).aspx
-function mutationObjectCallback( mutationRecordsList ) {
+function mutationObjectCallback ( mutationRecordsList ) {
     var dom = document.getElementsByClassName( 'adp-summary' )[0];
     if ( dom ) {
 	dom.style.borderColor = adpSummaryBorderColor;	
-	var km = [].filter.call( document.getElementsByTagName( 'span' ), function( n ) {
-	    return ( n.textContent.match( / km/ ) );
-	});
+	var km = [].filter.call( document.getElementsByTagName( 'span' ),
+                                 function( n ) {
+	                             return ( n.textContent.match( / km/ ) );
+	                         });
 	document.getElementById( 'distance' ).textContent =
 	    ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
 	    ': ' + km[0].textContent;
@@ -680,6 +681,6 @@ function dispNearTouhyou () {
 
     var from = new google.maps.LatLng( stLat, stLng );
     var nearTouhyou = getNearTouhyou( stLat, stLng );
-    drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red-dot', from, true );
+    drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red', from, true );
     drawTouhyouMarker( map, nearTouhyou.slice( 5    ), 'purple', from, false );
 }
