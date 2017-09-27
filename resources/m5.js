@@ -633,17 +633,18 @@ function init () {
     }
 }
 
-function getNearTouhyou ( lat, lng ) {
+function getNearTouhyou ( stLat, stLng ) {
+    var fromLatLng = new google.maps.LatLng( stLat, stLng );
     var result = objWorkplace['中央'].map(
 	function( s ) {
             var e = s.split( ',' );
-	    var h1 = Math.abs( lat - e[3] );
-	    var h2 = Math.abs( lng - e[4] );
 	    return { id:   e[0],
 		     name: e[1],
 		     lat:  e[3],
 		     lng:  e[4],
-		     dist: h1 * h1 + h2 * h2 };
+		     dist: google.maps.geometry.spherical.computeDistanceBetween( fromLatLng,
+                                    new google.maps.LatLng( e[3], e[4] ) )
+                   };
 	});
     return result.sort( function( a, b ) {
 	if ( a.dist < b.dist ) return -1;
@@ -652,16 +653,12 @@ function getNearTouhyou ( lat, lng ) {
     });
 }
 
-function drawTouhyouMarker ( map, ary, color, from, tooltip ) {
+function drawTouhyouMarker ( map, ary, color, tooltip ) {
     ary.forEach( function( e, idx, ary ) {
         var marker = makeMarker( map, e['lat'], e['lng'],
                                  'https://maps.google.co.jp/mapfiles/ms/icons/' + color + '.png' );
-        var dist = google.maps.geometry.spherical.computeDistanceBetween( from,
-                                          new google.maps.LatLng( e['lat'], e['lng'] ) );
-        attachMessage( marker, '(' + e['id'] + ') ' + e['name'] +
-                       '<br>' +
-                       separate( Math.floor( dist ) ) + 'm'
-                     );
+        attachMessage( marker, '(' + e['id'] + ') ' + e['name'] + '<br>' +
+                       separate( Math.floor( e['dist'] ) ) + 'm' );
         if ( tooltip ) {
             google.maps.event.trigger( marker, 'click' );
         }
@@ -679,8 +676,7 @@ function dispNearTouhyou () {
     drawBoundArea( map );
     makeMarker( map, stLat, stLng, 'https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png' );
 
-    var from = new google.maps.LatLng( stLat, stLng );
     var nearTouhyou = getNearTouhyou( stLat, stLng );
-    drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red', from, true );
-    drawTouhyouMarker( map, nearTouhyou.slice( 5    ), 'purple', from, false );
+    drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red', true );
+    drawTouhyouMarker( map, nearTouhyou.slice( 5    ), 'purple', false );
 }
