@@ -674,6 +674,16 @@ function dispNearTouhyou () {
     }
     var map = makeMap( 'touhyou_map', stLat, stLng, { zoom: 14 } );
     drawBoundArea( map );
+
+    var path = objKuBorder['10'].split( ' ' ).map( function( e ) {
+	var c = e.split( ',' );
+	return { lat: Number( c[1] ),
+		 lng: Number( c[0] ) }
+    });
+    drawPolyline( map, path, { strokeColor: 'red',
+			       strokeOpacity: 0.5,
+			       strokeWeight: 2 } );
+
     makeMarker( map, stLat, stLng, 'https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png' );
 
     var nearTouhyou = getNearTouhyou( stLat, stLng );
