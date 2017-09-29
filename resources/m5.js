@@ -228,7 +228,7 @@ var hot = new Handsontable( document.getElementById( 'hot' ) ,
 hot.selectCell( 0, 0 );
 
 function changeKyoku ( kyoku ) {
-    var data = objWorkplace[ kyoku ].map( function( e ) {
+    var data = objWorkplace[ kyoku ].data.map( function( e ) {
 	return e.split( ',' );
     });
     hot.updateSettings( { data: data,
@@ -254,7 +254,7 @@ function searchShokuba () {
 
     var result = [];
     Object.keys( objWorkplace ).forEach( function( key ) {
-	objWorkplace[ key ].forEach( function( str ) {
+	objWorkplace[ key ].data.forEach( function( str ) {
 	    if ( str.indexOf( kword ) > -1 ) {
 		result.push( str );
 	    }});
@@ -551,10 +551,10 @@ function unlock () {
 function setupShokuba () {
     var dom = document.getElementById( 'kyoku' );
     Object.keys( objWorkplace ).forEach( function( e ) {
-	addOption( dom, e, e );
+	addOption( dom, e, objWorkplace[e].name );
     });
     dom.selectedIndex = 0;
-    changeKyoku( Object.keys( objWorkplace )[0] );
+    changeKyoku( getOptionValue('kyoku') );
 }
 
 function setupBoundCity () {
@@ -635,15 +635,15 @@ function init () {
 
 function getNearTouhyou ( stLat, stLng ) {
     var fromLatLng = new google.maps.LatLng( stLat, stLng );
-    var result = objWorkplace['中央'].map(
+    var result = objWorkplace[ getOptionValue('kyoku') ].data.map(
 	function( s ) {
             var e = s.split( ',' );
 	    return { id:   e[0],
 		     name: e[1],
 		     lat:  e[3],
 		     lng:  e[4],
-		     dist: google.maps.geometry.spherical.computeDistanceBetween( fromLatLng,
-                                    new google.maps.LatLng( e[3], e[4] ) )
+		     dist: google.maps.geometry.spherical.computeDistanceBetween(
+                         fromLatLng, new google.maps.LatLng( e[3], e[4] ) )
                    };
 	});
     return result.sort( function( a, b ) {
@@ -675,7 +675,7 @@ function dispNearTouhyou () {
     var map = makeMap( 'touhyou_map', stLat, stLng, { zoom: 14 } );
     drawBoundArea( map );
 
-    var path = objKuBorder['10'].split( ' ' ).map( function( e ) {
+    var path = objKuBorder[ getOptionValue('kyoku') ].split( ' ' ).map( function( e ) {
 	var c = e.split( ',' );
 	return { lat: Number( c[1] ),
 		 lng: Number( c[0] ) }
