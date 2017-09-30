@@ -135,7 +135,7 @@
 	</div> <!-- end contents -->
 
 	<h1 id="bus">バス <span class="shortcut">bus</span></h1>
-	<div class="contents" style="margin-bottom: 2em;">
+	<div class="contents">
 	    <div id="groupbusstop">
 		<div style="display: flex; flex-direction: row;">
 		    <div style="padding: 0.5em; background: rgba(143, 201, 248, 1);">
@@ -178,6 +178,44 @@
 
 	    <div id="bus_map" class="border"></div>
 	</div> <!-- end contents -->
+
+	<h1 id="ekibus">えきバス</h1>
+	<div class="contents" style="margin-bottom: 2em; display: flex; flex-direction: row;">
+	    <div style="margin-right: 0.5em;">
+		<div id="ebDeparture">
+		    <div style="color: white; background: rgba( 48, 97, 198, 1 );">出発</div>
+		    <div>
+			<input type="text"
+			       id="word_ebDep"
+                               placeholder="名称（ローマ字可）"
+			       onFocus="this.select();"
+			       onKeyUp="ebChangeWord('ebDep');">
+		    </div>
+		    <div>
+			<select id="ebDep" size="15"></select>
+		    </div>
+		</div>
+		<div id="ebArrive">
+		    <div style="color: white; background: rgba( 200, 48, 48, 1 );">到着</div>
+		    <div>
+			<input type="text"
+			       id="word_ebArr"
+                               placeholder="名称（ローマ字可）"
+			       onFocus="this.select();"
+			       onKeyUp="ebChangeWord('ebArr');">
+		    </div>
+		    <div>
+			<select id="ebArr" size="15"></select>
+		    </div>
+		</div>
+	    </div>
+
+	    <div>
+		<button id="ebBtnSearch" onClick="getSearchResult();">検索</button>
+		<div id="result"></div>
+		<div id="timetable"></div>
+	    </div>
+        </div>
 
 	<div class="navibox">
 	    <a href="#top" id="link_top">TOP<span class="shortcut">t</span></a>

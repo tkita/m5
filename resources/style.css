@@ -28,7 +28,7 @@ h2 {
 }
 
 ul {
-    list-style : none;
+    margin: 1em;
 }
 
 select {
@@ -70,10 +70,12 @@ div.navibox a {
     display: block;
     text-align: center;
     color: gray;
+    transition: background 0.3s, color 0.3s;
 }
 
 div.navibox a:hover {
     color: white;
+    background: #222;
 }
 
 div.border {
@@ -244,6 +246,59 @@ td.adp-text {
     padding-right: 1em;
 }
 
+#ebDeparture {
+    border: 1px solid rgba( 48, 97, 198, 1 );
+    margin-bottom: 0.5em;
+}
+
+#ebArrive {
+    border: 1px solid rgba( 200, 48, 48, 1 );
+}
+
+#ebBtnSearch {
+    margin-bottom: 0.5em;
+}
+
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+
+tr, td, th {
+    border: 1px solid black;
+}
+
+li {
+    margin-bottom: 0.4em;
+}
+
+.station {
+    background: #928b8b;
+    color: white;
+    padding: 0.1em;
+}
+
+.linename {
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 6px;
+    padding: 0.1em;
+}
+
+.linename:hover {
+    background-color: LightPink;
+}
+
+dt {
+    margin-top: 0.5em;
+}
+
+dd {
+    margin-left: 2em;
+    margin-bottom: 0.5em;
+}
+
 /* 640 ピクセル以上の場合 */
 @media screen and ( min-width: 640px ) {
 
@@ -300,7 +355,6 @@ td.adp-text {
     }
 
     #groupbusstop {
-	
 	float: left;
     }
 

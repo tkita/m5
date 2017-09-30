@@ -30,7 +30,7 @@ function removeAllChilds ( id ) {
 function addOption ( sel, value, text ) {
     var opt = document.createElement( 'option' );
     opt.value = value;
-    opt.appendChild( document.createTextNode( text ) );
+    opt.text = text;
     sel.appendChild( opt );
 }
 
@@ -689,4 +689,268 @@ function dispNearTouhyou () {
     var nearTouhyou = getNearTouhyou( stLat, stLng );
     drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red', true );
     drawTouhyouMarker( map, nearTouhyou.slice( 5    ), 'purple', false );
+}
+
+// ekibus
+var company_name = { 34: 'ＪＲバス',
+		     42: 'じょうてつバス',
+		     54: '中央バス',
+		     64: 'ばんけいバス',
+		     91: 'ＪＲ鉄道',
+		     92: '地下鉄',
+		     93: '市電',
+		     100: 'ランドマーク'
+	           }
+
+function format () {
+    var args = Array.prototype.slice.call( arguments, 0 );
+    var str = args.shift();
+    args.forEach( function(e) {
+	str = str.replace( '$$$', e );
+    });
+    return str;
+}
+
+function getRoutePrediction ( word, id ) {
+    var param = {};
+    param['kind']        = 0;
+    param['search_flg']  = 1;
+    param['search_word'] = word;
+    param['pos_flg']     = 0;
+    param['company_id']  = '';
+    param['lang']        = '';
+
+    $.ajax( { url: 'https://ekibus-api.city.sapporo.jp/get_route_prediction',
+	      type: 'POST',
+	      data: param,
+	      dataType: 'text' }
+          ).done( function( res, status, xhr ) {
+	      var obj = JSON.parse( res );
+	      if ( obj.result == 0 ) {
+	          var dom = removeOptions( id );
+	          obj.route_prediction.forEach( function(e) {
+                      var str = format( '($$$)$$$ - $$$',
+                                        e.company_id, company_name[ e.company_id ], e.name );
+		      addOption( dom, e.station_id, str ); // dom, value, text
+	          });
+	      }
+          });
+}
+
+function ebChangeWord ( id ) {
+    getRoutePrediction( document.getElementById( 'word_' + id ).value, id );
+}
+
+function getSearchResult () {
+    var start_st = document.getElementById( 'ebDep' ).value;
+    var end_st = document.getElementById( 'ebArr' ).value;
+    if ( ( start_st == '' ) || ( end_st == '' ) ) {
+	alert( '未選択' );
+	return ;
+    }
+    removeAllChilds( 'result' );
+    removeAllChilds( 'timetable' );
+
+    var param = {};
+    param['kind']               = 0;
+    param['start_st']           = start_st;
+    param['end_st']             = end_st;
+    param['bus_prediction_flg'] = 0;
+    param['departure_flg']      = 0;
+    param['sort_id']            = 2;
+    param['before_after_count'] = 0;
+    param['start_datetime']     = '';
+    param['lang']               = '';
+
+    $.ajax( { url: 'https://ekibus-api.city.sapporo.jp/get_search_result',
+	      type: 'POST',
+	      data: param,
+	      dataType: 'text' }
+    ).done( function( res, status, xhr ) {
+	var obj = JSON.parse( res );
+	drawTable( obj.search_result.route );
+    });
+}
+
+function drawTable ( ary ) {
+    var result = document.getElementById( 'result' );
+    var tbl = document.createElement( 'table' );
+
+    var thead = document.createElement( 'thead' );
+    [ '片道金額', '所要時間', '経路' ].forEach( function(e) {
+	var th = document.createElement( 'th' );
+	th.appendChild( document.createTextNode( e ) );
+	thead.appendChild( th );
+    });
+    tbl.appendChild( thead );
+
+    ary.forEach( function(e) {
+	var tr = document.createElement( 'tr' );
+
+	// 片道金額
+	var td = document.createElement( 'td' );
+	td.appendChild( document.createTextNode( e.fare + ' 円' )  );
+	td.setAttribute( 'align', 'right' );
+	tr.appendChild( td );
+
+	// 所要時間
+	var td = document.createElement( 'td' );
+	td.appendChild( document.createTextNode( e.total_time + ' 分' )  );
+	td.setAttribute( 'align', 'right' );
+	tr.appendChild( td );
+
+	// 経路
+	var td = document.createElement( 'td' );
+	var ul = document.createElement( 'ul' );
+	e.route_list.forEach( function(r) {
+	    var li = document.createElement( 'li' );
+
+	    var connect = r.connect_flag == 1 ? '（乗継） ' : ' - ';
+	    var fare = document.createTextNode( format( '$$$ 円$$$', r.fare, connect ) );
+	    var from_name = document.createElement( 'span' );
+	    from_name.setAttribute( 'class', 'station' );
+	    from_name.appendChild( document.createTextNode( r.from_name ) );
+
+	    var line_name = document.createElement( 'span' );
+	    var fn = format( 'getTimeTable("$$$", "$$$", "$$$", "$$$");',
+			     r.from_id, r.from_name, r.to_id, r.to_name) ;
+	    line_name.setAttribute( 'class', 'linename' );
+	    line_name.setAttribute( 'onClick', fn );
+	    line_name.appendChild( document.createTextNode( r.line_name ) );
+
+	    var to_name = document.createElement( 'span' );
+	    to_name.setAttribute( 'class', 'station' );
+	    to_name.appendChild( document.createTextNode( r.to_name ) );
+
+	    li.appendChild( fare );
+	    li.appendChild( from_name );
+	    li.appendChild( document.createTextNode( ' → ' ) );
+	    li.appendChild( line_name );
+	    li.appendChild( document.createTextNode( ' → ' ) );
+	    li.appendChild( to_name );
+	    ul.appendChild( li );
+	});
+	td.appendChild( ul );
+	tr.appendChild( td );
+
+	tbl.appendChild( tr );
+    });
+    result.appendChild( tbl );
+}
+
+function getTimeTable ( from_id, from_name, to_id, to_name ) {
+    removeAllChilds( 'timetable' );
+    var param = {};
+    param['kind']     = 0;
+    param['start_st'] = from_id;
+    param['end_st']   = to_id;
+    param['lang']     = '';
+
+    $.ajax( { url: 'https://ekibus-api.city.sapporo.jp/get_time_table',
+	      type: 'POST',
+	      data: param,
+	      dataType: 'text' }
+          ).done( function( res, status, xhr ) {
+	      var obj = JSON.parse( res );
+	      dispTimeTable( obj, from_id, from_name, to_id, to_name );
+	  });
+}
+
+function dispTimeTable ( obj, from_id, from_name, to_id, to_name ) {
+    var objTimeTable = obj.time_table[0]; // dia_flg = 1
+    var aryHeader = objTimeTable.header_table;
+    var company = objTimeTable.company_name;
+    var aryTimes = objTimeTable.times;
+
+    var dl = document.createElement( 'dl' );
+    aryHeader.forEach( function(e) {
+	var dt = document.createElement( 'dt' );
+	dt.appendChild( document.createTextNode( format( '$$$＠$$$',
+							 e.line_name,
+							 company ) ) );
+	dl.appendChild( dt );
+
+	var dd = document.createElement( 'dd' );
+	var course = document.createElement( 'span' );
+	course.appendChild(
+	    document.createTextNode( format( ' line_id:$$$ ', e.line_id ) ) );
+	course.setAttribute( 'class', 'linename' );
+	var fn = format( 'showLine("$$$", "$$$", "$$$");', e.line_id, from_id, to_id );
+	course.setAttribute( 'onClick', fn );
+	dd.appendChild( course );
+	dd.appendChild( document.createTextNode( e.course_name ) );
+	dl.appendChild( dd );
+
+	var tt = '';
+	aryTimes.filter( function(t) {
+	    return ( t.course_id == e.course_id )
+	}).forEach( function(e) {
+	    tt = tt + e.time + ' / ';
+	});
+	var dd = document.createElement( 'dd' );
+	dd.appendChild( document.createTextNode( tt ) );
+	dl.appendChild( dd );
+
+	var dd = document.createElement( 'dd' );
+	dd.setAttribute( 'id', e.line_id );
+	dl.appendChild( dd );
+    });
+
+    var timetable = document.getElementById( 'timetable' );
+    timetable.appendChild( document.createTextNode( format( '【時刻表】$$$ → $$$',
+							    from_name,
+							    to_name ) ) );
+    timetable.appendChild( dl );
+}
+
+function showLine ( line_id, from_id, to_id ) {
+    var param = {};
+    param['kind']    = 0;
+    param['line_id'] = line_id;
+    param['lang']    = '';
+
+    var obj = JSON.parse(
+	$.ajax( { url: 'https://ekibus-api.city.sapporo.jp/get_route_station',
+		  type: 'POST',
+		  data: param,
+		  dataType: 'text',
+		  async: false      // デフォルトは非同期
+		} ).responseText );
+
+    var center = obj.route_station[0].station_list.filter( function(s) {
+	return ( s.station_id == from_id );
+    });
+    var dom = removeAllChilds( line_id );
+    dom.style.height = '300px';
+    var map = new google.maps.Map( dom,
+				   { center: { lat: Number( center[0].lat ),
+					       lng: Number( center[0].lon ) },
+				     zoom: 13 } );
+
+    obj.route_station.forEach( function( route ) {
+	var path = route.station_list.map( function(r) {
+	    return { lat: Number( r.lat ),
+		     lng: Number( r.lon ) }
+	});
+	var polyline = new google.maps.Polyline( { strokeColor: 'cyan',
+						   strokeOpacity: 0.8,
+						   strokeWeight: 2,
+						   path: path } );
+	polyline.setMap( map );
+
+	route.station_list.forEach( function(s) {
+	    var marker = new google.maps.Marker(
+		{ position: { lat: Number( s.lat ),
+			      lng: Number( s.lon ) },
+		  icon: 'https://tkita.github.io/m5/resources/mm_20_orange.png',
+		  map: map });
+	    google.maps.event.addListener( marker, 'click', function( event ) {
+		new google.maps.InfoWindow( { content: s.name } )
+		    .open( marker.getMap(), marker );
+	    });
+	    if ( s.station_id == from_id ) {
+		google.maps.event.trigger( marker, 'click' );
+	    }
+	});
+    });
 }
