@@ -3,6 +3,15 @@ var geocoder;
 var adpSummaryBorderColor;
 
 // subroutines
+function format () {
+    var args = Array.prototype.slice.call( arguments, 0 );
+    var str = args.shift();
+    args.forEach( function(e) {
+	str = str.replace( '$$$', e );
+    });
+    return str;
+}
+
 function setInnerHTML ( domName, text ) {
     document.getElementById( domName ).innerHTML = text;
 }
@@ -398,17 +407,17 @@ function dispNearStation () {
 
 function dispNearStationSub ( map, lat, lng, color ) {
     makeMarker( map, lat, lng,
-		'https://maps.google.co.jp/mapfiles/ms/icons/' + color + '-dot.png' );
+                format( 'https://maps.google.co.jp/mapfiles/ms/icons/$$$-dot.png', color) );
     makeCircle( map, lat, lng );
     var from = new google.maps.LatLng( lat, lng );
     getNearStations( lat, lng ).forEach(
 	function( e, idx, ary ) {
-	    var marker = makeMarker( map, e['lat'], e['lng'], 'https://tkita.github.io/m5/resources/mm_20_' + color + '.png' );
+	    var marker = makeMarker( map, e['lat'], e['lng'],
+                                     format( 'https://tkita.github.io/m5/resources/mm_20_$$$.png', color ) );
     	    var dist = google.maps.geometry.spherical.computeDistanceBetween( from,
     		new google.maps.LatLng( e['lat'], e['lng'] ) );
-    	    var str = '(' + ( idx + 1 ) + ') ' +
-		e['name'] + ': ' +
-		separate( Math.floor( dist ) ) + 'm';
+    	    var str = format( '($$$) $$$: $$$m',
+                              ( idx + 1 ), e['name'], separate( Math.floor( dist ) ) );
     	    attachMessage( marker, str );
     	    google.maps.event.trigger( marker, 'click' );
 	});
@@ -472,16 +481,17 @@ function changeBusStop ( id ) {
 	var aryRoute = Object.keys( objBusStopRoute[ c ].route );
 	aryRoute.forEach( function ( r ) {
 	    if ( objBusStopRoute[ c ].route[ r ].data.indexOf( id ) > -1 ) {
-		addOption( sel,
-			   [ c, r ],
-			   objBusStopRoute[ c ].route[ r ].name + '(' + objBusStopRoute[ c ].company + ')' );
+		addOption( sel, [ c, r ],
+                           format( '$$$($$$)',
+                                   objBusStopRoute[ c ].route[ r ].name,
+                                   objBusStopRoute[ c ].company) );
 	    }
 	});
     });
 }
 
 function drawBusRoute ( map, route ) {
-    var url = 'https://tkita.github.io/m5/data-kml/' + route.replace( ',', '' ) + '.kml';
+    var url = format( 'https://tkita.github.io/m5/data-kml/$$$.kml', route.replace( ',', '' ) );
     var kml = new google.maps.KmlLayer( url );
     kml.setMap( map );
 }
@@ -657,8 +667,9 @@ function drawTouhyouMarker ( map, ary, color, tooltip ) {
     ary.forEach( function( e, idx, ary ) {
         var marker = makeMarker( map, e['lat'], e['lng'],
                                  'https://maps.google.co.jp/mapfiles/ms/icons/' + color + '.png' );
-        attachMessage( marker, '(' + e['id'] + ') ' + e['name'] + '<br>' +
-                       separate( Math.floor( e['dist'] ) ) + 'm' );
+        attachMessage( marker, format( '($$$) $$$<br>$$$m',
+                                       e['id'], e['name'], separate( Math.floor( e['dist'] ) ) )
+                     );
         if ( tooltip ) {
             google.maps.event.trigger( marker, 'click' );
         }
@@ -701,15 +712,6 @@ var company_name = { 34: 'ＪＲバス',
 		     93: '市電',
 		     100: 'ランドマーク'
 	           }
-
-function format () {
-    var args = Array.prototype.slice.call( arguments, 0 );
-    var str = args.shift();
-    args.forEach( function(e) {
-	str = str.replace( '$$$', e );
-    });
-    return str;
-}
 
 function getRoutePrediction ( word, id ) {
     var param = {};
@@ -920,39 +922,18 @@ function showLine ( line_id, from_id, to_id ) {
     var center = obj.route_station[0].station_list.filter( function(s) {
 	return ( s.station_id == from_id );
     });
-//    var map = new google.maps.Map( dom,
-//				   { center: { lat: Number( center[0].lat ),
-//					       lng: Number( center[0].lon ) },
-//				     zoom: 13 } );
     var map = makeMap( line_id, center[0].lat, center[0].lon, { zoom: 13 } );
     document.getElementById( line_id ).style.height = '300px';
 
     obj.route_station.forEach( function( route ) {
 	var path = route.station_list.map( function(r) {
-	    return { lat: Number( r.lat ),
-		     lng: Number( r.lon ) }
+	    return { lat: Number( r.lat ), lng: Number( r.lon ) }
 	});
-//	var polyline = new google.maps.Polyline( { strokeColor: 'cyan',
-//						   strokeOpacity: 0.8,
-//						   strokeWeight: 2,
-//						   path: path } );
-//	polyline.setMap( map );
-        drawPolyline( map, path, { strokeColor: 'cyan',
-                                   strokeOpacity: 0.8,
-                                   strokeWeight: 2 } );
+        drawPolyline( map, path, { strokeColor: 'cyan', strokeOpacity: 0.8, strokeWeight: 2 } );
 
 	route.station_list.forEach( function(s) {
-//	    var marker = new google.maps.Marker(
-//		{ position: { lat: Number( s.lat ),
-//			      lng: Number( s.lon ) },
-//		  icon: 'https://tkita.github.io/m5/resources/mm_20_orange.png',
-//		  map: map });
-            var marker = makeMarker( map, s.lat, s.lon, 'https://tkita.github.io/m5/resources/mm_20_orange.png' );
-
-//	    google.maps.event.addListener( marker, 'click', function( event ) {
-//		new google.maps.InfoWindow( { content: s.name } )
-//		    .open( marker.getMap(), marker );
-//	    });
+            var marker = makeMarker( map, s.lat, s.lon,
+                                     'https://tkita.github.io/m5/resources/mm_20_orange.png' );
             attachMessage( marker, s.name );
 	    if ( s.station_id == from_id ) {
 		google.maps.event.trigger( marker, 'click' );
