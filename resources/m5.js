@@ -2,6 +2,10 @@
 var geocoder;
 var adpSummaryBorderColor;
 
+var URL_GOOGLE_ICONS = 'https://maps.google.co.jp/mapfiles/ms/icons/';
+var URL_EKIBUS_API = 'https://ekibus-api.city.sapporo.jp/';
+var URL_TKITA_GITHUB = 'https://tkita.github.io/m5/';
+
 // subroutines
 function format () {
     var args = Array.prototype.slice.call( arguments, 0 );
@@ -407,13 +411,13 @@ function dispNearStation () {
 
 function dispNearStationSub ( map, lat, lng, color ) {
     makeMarker( map, lat, lng,
-                format( 'https://maps.google.co.jp/mapfiles/ms/icons/$$$-dot.png', color) );
+                format( URL_GOOGLE_ICONS + '$$$-dot.png', color) );
     makeCircle( map, lat, lng );
     var from = new google.maps.LatLng( lat, lng );
     getNearStations( lat, lng ).forEach(
 	function( e, idx, ary ) {
 	    var marker = makeMarker( map, e['lat'], e['lng'],
-                                     format( 'https://tkita.github.io/m5/resources/mm_20_$$$.png', color ) );
+                                     format( URL_TKITA_GITHUB + 'resources/mm_20_$$$.png', color ) );
     	    var dist = google.maps.geometry.spherical.computeDistanceBetween( from,
     		new google.maps.LatLng( e['lat'], e['lng'] ) );
     	    var str = format( '($$$) $$$: $$$m',
@@ -491,7 +495,7 @@ function changeBusStop ( id ) {
 }
 
 function drawBusRoute ( map, route ) {
-    var url = format( 'https://tkita.github.io/m5/data-kml/$$$.kml', route.replace( ',', '' ) );
+    var url = format( URL_TKITA_GITHUB + 'data-kml/$$$.kml', route.replace( ',', '' ) );
     var kml = new google.maps.KmlLayer( url );
     kml.setMap( map );
 }
@@ -524,14 +528,14 @@ function dispBusRoute ( busRouteKey ) {
     var transitLayer = new google.maps.TransitLayer();
     transitLayer.setMap( map );
 
-    var url = 'https://maps.google.co.jp/mapfiles/ms/icons/';
-    makeMarker( map, lat,       lng,       url + 'green-dot.png' );
+    makeMarker( map, lat,       lng,       URL_GOOGLE_ICONS + 'green-dot.png' );
     makeCircle( map, lat, lng );
-    makeMarker( map, latlng[2], latlng[3], url + 'red-dot.png' );
+    makeMarker( map, latlng[2], latlng[3], URL_GOOGLE_ICONS + 'red-dot.png' );
 
     // バス停
-    var url = 'https://tkita.github.io/m5/resources/';
-    drawBusStops( map, busRouteKey, url + 'mm_20_orange.png', getOptionValue( 'busStops' ) );
+    drawBusStops( map, busRouteKey,
+                  URL_TKITA_GITHUB + 'resources/mm_20_orange.png',
+                  getOptionValue( 'busStops' ) );
 
     // バス路線
     drawBusRoute( map, busRouteKey )
@@ -545,7 +549,7 @@ function dispBusRoute ( busRouteKey ) {
 	busRouteKey = busRouteKey.split( ',' );
 	busRouteKey = busRouteKey[1] + ',' + busRouteKey[2];
 	drawBusRoute( map, busRouteKey )
-	drawBusStops( map, busRouteKey, url + 'mm_20_green.png', false );
+	drawBusStops( map, busRouteKey, URL_TKITA_GITHUB + 'resources/mm_20_green.png', false );
 	drawControl( map, busRouteKey, google.maps.ControlPosition.BOTTOM_CENTER, 'green' );
     }
 }
@@ -665,8 +669,7 @@ function getNearTouhyou ( stLat, stLng ) {
 
 function drawTouhyouMarker ( map, ary, color, tooltip ) {
     ary.forEach( function( e, idx, ary ) {
-        var marker = makeMarker( map, e['lat'], e['lng'],
-                                 'https://maps.google.co.jp/mapfiles/ms/icons/' + color + '.png' );
+        var marker = makeMarker( map, e['lat'], e['lng'], URL_GOOGLE_ICONS + color + '.png' );
         attachMessage( marker, format( '($$$) $$$<br>$$$m',
                                        e['id'], e['name'], separate( Math.floor( e['dist'] ) ) )
                      );
@@ -695,7 +698,7 @@ function dispNearTouhyou () {
 			       strokeOpacity: 0.5,
 			       strokeWeight: 2 } );
 
-    makeMarker( map, stLat, stLng, 'https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png' );
+    makeMarker( map, stLat, stLng, URL_GOOGLE_ICONS + 'green-dot.png' );
 
     var nearTouhyou = getNearTouhyou( stLat, stLng );
     drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red', true );
@@ -703,15 +706,14 @@ function dispNearTouhyou () {
 }
 
 // ekibus
-var company_name = { 34: 'ＪＲバス',
+var COMPANY_NAME = { 34: 'ＪＲバス',
 		     42: 'じょうてつバス',
 		     54: '中央バス',
 		     64: 'ばんけいバス',
 		     91: 'ＪＲ鉄道',
 		     92: '地下鉄',
 		     93: '市電',
-		     100: 'ランドマーク'
-	           }
+		     100: 'ランドマーク' }
 
 function getRoutePrediction ( word, id ) {
     var param = {};
@@ -722,7 +724,7 @@ function getRoutePrediction ( word, id ) {
     param['company_id']  = '';
     param['lang']        = '';
 
-    $.ajax( { url: 'https://ekibus-api.city.sapporo.jp/get_route_prediction',
+    $.ajax( { url: URL_EKIBUS_API + 'get_route_prediction',
 	      type: 'POST',
 	      data: param,
 	      dataType: 'text' }
@@ -732,7 +734,7 @@ function getRoutePrediction ( word, id ) {
 	          var dom = removeOptions( id );
 	          obj.route_prediction.forEach( function(e) {
                       var str = format( '($$$)$$$ - $$$',
-                                        e.company_id, company_name[ e.company_id ], e.name );
+                                        e.company_id, COMPANY_NAME[ e.company_id ], e.name );
 		      addOption( dom, e.station_id, str ); // dom, value, text
 	          });
 	      }
@@ -764,7 +766,7 @@ function getSearchResult () {
     param['start_datetime']     = '';
     param['lang']               = '';
 
-    $.ajax( { url: 'https://ekibus-api.city.sapporo.jp/get_search_result',
+    $.ajax( { url: URL_EKIBUS_API + 'get_search_result',
 	      type: 'POST',
 	      data: param,
 	      dataType: 'text' }
@@ -848,7 +850,7 @@ function getTimeTable ( from_id, from_name, to_id, to_name ) {
     param['end_st']   = to_id;
     param['lang']     = '';
 
-    $.ajax( { url: 'https://ekibus-api.city.sapporo.jp/get_time_table',
+    $.ajax( { url: URL_EKIBUS_API + 'get_time_table',
 	      type: 'POST',
 	      data: param,
 	      dataType: 'text' }
@@ -912,18 +914,18 @@ function showLine ( line_id, from_id, to_id ) {
     param['lang']    = '';
 
     var obj = JSON.parse(
-	$.ajax( { url: 'https://ekibus-api.city.sapporo.jp/get_route_station',
+	$.ajax( { url: URL_EKIBUS_API + 'get_route_station',
 		  type: 'POST',
 		  data: param,
 		  dataType: 'text',
 		  async: false      // デフォルトは非同期
 		} ).responseText );
 
+    document.getElementById( line_id ).style.height = '300px';
     var center = obj.route_station[0].station_list.filter( function(s) {
 	return ( s.station_id == from_id );
     });
     var map = makeMap( line_id, center[0].lat, center[0].lon, { zoom: 13 } );
-    document.getElementById( line_id ).style.height = '300px';
 
     obj.route_station.forEach( function( route ) {
 	var path = route.station_list.map( function(r) {
@@ -933,7 +935,7 @@ function showLine ( line_id, from_id, to_id ) {
 
 	route.station_list.forEach( function(s) {
             var marker = makeMarker( map, s.lat, s.lon,
-                                     'https://tkita.github.io/m5/resources/mm_20_orange.png' );
+                                     URL_TKITA_GITHUB + 'resources/mm_20_orange.png' );
             attachMessage( marker, s.name );
 	    if ( s.station_id == from_id ) {
 		google.maps.event.trigger( marker, 'click' );
