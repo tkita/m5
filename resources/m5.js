@@ -920,34 +920,40 @@ function showLine ( line_id, from_id, to_id ) {
     var center = obj.route_station[0].station_list.filter( function(s) {
 	return ( s.station_id == from_id );
     });
-    var dom = removeAllChilds( line_id );
-    dom.style.height = '300px';
-    var map = new google.maps.Map( dom,
-				   { center: { lat: Number( center[0].lat ),
-					       lng: Number( center[0].lon ) },
-				     zoom: 13 } );
+//    var map = new google.maps.Map( dom,
+//				   { center: { lat: Number( center[0].lat ),
+//					       lng: Number( center[0].lon ) },
+//				     zoom: 13 } );
+    var map = makeMap( line_id, center[0].lat, center[0].lon, { zoom: 13 } );
+    document.getElementById( line_id ).style.height = '300px';
 
     obj.route_station.forEach( function( route ) {
 	var path = route.station_list.map( function(r) {
 	    return { lat: Number( r.lat ),
 		     lng: Number( r.lon ) }
 	});
-	var polyline = new google.maps.Polyline( { strokeColor: 'cyan',
-						   strokeOpacity: 0.8,
-						   strokeWeight: 2,
-						   path: path } );
-	polyline.setMap( map );
+//	var polyline = new google.maps.Polyline( { strokeColor: 'cyan',
+//						   strokeOpacity: 0.8,
+//						   strokeWeight: 2,
+//						   path: path } );
+//	polyline.setMap( map );
+        drawPolyline( map, path, { strokeColor: 'cyan',
+                                   strokeOpacity: 0.8,
+                                   strokeWeight: 2 } );
 
 	route.station_list.forEach( function(s) {
-	    var marker = new google.maps.Marker(
-		{ position: { lat: Number( s.lat ),
-			      lng: Number( s.lon ) },
-		  icon: 'https://tkita.github.io/m5/resources/mm_20_orange.png',
-		  map: map });
-	    google.maps.event.addListener( marker, 'click', function( event ) {
-		new google.maps.InfoWindow( { content: s.name } )
-		    .open( marker.getMap(), marker );
-	    });
+//	    var marker = new google.maps.Marker(
+//		{ position: { lat: Number( s.lat ),
+//			      lng: Number( s.lon ) },
+//		  icon: 'https://tkita.github.io/m5/resources/mm_20_orange.png',
+//		  map: map });
+            var marker = makeMarker( map, s.lat, s.lon, 'https://tkita.github.io/m5/resources/mm_20_orange.png' );
+
+//	    google.maps.event.addListener( marker, 'click', function( event ) {
+//		new google.maps.InfoWindow( { content: s.name } )
+//		    .open( marker.getMap(), marker );
+//	    });
+            attachMessage( marker, s.name );
 	    if ( s.station_id == from_id ) {
 		google.maps.event.trigger( marker, 'click' );
 	    }
