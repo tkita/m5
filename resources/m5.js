@@ -145,7 +145,8 @@ function drawControl ( map, str, pos, color ) {
       [ 'border',     '1px solid #000' ],
       [ 'background', '#fff' ],
       [ 'color', color ],
-      [ 'fontSize',   '14px' ] ].forEach( function( e ) {
+      [ 'fontSize',   '14px' ]
+    ].forEach( function( e ) {
 	  container.style[ e[0] ] = e[1];
       });
     container.innerText = str;
@@ -542,7 +543,7 @@ function dispBusRoute ( busRouteKey ) {
     drawBusRoute( map, busRouteKey )
 
     var sel = document.getElementById( 'busRoutes' );
-    drawControl( map, getOptionText( 'busRoutes' ), false, 'orange' );
+    drawControl( map, getOptionText( 'busRoutes' ), false, 'black' );
 
     // 路線を固定
     busRouteKey = document.getElementById( 'lock' ).value;
