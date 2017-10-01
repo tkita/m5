@@ -103,24 +103,18 @@ function makeMarker( map, lat, lng, image, opt_msg ) {
     return marker;
 }
 
-function attachMessage( marker, msg ) {
-    google.maps.event.addListener( marker, 'click', function( event ) {
-	new google.maps.InfoWindow( { content: msg } ).open( marker.getMap(), marker );
-    });
-}
-
 function makeCircle( map, lat, lng ) {
-    var circleOptions = { strokeColor: 'green', // '#c71585',
-			  strokeOpacity: 0.3,
-			  strokeWeight: 3,
-			  fillColor: '#ff1493',
-			  fillOpacity: 0,
-			  clickable: false,
-			  map: map,
-			  center: new google.maps.LatLng( lat, lng ),
-			  radius: 1000   // 半径 1000 m
-			};
-    var circle = new google.maps.Circle( circleOptions );
+    var options = { strokeColor: 'green', // '#c71585',
+		    strokeOpacity: 0.3,
+		    strokeWeight: 3,
+		    fillColor: '#ff1493',
+		    fillOpacity: 0,
+		    clickable: false,
+		    map: map,
+		    center: new google.maps.LatLng( lat, lng ),
+		    radius: 1000   // 半径 1000 m
+		  };
+    return new google.maps.Circle( options );
 }
 
 function drawPolyline ( map, path, option ) {
@@ -431,7 +425,6 @@ function dispNearStationSub ( map, lat, lng, color ) {
 	    var marker = makeMarker( map, e['lat'], e['lng'],
                                      format( URL_TKITA_GITHUB + 'resources/mm_20_$$$.png', color ),
                                      str );
-//    	    attachMessage( marker, str );
     	    google.maps.event.trigger( marker, 'click' );
 	});
 }
@@ -516,7 +509,6 @@ function drawBusStops ( map, busRouteKey, image, advance ) {
     aryBusStop.forEach( function( e ) {
 	var s = objbusstops[ e ].split( ',' );
     	var marker = makeMarker( map, s[0], s[1], image, s[2] );
-//    	attachMessage( marker, s[2] );
 	if ( e == advance ) {
 	    google.maps.event.trigger( marker, 'click' );
 	}	
@@ -683,9 +675,6 @@ function drawTouhyouMarker ( map, ary, color, tooltip ) {
                                          e['id'], e['name'],
                                          fmtNumber( Math.floor( e['dist'] ) ) )
                                         );
-//        attachMessage( marker, format( '($$$) $$$<br>$$$m',
-//                                       e['id'], e['name'], fmtNumber( Math.floor( e['dist'] ) ) )
-//                     );
         if ( tooltip ) {
             google.maps.event.trigger( marker, 'click' );
         }
@@ -949,7 +938,6 @@ function showLine ( line_id, from_id, to_id ) {
 	route.station_list.forEach( function(s) {
             var marker = makeMarker( map, s.lat, s.lon,
                                      URL_TKITA_GITHUB + 'resources/mm_20_orange.png', s.name );
-//            attachMessage( marker, s.name );
 	    if ( s.station_id == from_id ) {
 		google.maps.event.trigger( marker, 'click' );
 	    }
