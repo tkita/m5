@@ -16,6 +16,10 @@ function format () {
     return str;
 }
 
+function fmtNumber( num ) {
+    return String( num ).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,' );
+}
+
 function setInnerHTML ( domName, text ) {
     document.getElementById( domName ).innerHTML = text;
 }
@@ -76,17 +80,26 @@ function makeMap( canvas, lat, lng, option ) {
       [ 'panControl' , false ],
       [ 'scaleControl' , true ],
       [ 'zoomControlOptions' , { style: google.maps.ZoomControlStyle.SMALL } ],
-      [ 'mapTypeId' , google.maps.MapTypeId.ROADMAP ] ].forEach( function( e ) {
+      [ 'mapTypeId' , google.maps.MapTypeId.ROADMAP ]
+    ].forEach( function( e ) {
 	  option[ e[0] ] = e[1];
       });
     return new google.maps.Map( removeAllChilds( canvas ), option );
 }
 
-function makeMarker( map, lat, lng, image ) {
+function makeMarker( map, lat, lng, image, opt_msg ) {
     var marker = new google.maps.Marker(
-	{ position: new google.maps.LatLng( lat, lng ),
-	  icon: new google.maps.MarkerImage( image ),
-	  map: map });
+	{ map: map,
+          position: new google.maps.LatLng( lat, lng ),
+	  icon: new google.maps.MarkerImage( image )
+        } );
+    if ( opt_msg ) {
+        google.maps.event.addListener( marker, 'click',
+                                       function( event ) {
+	                                   new google.maps.InfoWindow( { content: opt_msg } ).
+                                               open( marker.getMap(), marker );
+                                       });
+    }
     return marker;
 }
 
@@ -94,10 +107,6 @@ function attachMessage( marker, msg ) {
     google.maps.event.addListener( marker, 'click', function( event ) {
 	new google.maps.InfoWindow( { content: msg } ).open( marker.getMap(), marker );
     });
-}
-
-function separate( num ) {
-    return String( num ).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,' );
 }
 
 function makeCircle( map, lat, lng ) {
@@ -410,19 +419,19 @@ function dispNearStation () {
 }
 
 function dispNearStationSub ( map, lat, lng, color ) {
-    makeMarker( map, lat, lng,
-                format( URL_GOOGLE_ICONS + '$$$-dot.png', color) );
+    makeMarker( map, lat, lng, format( URL_GOOGLE_ICONS + '$$$-dot.png', color) );
     makeCircle( map, lat, lng );
     var from = new google.maps.LatLng( lat, lng );
     getNearStations( lat, lng ).forEach(
 	function( e, idx, ary ) {
-	    var marker = makeMarker( map, e['lat'], e['lng'],
-                                     format( URL_TKITA_GITHUB + 'resources/mm_20_$$$.png', color ) );
     	    var dist = google.maps.geometry.spherical.computeDistanceBetween( from,
     		new google.maps.LatLng( e['lat'], e['lng'] ) );
     	    var str = format( '($$$) $$$: $$$m',
-                              ( idx + 1 ), e['name'], separate( Math.floor( dist ) ) );
-    	    attachMessage( marker, str );
+                              ( idx + 1 ), e['name'], fmtNumber( Math.floor( dist ) ) );
+	    var marker = makeMarker( map, e['lat'], e['lng'],
+                                     format( URL_TKITA_GITHUB + 'resources/mm_20_$$$.png', color ),
+                                     str );
+//    	    attachMessage( marker, str );
     	    google.maps.event.trigger( marker, 'click' );
 	});
 }
@@ -506,8 +515,8 @@ function drawBusStops ( map, busRouteKey, image, advance ) {
     var aryBusStop = objBusStopRoute[ key[0] ].route[ key[1] ].data;
     aryBusStop.forEach( function( e ) {
 	var s = objbusstops[ e ].split( ',' );
-    	var marker = makeMarker( map, s[0] , s[1], image );
-    	attachMessage( marker, s[2] );
+    	var marker = makeMarker( map, s[0], s[1], image, s[2] );
+//    	attachMessage( marker, s[2] );
 	if ( e == advance ) {
 	    google.maps.event.trigger( marker, 'click' );
 	}	
@@ -669,10 +678,14 @@ function getNearTouhyou ( stLat, stLng ) {
 
 function drawTouhyouMarker ( map, ary, color, tooltip ) {
     ary.forEach( function( e, idx, ary ) {
-        var marker = makeMarker( map, e['lat'], e['lng'], URL_GOOGLE_ICONS + color + '.png' );
-        attachMessage( marker, format( '($$$) $$$<br>$$$m',
-                                       e['id'], e['name'], separate( Math.floor( e['dist'] ) ) )
-                     );
+        var marker = makeMarker( map, e['lat'], e['lng'], URL_GOOGLE_ICONS + color + '.png',
+                                 format( '($$$) $$$<br>$$$m',
+                                         e['id'], e['name'],
+                                         fmtNumber( Math.floor( e['dist'] ) ) )
+                                        );
+//        attachMessage( marker, format( '($$$) $$$<br>$$$m',
+//                                       e['id'], e['name'], fmtNumber( Math.floor( e['dist'] ) ) )
+//                     );
         if ( tooltip ) {
             google.maps.event.trigger( marker, 'click' );
         }
@@ -935,8 +948,8 @@ function showLine ( line_id, from_id, to_id ) {
 
 	route.station_list.forEach( function(s) {
             var marker = makeMarker( map, s.lat, s.lon,
-                                     URL_TKITA_GITHUB + 'resources/mm_20_orange.png' );
-            attachMessage( marker, s.name );
+                                     URL_TKITA_GITHUB + 'resources/mm_20_orange.png', s.name );
+//            attachMessage( marker, s.name );
 	    if ( s.station_id == from_id ) {
 		google.maps.event.trigger( marker, 'click' );
 	    }
