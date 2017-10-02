@@ -408,9 +408,9 @@ function dispNearStation () {
 
     var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 14 } );
     var st = dispNearStationSub( map, latlng[0], latlng[1], 'green' );
-    console.info( st );
+    document.getElementById( 'jrdepstation' ).textContent = st[0].name;
     var st = dispNearStationSub( map, latlng[2], latlng[3], 'red' );
-    console.info( st );
+    document.getElementById( 'jrarrstation' ).textContent = st[0].name;
     drawBoundArea( map );
 }
 
@@ -949,4 +949,11 @@ function showLine ( line_id, from_id, to_id ) {
 	    }
 	});
     });
+}
+
+function setStationName () {
+    document.getElementById( 'word_ebDep' ).value =
+        document.getElementById( 'jrdepstation' ).textContent;
+    document.getElementById( 'word_ebArr' ).value =
+        document.getElementById( 'jrarrstation' ).textContent;
 }
