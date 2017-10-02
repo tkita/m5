@@ -123,8 +123,10 @@
 			<img src="https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png"
 			     style="height: 1em;">
 			<span id="jrdep"></span>
+                        <span>（</span><span id="jrdepstation"></span><span>）</span>
 		    </div>
 		    <div>
+                        <span>（</span><span id="jrarrstation"></span><span>）</span>
 			<img src="https://maps.google.co.jp/mapfiles/ms/icons/red-dot.png"
 			     style="height: 1em;">
 			<span id="jrarr"></span>
@@ -210,11 +212,14 @@
 		</div>
 	    </div>
 
-	    <div>
-		<button id="ebBtnSearch" onClick="getSearchResult();">検索</button>
-		<div id="result"></div>
-		<div id="timetable"></div>
+	    <div style="width: 100%;">
+                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+		    <button id="ebBtnSearch" onClick="getSearchResult();">検索</button>
+                    <button id="ebBtnSetStation" onClick="setStationName();">近隣駅をセット</button>
+                </div>
 	    </div>
+	    <div id="result"></div>
+	    <div id="timetable"></div>
         </div>
 
 	<div class="navibox">
