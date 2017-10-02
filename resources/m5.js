@@ -952,8 +952,15 @@ function showLine ( line_id, from_id, to_id ) {
 }
 
 function setStationName () {
-    document.getElementById( 'word_ebDep' ).value =
-        document.getElementById( 'jrdepstation' ).textContent;
-    document.getElementById( 'word_ebArr' ).value =
-        document.getElementById( 'jrarrstation' ).textContent;
+    var str = document.getElementById( 'jrdepstation' ).textContent;
+    if ( str != '' ) {
+        document.getElementById( 'word_ebDep' ).value = str;
+        ebChangeWord ( 'ebDep' );
+    }
+
+    var str = document.getElementById( 'jrarrstation' ).textContent;
+    if ( str != '' ) {
+        document.getElementById( 'word_ebArr' ).value = str;
+        ebChangeWord ( 'ebArr' );
+    }
 }
