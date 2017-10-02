@@ -240,6 +240,13 @@
         </script>
 	<script type="text/jscript" src="./resources/m5.js"></script>
 	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
-
+        <script src="./lib/jquery.funcResizeBox.js"></script>
+        <script>
+         var RESIZE_OPTION = { isWidthResize: false };
+         $( '#touhyou_map'  ).funcResizeBox( RESIZE_OPTION );
+         $( '#yougu_map'    ).funcResizeBox( RESIZE_OPTION );
+         $( '#jrsubway_map' ).funcResizeBox( RESIZE_OPTION );
+         $( '#bus_map'      ).funcResizeBox( RESIZE_OPTION );
+        </script>
     </body>
 </html>

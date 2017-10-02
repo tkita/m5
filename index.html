@@ -232,7 +232,10 @@
 	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
         <script src="./lib/jquery.funcResizeBox.js"></script>
         <script>
-         $( '#yougu_map' ).funcResizeBox( { isWidthResize: false } );
+         var RESIZE_OPTION = { isWidthResize: false };
+         $( '#yougu_map'    ).funcResizeBox( RESIZE_OPTION );
+         $( '#jrsubway_map' ).funcResizeBox( RESIZE_OPTION );
+         $( '#bus_map'      ).funcResizeBox( RESIZE_OPTION );
         </script>
     </body>
 </html>
