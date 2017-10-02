@@ -378,13 +378,14 @@ function getNearStations ( lat, lng ) {
     // objStations ... 別ファイル [ id, name, lat, lng ]
     var result = objStations.map(
 	function( s ) {
-	    var h1 = Math.abs( lat - s[2] );
-	    var h2 = Math.abs( lng - s[3] );
 	    return { id:   s[0],
 		     name: s[1],
 		     lat:  s[2],
 		     lng:  s[3],
-		     dist: h1 * h1 + h2 * h2 };
+		     dist: google.maps.geometry.spherical.computeDistanceBetween(
+                         new google.maps.LatLng( lat, lng ),
+                         new google.maps.LatLng( s[2], s[3] ) )
+                   };
 	});
 
     result.sort( function( a, b ) {
@@ -401,15 +402,15 @@ function dispNearStation () {
     if ( !latlng ) {
 	return false;
     }
-    var stLat = latlng[0],
-	stLng = latlng[1];
 
     document.getElementById( 'jrdep' ).textContent = document.getElementById( 'faddr' ).textContent;
     document.getElementById( 'jrarr' ).textContent = latlng[4][0] + '　' + latlng[4][1];
 
-    var map = makeMap( 'jrsubway_map', stLat, stLng, { zoom: 14 } );
-    dispNearStationSub ( map, stLat,     stLng,     'green' );
-    dispNearStationSub ( map, latlng[2], latlng[3], 'red' );
+    var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 14 } );
+    var st = dispNearStationSub( map, latlng[0], latlng[1], 'green' );
+    console.info( st );
+    var st = dispNearStationSub( map, latlng[2], latlng[3], 'red' );
+    console.info( st );
     drawBoundArea( map );
 }
 
@@ -417,17 +418,19 @@ function dispNearStationSub ( map, lat, lng, color ) {
     makeMarker( map, lat, lng, format( URL_GOOGLE_ICONS + '$$$-dot.png', color) );
     makeCircle( map, lat, lng );
     var from = new google.maps.LatLng( lat, lng );
-    getNearStations( lat, lng ).forEach(
+    var stations = getNearStations( lat, lng );
+    stations.forEach(
 	function( e, idx, ary ) {
-    	    var dist = google.maps.geometry.spherical.computeDistanceBetween( from,
-    		new google.maps.LatLng( e['lat'], e['lng'] ) );
-    	    var str = format( '($$$) $$$: $$$m',
-                              ( idx + 1 ), e['name'], fmtNumber( Math.floor( dist ) ) );
 	    var marker = makeMarker( map, e['lat'], e['lng'],
-                                     format( URL_TKITA_GITHUB + 'resources/mm_20_$$$.png', color ),
-                                     str );
+                                     format( '$$$resources/mm_20_$$$.png', URL_TKITA_GITHUB, color ),
+                                     format( '($$$) $$$: $$$m',
+                                             ( idx + 1 ),
+                                             e['name'],
+                                             fmtNumber( Math.floor( e['dist'] ) ) )
+                                   );
     	    google.maps.event.trigger( marker, 'click' );
 	});
+    return stations;
 }
 
 function getNearBusStop ( lat, lng ) {
@@ -498,7 +501,7 @@ function changeBusStop ( id ) {
 }
 
 function drawBusRoute ( map, route ) {
-    var url = format( URL_TKITA_GITHUB + 'data-kml/$$$.kml', route.replace( ',', '' ) );
+    var url = format( '$$$data-kml/$$$.kml', URL_TKITA_GITHUB, route.replace( ',', '' ) );
     var kml = new google.maps.KmlLayer( url );
     kml.setMap( map );
 }
@@ -557,7 +560,8 @@ function dispBusRoute ( busRouteKey ) {
 }
 
 function lock () {
-    document.getElementById( 'lock' ).value = getOptionText( 'busRoutes' ) + ',' + getOptionValue( 'busRoutes' );
+    document.getElementById( 'lock' ).value = getOptionText( 'busRoutes' ) +
+        ',' + getOptionValue( 'busRoutes' );
 }
 
 function unlock () {
@@ -671,7 +675,8 @@ function getNearTouhyou ( stLat, stLng ) {
 
 function drawTouhyouMarker ( map, ary, color, tooltip ) {
     ary.forEach( function( e, idx, ary ) {
-        var marker = makeMarker( map, e['lat'], e['lng'], URL_GOOGLE_ICONS + color + '.png',
+        var marker = makeMarker( map, e['lat'], e['lng'],
+                                 URL_GOOGLE_ICONS + color + '.png',
                                  format( '($$$) $$$<br>$$$m',
                                          e['id'], e['name'],
                                          fmtNumber( Math.floor( e['dist'] ) ) )
