@@ -7,7 +7,6 @@
 
 body {
     background-color: white;
-
 }
 
 a {
@@ -150,7 +149,7 @@ option:nth-child(odd) {
     text-align: center;
     color: white;
 }
-	 
+
 /* Directions Panel */
 .warnbox-content {
     font-size: 7pt;
@@ -224,6 +223,15 @@ td.adp-text {
     margin-bottom: 0.4em;
 }
 
+dd a {
+    color: cyan;
+    transition: background 0.3s;
+}
+
+dd a:hover {
+    background: blue;
+}
+
 #bus_map {
     border-radius: 6px;
     height: 60vh;
@@ -244,6 +252,10 @@ td.adp-text {
 
 #groupbusstop {
     margin-bottom: 0.5em;
+    padding-right: 1em;
+}
+
+#groupbusroute {
     padding-right: 1em;
 }
 
@@ -369,11 +381,11 @@ dd {
     }
 
     #groupbusstop {
-	float: left;
+	/* float: left; */
     }
 
     #groupbusroute {
-	margin-bottom: 0.5em;
+	/* margin-bottom: 0.5em; */
     }
 
     div.navibox {

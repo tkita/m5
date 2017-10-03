@@ -138,45 +138,58 @@
 
 	<h1 id="bus">バス <span class="shortcut">bus</span></h1>
 	<div class="contents">
-	    <div id="groupbusstop">
-		<div style="display: flex; flex-direction: row;">
-		    <div style="padding: 0.5em; background: rgba(143, 201, 248, 1);">
-			<label>
-			    <input name="busAround" type="radio" checked /> 自宅周辺
-			</label><br>
-			<label>
-			    <input name="busAround" type="radio" /> 職場周辺
-			</label><br>
-			<button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button><br>
+            <div style="margin-bottom: 0.5em; display: flex; flex-direction: row;">
+	        <div id="groupbusstop">
+		    <div style="display: flex; flex-direction: row;">
+		        <div style="padding: 0.5em; background: rgba(143, 201, 248, 1);">
+			    <label>
+			        <input name="busAround" type="radio" checked /> 自宅周辺
+			    </label><br>
+			    <label>
+			        <input name="busAround" type="radio" /> 職場周辺
+			    </label><br>
+			    <button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button><br>
+		        </div>
+
+		        <div style="padding: 0.5em; background: rgba(127, 221, 233, 1);">
+			    <input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
+			           onFocus="this.select();"
+			           class="ime-active"><br>
+			    <button onClick="searchNameBusStop();">名称でバス停検索</button>
+		        </div>
+		    </div> <!-- end flex -->
+
+		    <div>
+		        <select id="busStops" size="7" onChange="changeBusStop(this.value);"></select>
+		    </div>
+	        </div> <!-- end groupbusstop -->
+
+	        <div id="groupbusroute">
+		    <div>
+		        選択したバス停を含む路線<img src="https://maps.google.co.jp/mapfiles/ms/icons/orange.png" style="height: 1em;"><br>
+		        <select id="busRoutes" size="7" onClick="dispBusRoute(this.value);">
+		        </select>
 		    </div>
 
-		    <div style="padding: 0.5em; background: rgba(127, 221, 233, 1);">
-			<input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
-			       onFocus="this.select();"
-			       class="ime-active"><br>
-			<button onClick="searchNameBusStop();">名称でバス停検索</button>
+		    <div>
+		        <button id="btnLock" onClick="lock();">路線を固定する</button>
+		        <img src="https://maps.google.co.jp/mapfiles/ms/icons/green.png" style="height: 1em;"><br>
+		        <input type="text" id="lock" disabled="disabled" size="30">
+		        <button onClick="unlock();">解除</button>
 		    </div>
-		</div> <!-- end flex -->
-
-		<div>
-		    <select id="busStops" size="7" onChange="changeBusStop(this.value);"></select>
-		</div>
-	    </div> <!-- end groupbusstop -->
-
-	    <div id="groupbusroute">
-		<div>
-		    選択したバス停を含む路線<img src="https://maps.google.co.jp/mapfiles/ms/icons/orange.png" style="height: 1em;"><br>
-		    <select id="busRoutes" size="7" onClick="dispBusRoute(this.value);">
-		    </select>
-		</div>
-
-		<div>
-		    <button id="btnLock" onClick="lock();">路線を固定する</button>
-		    <img src="https://maps.google.co.jp/mapfiles/ms/icons/green.png" style="height: 1em;"><br>
-		    <input type="text" id="lock" disabled="disabled" size="30">
-		    <button onClick="unlock();">解除</button>
-		</div>
-	    </div> <!-- end groupbusroute -->
+	        </div> <!-- end groupbusroute -->
+                <div>
+                    <dl>
+                        <dt>ＪＲ北海道バス</dt>
+                        <dd><a href="http://www.jhbunchin.com/" target="_blank">片道・定期券運賃、距離照会</a></dd>
+                        <dt>北海道中央バス</dt>
+                        <dd><a href="http://www.chuo-bus.co.jp/city_route/rate_table/" target="_blank">片道・定期運賃・キロ数検索</a></dd>
+                        <dd><a href="http://www.bustei.com/" target="_blank">時刻表</a></dd>
+                        <dt>じょうてつバス</dt>
+                        <dd><a href="http://www.jotetsu.co.jp/bus/pdf/price_list.pdf" target="_blank">バス料金表</a></dd>
+                    </dl>
+                </div>
+            </div>
 
 	    <div id="bus_map" class="border"></div>
 	</div> <!-- end contents -->
