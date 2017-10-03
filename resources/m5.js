@@ -789,11 +789,13 @@ function drawTable ( ary ) {
     var tbl = document.createElement( 'table' );
 
     var thead = document.createElement( 'thead' );
+    var tr = document.createElement( 'tr' );
     [ '片道金額', '所要時間', '経路' ].forEach( function(e) {
 	var th = document.createElement( 'th' );
 	th.appendChild( document.createTextNode( e ) );
-	thead.appendChild( th );
+	tr.appendChild( th );
     });
+    thead.appendChild( tr );
     tbl.appendChild( thead );
 
     ary.forEach( function(e) {

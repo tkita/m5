@@ -264,13 +264,17 @@ td.adp-text {
 }
 
 table {
-    border: 1px solid black;
+    border: 1px solid rgb( 48, 66, 81 );
     border-collapse: collapse;
     margin-bottom: 1em;
 }
 
 tr, td, th {
-    border: 1px solid black;
+    border: 1px solid rgb( 48, 66, 81 );
+}
+
+th {
+    padding: 0.5em;
 }
 
 li {
