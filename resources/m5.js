@@ -132,7 +132,7 @@ function drawBoundArea ( map ) {
 	    return { lat: Number( c[1] ),
 		     lng: Number( c[0] ) }
 	});
-	drawPolyline( map, path, { strokeColor: 'cyan',
+	drawPolyline( map, path, { strokeColor: 'blue',
 				   strokeOpacity: 0.8,
 				   strokeWeight: 2 } );
     }
