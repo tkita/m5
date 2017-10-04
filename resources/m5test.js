@@ -409,8 +409,10 @@ function dispNearStation () {
     var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 14 } );
     var st = dispNearStationSub( map, latlng[0], latlng[1], 'green' );
     document.getElementById( 'jrdepstation' ).textContent = st[0].name;
+    var txt = st[0].name + '@';
     var st = dispNearStationSub( map, latlng[2], latlng[3], 'red' );
     document.getElementById( 'jrarrstation' ).textContent = st[0].name;
+    window.clipboardData.setData( 'Text', txt + st[0].name );
     drawBoundArea( map );
 }
 
