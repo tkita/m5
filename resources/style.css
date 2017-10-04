@@ -259,6 +259,10 @@ dd a:hover {
     padding-right: 1em;
 }
 
+#bus_links {
+    display: none;
+}
+
 #ebDeparture {
     border: 1px solid rgba( 48, 97, 198, 1 );
     margin-bottom: 0.5em;
@@ -386,6 +390,10 @@ dd {
 
     #groupbusroute {
 	/* margin-bottom: 0.5em; */
+    }
+
+    #bus_links {
+        display: block;
     }
 
     div.navibox {
