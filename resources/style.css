@@ -135,6 +135,10 @@ option:nth-child(odd) {
 }
 
 /* 交通用具 */
+#btnDist {
+    margin-right: 2em;
+}
+
 #directionsPanel {
     margin-right: 0.2em;
     width: 20vw;
