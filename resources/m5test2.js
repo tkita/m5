@@ -315,6 +315,7 @@ function mutationObjectCallback ( mutationRecordsList ) {
                                  function( n ) {
 	                             return ( n.textContent.match( / km/ ) );
 	                         });
+        console.info( span );
         var km = 0.0;
         span.forEach( function(e) {
             km = km + Number( e.replace( ' km', '' ) );
