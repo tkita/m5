@@ -308,7 +308,7 @@ function mutationObjectCallback ( mutationRecordsList ) {
 
         var table = document.getElementsByClassName( 'adp-directions' );
         [].forEach.call( dom, function(e) {
-//            e.style.display = 'none';
+            e.style.display = 'none';
         });
 
 	var span = [].filter.call( document.getElementsByTagName( 'span' ),
@@ -342,7 +342,6 @@ function getWaypoints () {
             return { location: new google.maps.LatLng( coords[0], coords[1] ) };
         });
     }
-    console.info( ary );
     return ary;
 }
 
@@ -361,6 +360,7 @@ function measure_distance () {
     var edLng = latlng[3];
     var map = makeMap( 'yougu_map', stLat, stLng, { zoom: 18 } );
 
+    google.maps.event.clearListeners( map, 'rightclick' );
     map.addListener( 'rightclick', function( arg ) {
         var element = document.getElementById( 'waypoints' );
         element.textContent = element.textContent +
