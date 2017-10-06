@@ -308,14 +308,13 @@ function mutationObjectCallback ( mutationRecordsList ) {
 
         var table = document.getElementsByClassName( 'adp-directions' );
         [].forEach.call( dom, function(e) {
-            e.style.display = 'none';
+//            e.style.display = 'none';
         });
 
 	var span = [].filter.call( document.getElementsByTagName( 'span' ),
                                  function( n ) {
 	                             return ( n.textContent.match( / km/ ) );
 	                         });
-        console.info( span );
         var km = 0.0;
         span.forEach( function(e) {
             km = km + Number( e.textContent.replace( ' km', '' ) );
