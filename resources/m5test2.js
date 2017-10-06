@@ -312,8 +312,8 @@ function mutationObjectCallback ( mutationRecordsList ) {
         // });
 
         $(function () {
-            $( 'adp-summary' ).next().hide();
-            $( 'adp-summary' ).click( function() {
+            $( '.adp-summary' ).next().hide();
+            $( '.adp-summary' ).click( function() {
                 if ( $( this ).next().is( ':hidden' ) ) {
                     $( this ).next().slideDown();
                 } else {
@@ -657,7 +657,7 @@ function changeCity ( city ) {
 }
 
 function init () {
-    alert( 'test2' );
+    alert( 'test2.1' );
     setupShokuba();
     setupBoundCity();
     changeCity( getOptionValue( 'boundCity' ) );
