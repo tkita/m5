@@ -306,11 +306,6 @@ function mutationObjectCallback ( mutationRecordsList ) {
             e.style.borderColor = adpSummaryBorderColor;
         });
 
-        // var table = document.getElementsByClassName( 'adp-directions' );
-        // [].forEach.call( dom, function(e) {
-        //     e.style.display = 'none';
-        // });
-
         $(function () {
             $( '.adp-summary' ).next().hide();
             $( '.adp-summary' ).click( function() {
