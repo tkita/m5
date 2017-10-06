@@ -300,18 +300,6 @@ function move () {
 // dom の更新を監視する
 //   https://msdn.microsoft.com/ja-jp/library/dn265034(v=vs.85).aspx
 function mutationObjectCallback ( mutationRecordsList ) {
-    // var dom = document.getElementsByClassName( 'adp-summary' )[0];
-    // if ( dom ) {
-    //     dom.style.borderColor = adpSummaryBorderColor;
-    //     var km = [].filter.call( document.getElementsByTagName( 'span' ),
-    //                              function( n ) {
-    //                                  return ( n.textContent.match( / km/ ) );
-    //                              });
-    //     document.getElementById( 'distance' ).textContent =
-    //         ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
-    //         ': ' + km[0].textContent;
-    // }
-
     var dom = document.getElementsByClassName( 'adp-summary' );
     if ( dom[0] ) {
         [].forEach.call( dom, function(e) {
@@ -330,10 +318,7 @@ function mutationObjectCallback ( mutationRecordsList ) {
 	document.getElementById( 'distance' ).textContent =
 	    ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
 	    ': ' + km + ' km';
-
     }
-
-
 }
 
 var observerObject = new MutationObserver( mutationObjectCallback );
@@ -345,11 +330,10 @@ observerObject.observe( document.getElementById( 'directionsPanel' ), // target 
 			});
 
 function getWaypoints () {
+    var ary = [];
     var txt = document.getElementById( 'waypoints' ).textContent;
-    if ( txt == '' ) {
-        var ary = [];
-    } else {
-        var ary = txt.split(' ').map( function(e) {
+    if ( txt != '' ) {
+        ary = txt.slice( 0, -1 ).split(' ').map( function(e) {
             var coords = e.split(',');
             return { location: new google.maps.LatLng( coords[0], coords[1] ) };
         });
@@ -372,6 +356,12 @@ function measure_distance () {
     var edLat = latlng[2];
     var edLng = latlng[3];
     var map = makeMap( 'yougu_map', stLat, stLng, { zoom: 18 } );
+
+    map.addListener( 'rightclick', function( arg ) {
+        var element = document.getElementById( 'waypoints' );
+        element.textContent = element.textContent +
+            format( '$$$,$$$ ', arg.latLng.lat, arg.latLng.lng );
+    });
 
     // 地下鉄を強調表示
     var transitLayer = new google.maps.TransitLayer();
