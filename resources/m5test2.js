@@ -657,7 +657,6 @@ function changeCity ( city ) {
 }
 
 function init () {
-    alert( 'test2.1' );
     setupShokuba();
     setupBoundCity();
     changeCity( getOptionValue( 'boundCity' ) );
