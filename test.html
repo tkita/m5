@@ -91,7 +91,13 @@
 			<input name="walk" type="radio" /> 自動車
 		    </label>
 		</div>
+
 		<button id="btnDist" onClick="measure_distance();">距離を測る</button>
+
+                <div class="border" style="width: 70%; display: flex; flex-direction: row; justify-content: space-between;">
+                    <div id="waypoints"></div>
+                    <button onClick="clearWaypoints();">経由地情報をクリア</button>
+                </div>
 	    </div>
 
 	    <div style="display: flex; flex-direction: row;">
@@ -249,7 +255,7 @@
         <script>
          var columnHeader = [ '名称', '建物', '住所', 'lat', 'lng', '通勤不便', '電話番号' ];
         </script>
-	<script type="text/jscript" src="./resources/m5test.js"></script>
+	<script type="text/jscript" src="./resources/m5test2.js"></script>
 	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
         <script src="./lib/jquery.funcResizeBox.js"></script>
         <script>
