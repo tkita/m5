@@ -306,9 +306,20 @@ function mutationObjectCallback ( mutationRecordsList ) {
             e.style.borderColor = adpSummaryBorderColor;
         });
 
-        var table = document.getElementsByClassName( 'adp-directions' );
-        [].forEach.call( dom, function(e) {
-            e.style.display = 'none';
+        // var table = document.getElementsByClassName( 'adp-directions' );
+        // [].forEach.call( dom, function(e) {
+        //     e.style.display = 'none';
+        // });
+
+        $(function () {
+            $( 'adp-summary' ).next().hide();
+            $( 'adp-summary' ).click( function() {
+                if ( $( this ).next().is( ':hidden' ) ) {
+                    $( this ).next().slideDown();
+                } else {
+                    $( this ).next().slideUp();
+                }
+            });
         });
 
 	var span = [].filter.call( document.getElementsByTagName( 'span' ),
@@ -646,6 +657,7 @@ function changeCity ( city ) {
 }
 
 function init () {
+    alert( 'test2' );
     setupShokuba();
     setupBoundCity();
     changeCity( getOptionValue( 'boundCity' ) );
