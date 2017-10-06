@@ -300,16 +300,39 @@ function move () {
 // dom の更新を監視する
 //   https://msdn.microsoft.com/ja-jp/library/dn265034(v=vs.85).aspx
 function mutationObjectCallback ( mutationRecordsList ) {
-    var dom = document.getElementsByClassName( 'adp-summary' )[0];
-    if ( dom ) {
-	dom.style.borderColor = adpSummaryBorderColor;	
-	var km = [].filter.call( document.getElementsByTagName( 'span' ),
+    var dom = document.getElementsByClassName( 'adp-summary' );
+    if ( dom[0] ) {
+        [].forEach.call( dom, function(e) {
+            e.style.borderColor = adpSummaryBorderColor;
+        });
+
+        // var table = document.getElementsByClassName( 'adp-directions' );
+        // [].forEach.call( dom, function(e) {
+        //     e.style.display = 'none';
+        // });
+
+        $(function () {
+            $( '.adp-summary' ).next().hide();
+            $( '.adp-summary' ).click( function() {
+                if ( $( this ).next().is( ':hidden' ) ) {
+                    $( this ).next().slideDown();
+                } else {
+                    $( this ).next().slideUp();
+                }
+            });
+        });
+
+	var span = [].filter.call( document.getElementsByTagName( 'span' ),
                                  function( n ) {
 	                             return ( n.textContent.match( / km/ ) );
 	                         });
+        var km = 0.0;
+        span.forEach( function(e) {
+            km = km + Number( e.textContent.replace( ' km', '' ) );
+        });
 	document.getElementById( 'distance' ).textContent =
 	    ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
-	    ': ' + km[0].textContent;
+	    ': ' + km + ' km';
     }
 }
 
@@ -321,6 +344,22 @@ observerObject.observe( document.getElementById( 'directionsPanel' ), // target 
 			    childList: true
 			});
 
+function getWaypoints () {
+    var ary = [];
+    var txt = document.getElementById( 'waypoints' ).textContent;
+    if ( txt != '' ) {
+        ary = txt.slice( 0, -1 ).split(' ').map( function(e) {
+            var coords = e.split(',');
+            return { location: new google.maps.LatLng( coords[0], coords[1] ) };
+        });
+    }
+    return ary;
+}
+
+function clearWaypoints () {
+    document.getElementById( 'waypoints' ).textContent = '';
+}
+
 function measure_distance () {
     var latlng = checkInData();
     if ( !latlng ) {
@@ -331,6 +370,13 @@ function measure_distance () {
     var edLat = latlng[2];
     var edLng = latlng[3];
     var map = makeMap( 'yougu_map', stLat, stLng, { zoom: 18 } );
+
+    google.maps.event.clearListeners( map, 'rightclick' );
+    map.addListener( 'rightclick', function( arg ) {
+        var element = document.getElementById( 'waypoints' );
+        element.textContent = element.textContent +
+            format( '$$$,$$$ ', arg.latLng.lat, arg.latLng.lng );
+    });
 
     // 地下鉄を強調表示
     var transitLayer = new google.maps.TransitLayer();
@@ -348,17 +394,22 @@ function measure_distance () {
 	{ draggable: true,
 	  polylineOptions: { strokeOpacity: 0.5,
 			     strokeWeight: 5,
-			     strokeColor: adpSummaryBorderColor }});
+			     strokeColor: adpSummaryBorderColor }
+        });
     directionsRenderer.setMap( map );
 
     var tMode = document.getElementsByName( "walk" )[0].checked ?
 	google.maps.DirectionsTravelMode.WALKING :
 	google.maps.DirectionsTravelMode.DRIVING;
+
+    var keiyu = getWaypoints();
+
     var request = { origin: new google.maps.LatLng( stLat, stLng ),
-		    destination: new google.maps.LatLng( edLat, edLng ),
-		    avoidHighways: true,	// true = 高速道路を除外する
-		    avoidTolls: true,		// true = 有料区間を除外する
-		    travelMode: tMode
+                    destination: new google.maps.LatLng( edLat, edLng ),
+                    waypoints: keiyu,           // 経由地点
+                    avoidHighways: true,	// true = 高速道路を除外する
+                    avoidTolls: true,		// true = 有料区間を除外する
+                    travelMode: tMode
 		  };
     var directionsService = new google.maps.DirectionsService();
     directionsService.route( request,
