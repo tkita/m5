@@ -306,15 +306,19 @@ function mutationObjectCallback ( mutationRecordsList ) {
             e.style.borderColor = adpSummaryBorderColor;
         });
 
+        var table = document.getElementsByClassName( 'adp-directions' );
+        [].forEach.call( dom, function(e) {
+            e.style.display = 'none';
+        });
+
 	var span = [].filter.call( document.getElementsByTagName( 'span' ),
                                  function( n ) {
 	                             return ( n.textContent.match( / km/ ) );
 	                         });
         var km = 0.0;
         span.forEach( function(e) {
-            km = km + Number( e );
+            km = km + Number( e.replace( ' km', '' ) );
         });
-
 	document.getElementById( 'distance' ).textContent =
 	    ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
 	    ': ' + km + ' km';
