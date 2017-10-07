@@ -1015,16 +1015,6 @@ function setStationName () {
     }
 }
 
-$(function () {
-    $( '#userPoint_map' ).hide();
-    $( '#btnUserPoint' ).click( function() {
-        if ( $( '#userPoint_map' ).is( ':hidden' ) ) {
-            drawUserPointMap();
-            $( '#userPoint_map' ).slideDown();
-        }
-    });
-});
-
 function drawUserPointMap () {
     var map = makeMap( 'userPoint_map', '43.061945', '141.354395', { zoom: 15 } );
     google.maps.event.clearListeners( map, 'rightclick' );
@@ -1034,6 +1024,15 @@ function drawUserPointMap () {
                                                                      arg.latLng.lng );
     });
 }
+
+$(function () {
+    $( '#userPoint_map' ).hide();
+    $( '#btnUserPoint' ).click( function() {
+        if ( $( '#userPoint_map' ).is( ':hidden' ) ) {
+            $( '#userPoint_map' ).slideDown( 'fast', drawUserPointMap() );
+        }
+    });
+});
 
 function clearUserPoint () {
     clearTextContent( 'userPoint' );
