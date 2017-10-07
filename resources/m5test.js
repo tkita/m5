@@ -418,7 +418,25 @@ function measure_distance () {
 			     });
     directionsRenderer.setPanel( removeAllChilds( 'directionsPanel' ) );
     drawBoundArea( map );
+
+    var styleControl = document.getElementById( 'style-selector-control' );
+    map.controls[ google.maps.ControlPosition.TOP_LEFT ].push( styleControl );
+    document.getElementById( 'hide-poi' ).addEventListener( 'click', function() {
+        map.setOptions( { styles: styles[ 'hide' ] } );
+    });
+    document.getElementById( 'show-poi' ).addEventListener( 'click', function() {
+        map.setOptions( { styles: styles[ 'default' ] } );
+    });
 }
+
+var styles = { default: null,
+               hide: [ { featureType: 'poi.business',
+                         stylers: [ {visibility: 'off'} ] },
+                       { featureType: 'transit',
+                         elementType: 'labels.icon',
+                         stylers: [ {visibility: 'off'} ] }
+                     ]
+             };
 
 // ＪＲ線・地下鉄
 function getNearStations ( lat, lng ) {

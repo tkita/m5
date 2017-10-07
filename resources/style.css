@@ -263,6 +263,14 @@ dd a:hover {
     color: YellowGreen;
 }
 
+.map-control {
+    display: none;              /* 初期値は非表示 */
+}
+
+#yougu_map .map-control {
+    display: block;             /* マップ配下に配置されたら表示 */
+}
+
 #groupbusstop {
     margin-bottom: 0.5em;
     padding-right: 1em;
