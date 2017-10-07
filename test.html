@@ -53,7 +53,7 @@
 
             <div>
                 <div style="margin-bottom: 0.4em;">
-                    <button id="btnUserPoint" onClick="showModal('userpoint.html');">目的地（任意地点）を地図上で指定する</button>
+                    <button id="btnUserPoint" onClick="showModal('userpoint.html');">目的地を地図上で任意に指定する</button>
                     <button id="btnClearUserPoint" onClick="clearTextContent('userPoint');">クリア</button>
                 </div>
                 <div>緯度・経度 = <span id="userPoint"></span></div>
@@ -119,12 +119,12 @@
 
         <div id="style-selector-control" class="map-control">
             <label>
-                <input type="radio" name="show-hide" id="show-poi"
-                       class="selector-control" checked="checked">全表示
+                <input type="radio" name="show-hide" id="hide-poi"
+                       class="selector-control" checked="checked">簡素化
             </label>
             <label>
-                <input type="radio" name="show-hide" id="hide-poi"
-                       class="selector-control">簡素化
+                <input type="radio" name="show-hide" id="show-poi"
+                       class="selector-control">全表示
             </label>
         </div>
 

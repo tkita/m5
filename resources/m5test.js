@@ -419,8 +419,13 @@ function measure_distance () {
     directionsRenderer.setPanel( removeAllChilds( 'directionsPanel' ) );
     drawBoundArea( map );
 
-    var styleControl = document.getElementById( 'style-selector-control' );
-    map.controls[ google.maps.ControlPosition.TOP_LEFT ].push( styleControl );
+    map.controls[ google.maps.ControlPosition.TOP_LEFT ].push(
+        document.getElementById( 'style-selector-control' )
+    );
+    map.setOptions( { styles: styles[ 'hide' ] } );    // 初期動作
+
+    // 他の map にも 'style-selector-control' を追加する場合は、
+    // ID '#hide-poi' ID '#show-poi' を個々にユニーク化する必要
     document.getElementById( 'hide-poi' ).addEventListener( 'click', function() {
         map.setOptions( { styles: styles[ 'hide' ] } );
     });
