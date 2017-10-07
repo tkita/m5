@@ -1015,24 +1015,14 @@ function setStationName () {
     }
 }
 
-function drawUserPointMap () {
-    var map = makeMap( 'userPoint_map', '43.061945', '141.354395', { zoom: 15 } );
-    google.maps.event.clearListeners( map, 'rightclick' );
-    map.addListener( 'rightclick', function( arg ) {
-        document.getElementById( 'userPoint' ).textContent = format( '$$$,$$$ ',
-                                                                     arg.latLng.lat,
-                                                                     arg.latLng.lng );
-    });
+function showModal ( url ) {
+    window.showModalDialog(
+	url,   //移動先
+	this,  //ダイアログに渡すパラメータ（この例では、自分自身のwindowオブジェクト）
+	"dialogWidth=800px; dialogHeight=800px;"
+    );
+    //モーダルダイアログが終了すると、ここからスクリプトが続行される
 }
-
-$(function () {
-    $( '#userPoint_map' ).hide();
-    $( '#btnUserPoint' ).click( function() {
-        if ( $( '#userPoint_map' ).is( ':hidden' ) ) {
-            $( '#userPoint_map' ).slideDown( 'fast', drawUserPointMap() );
-        }
-    });
-});
 
 function clearUserPoint () {
     clearTextContent( 'userPoint' );
