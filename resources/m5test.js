@@ -441,13 +441,15 @@ function measure_distance () {
 
 var styles = { default: null,
                hide: [
+                   { featureType: 'poi.attraction',            // 観光スポット
+                     stylers: [ {visibility: 'off'} ] },
                    { featureType: 'poi.business',
                      stylers: [ {visibility: 'off'} ] },
                    { featureType: 'poi.medical',
                      stylers: [ {visibility: 'off'} ] },
-                   { featureType: 'poi.park',
-                     stylers: [ {visibility: 'off'} ] },
                    { featureType: 'poi.place_of_worship',      // 教会、寺院
+                     stylers: [ {visibility: 'off'} ] },
+                   { featureType: 'poi.sports_complex',        // スポーツ施設
                      stylers: [ {visibility: 'off'} ] },
 //                 { featureType: 'transit',
 //                   elementType: 'labels.icon',
