@@ -96,6 +96,11 @@ div.border {
     justify-content: flex-end;
 }
 
+#userPoint_map {
+    border-radius: 6px;
+    height: 80vh;
+}
+
 #kword {
     font-size: 16px;
 }

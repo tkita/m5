@@ -1015,6 +1015,27 @@ function setStationName () {
     }
 }
 
-function setUserPoint () {
-    document.getElementById( 'userPoint' ).textContent = '43.05539,141.34098';
+$(function () {
+    $( '#userPoint_map' ).hide();
+    $( '#btnUserPoint' ).click( function() {
+        if ( $( '#userPoint_map' ).is( ':hidden' ) ) {
+            $( '#userPoint_map' ).slideDown();
+            drawUserPointMap();
+        }
+    });
+});
+
+function drawUserPointMap () {
+    var map = makeMap( 'userPoint_map', '43.061945', '141.354395', { zoom: 18 } );
+    google.maps.event.clearListeners( map, 'rightclick' );
+    map.addListener( 'rightclick', function( arg ) {
+        document.getElementById( 'userPoint' ).textContent = format( '$$$,$$$ ',
+                                                                     arg.latLng.lat,
+                                                                     arg.latLng.lng );
+    });
+}
+
+function clearUserPoint () {
+    clearTextContent( 'userPoint' );
+    $( '#userPoint_map' ).slideUp();
 }
