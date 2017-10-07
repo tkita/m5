@@ -445,6 +445,10 @@ var styles = { default: null,
                      stylers: [ {visibility: 'off'} ] },
                    { featureType: 'poi.medical',
                      stylers: [ {visibility: 'off'} ] },
+                   { featureType: 'poi.park',
+                     stylers: [ {visibility: 'off'} ] },
+                   { featureType: 'poi.place_of_worship',      // 教会、寺院
+                     stylers: [ {visibility: 'off'} ] },
 //                 { featureType: 'transit',
 //                   elementType: 'labels.icon',
 //                   stylers: [ {visibility: 'off'} ] }
