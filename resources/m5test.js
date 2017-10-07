@@ -429,13 +429,26 @@ function measure_distance () {
     });
 }
 
+// http://phpjavascriptroom.com/?t=ajax&p=googlemapsapiv3_styling#a_maptypestylefeaturetype
+// featureType: 'administrative.land_parcel' ... 土地区画
+//              'landscape'                  ... 景観
+//              'poi'                        ... 誰かが興味をもった場所. Points of Interest
+//              'road'                       ... 道路
+
+// elementType: 'all'      ... 'geometry' & 'labels'
+//              'geometry' ... その対象物 (featureType) の幾何学要素
+//              'labels'   ... その対象物に関連付けられたテキストラベル
+
 var styles = { default: null,
-               hide: [ { featureType: 'poi.business',
-                         stylers: [ {visibility: 'off'} ] },
-                       { featureType: 'transit',
-                         elementType: 'labels.icon',
-                         stylers: [ {visibility: 'off'} ] }
-                     ]
+               hide: [
+                   { featureType: 'poi.business',
+                     stylers: [ {visibility: 'off'} ] },
+                   { featureType: 'poi.medical',
+                     stylers: [ {visibility: 'off'} ] },
+//                 { featureType: 'transit',
+//                   elementType: 'labels.icon',
+//                   stylers: [ {visibility: 'off'} ] }
+               ]
              };
 
 // ＪＲ線・地下鉄
