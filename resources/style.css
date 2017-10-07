@@ -255,6 +255,14 @@ dd a:hover {
     background: MistyRose;
 }
 
+#waypoints {
+    color: YellowGreen;
+}
+
+#userPoint {
+    color: YellowGreen;
+}
+
 #groupbusstop {
     margin-bottom: 0.5em;
     padding-right: 1em;

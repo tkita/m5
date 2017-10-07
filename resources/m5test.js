@@ -384,7 +384,7 @@ function measure_distance () {
 
     // ルート描画
     var directionsRenderer = new google.maps.DirectionsRenderer(
-	{ draggable: true,
+	{ draggable: false,
 	  polylineOptions: { strokeOpacity: 0.5,
 			     strokeWeight: 5,
 			     strokeColor: adpSummaryBorderColor }
@@ -770,7 +770,8 @@ var COMPANY_NAME = { 34: 'ＪＲバス',
 		     91: 'ＪＲ鉄道',
 		     92: '地下鉄',
 		     93: '市電',
-		     100: 'ランドマーク' }
+		     100: 'ランドマーク'
+                   };
 
 function getRoutePrediction ( word, id ) {
     var param = {};

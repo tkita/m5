@@ -9,22 +9,15 @@
 	<script>
 	 var opener = window.dialogArguments;
 
-         function makeMap( canvas, lat, lng, option ) {
-             [ [ 'center' , new google.maps.LatLng( lat, lng ) ],
-               [ 'panControl' , false ],
-               [ 'scaleControl' , true ],
-               [ 'zoomControlOptions' , { style: google.maps.ZoomControlStyle.SMALL } ],
-               [ 'mapTypeId' , google.maps.MapTypeId.ROADMAP ]
-             ].forEach( function( e ) {
-	         option[ e[0] ] = e[1];
-             });
-             return new google.maps.Map( document.getElementById( canvas ), option );
-         }
-
          function init () {
-             console.info( 'enter init()' );
-             var map = makeMap( 'userPoint_map', '43.061945', '141.354395', { zoom: 15 } );
-             console.info( map );
+             var options = { center: new google.maps.LatLng( '43.061945', '141.354395' ),
+                             panControl: false,
+                             scaleControl: true,
+                             zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
+                             zoom: 12,
+                             mapTypeId: google.maps.MapTypeId.ROADMAP
+             };
+             var map = new google.maps.Map( document.getElementById( 'userPoint_map' ), options );
              google.maps.event.clearListeners( map, 'rightclick' );
              map.addListener( 'rightclick', function( arg ) {
                  opener.document.getElementById( 'userPoint' ).textContent =
