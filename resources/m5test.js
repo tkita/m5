@@ -360,12 +360,10 @@ function measure_distance () {
     if ( !latlng ) {
 	return false;
     }
-    var stLat = latlng[0];
-    var stLng = latlng[1];
-    var edLat = latlng[2];
-    var edLng = latlng[3];
-    var map = makeMap( 'yougu_map', stLat, stLng, { zoom: 18 } );
+    var originLat = latlng[0];
+    var originLng = latlng[1];
 
+    var map = makeMap( 'yougu_map', originLat, originLng, { zoom: 18 } );
     google.maps.event.clearListeners( map, 'rightclick' );
     map.addListener( 'rightclick', function( arg ) {
         var element = document.getElementById( 'waypoints' );
@@ -378,7 +376,7 @@ function measure_distance () {
     transitLayer.setMap( map );
 
     // 出発地点を半径１ｋｍの円で囲む
-    makeCircle( map, stLat, stLng );
+    makeCircle( map, originLat, originLng );
 
     adpSummaryBorderColor = document.getElementsByName( 'walk' )[0].checked ?
 	'#FF66FF' :		// この関数 measure_distance() が終了したら
@@ -393,14 +391,17 @@ function measure_distance () {
         });
     directionsRenderer.setMap( map );
 
-    var tMode = document.getElementsByName( "walk" )[0].checked ?
+    var tMode = document.getElementsByName( 'walk' )[0].checked ?
 	google.maps.DirectionsTravelMode.WALKING :
 	google.maps.DirectionsTravelMode.DRIVING;
-
     var keiyu = getWaypoints();
-
-    var request = { origin: new google.maps.LatLng( stLat, stLng ),
-                    destination: new google.maps.LatLng( edLat, edLng ),
+    var userPoint = document.getElementById( 'userPoint' ).textContent;
+    if ( userPoint != '' ) {
+        latlng[2] = userPoint.split(',')[0];
+        latlng[3] = userPoint.split(',')[1];
+    }
+    var request = { origin: new google.maps.LatLng( originLat, originLng ),
+                    destination: new google.maps.LatLng( latlng[2], latlng[3] ),
                     waypoints: keiyu,           // 経由地点
                     avoidHighways: true,	// true = 高速道路を除外する
                     avoidTolls: true,		// true = 有料区間を除外する
@@ -1019,12 +1020,7 @@ function showModal ( url ) {
     window.showModalDialog(
 	url,   //移動先
 	this,  //ダイアログに渡すパラメータ（この例では、自分自身のwindowオブジェクト）
-	"dialogWidth=800px; dialogHeight=800px;"
+	'dialogWidth=800px; dialogHeight=800px;'
     );
     //モーダルダイアログが終了すると、ここからスクリプトが続行される
-}
-
-function clearUserPoint () {
-    clearTextContent( 'userPoint' );
-    $( '#userPoint_map' ).slideUp();
 }
