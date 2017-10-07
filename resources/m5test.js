@@ -20,14 +20,18 @@ function fmtNumber( num ) {
     return String( num ).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,' );
 }
 
-function setInnerHTML ( domName, text ) {
-    document.getElementById( domName ).innerHTML = text;
+function setInnerHTML ( domId, text ) {
+    document.getElementById( domId ).innerHTML = text;
 }
 
 function clearGeocodeResult () {
-    [ 'faddr', 'stLat', 'stLng' ].forEach( function( elm ) {
-	setInnerHTML( elm, '' );
+    [ 'faddr', 'stLat', 'stLng' ].forEach( function( id ) {
+	setInnerHTML( id, '' );
     });
+}
+
+function clearTextContent ( id ) {
+    document.getElementById( id ).textContent = '';
 }
 
 function cbPaste () {
@@ -349,10 +353,6 @@ function getWaypoints () {
         });
     }
     return ary;
-}
-
-function clearWaypoints () {
-    document.getElementById( 'waypoints' ).textContent = '';
 }
 
 function measure_distance () {
@@ -1013,4 +1013,8 @@ function setStationName () {
         document.getElementById( 'word_ebArr' ).value = str;
         ebChangeWord ( 'ebArr' );
     }
+}
+
+function setUserPoint () {
+    document.getElementById( 'userPoint' ).textContent = '43.05539,141.34098';
 }

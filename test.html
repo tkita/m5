@@ -50,6 +50,16 @@
 		    <button onClick="move();">目的地の位置情報を出発地へセット</button>
 		</div>
 	    </div>
+
+            <div>
+                <div style="margin-bottom: 0.4em;">
+                    <button id="btnUserPoint" onClick="setUserPoint();">任意地点を目的地として使用する</button>
+                    <button id="btnClearUserPoint" onClick="clearTextContent('userPoint');">クリア</button>
+                </div>
+                <div>
+                    緯度・経度 = <span id="userPoint">43.05539,141.34098</span>
+                </div>
+            </div>
 	</div> <!-- end contents -->
 
 	<h1 id="departure">出発地点 <span class="shortcut">departure</span></h1>
@@ -96,7 +106,7 @@
 
                 <div class="border" style="width: 70%; display: flex; flex-direction: row; justify-content: space-between;">
                     <div id="waypoints"></div>
-                    <button onClick="clearWaypoints();">経由地情報をクリア</button>
+                    <button onClick="clearTextContent('waypoints');">経由地情報をクリア</button>
                 </div>
 	    </div>
 
