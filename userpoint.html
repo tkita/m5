@@ -22,11 +22,13 @@
          }
 
          function init () {
+             console.info( 'enter init()' );
              var map = makeMap( 'userPoint_map', '43.061945', '141.354395', { zoom: 15 } );
+             console.info( map );
              google.maps.event.clearListeners( map, 'rightclick' );
              map.addListener( 'rightclick', function( arg ) {
                  opener.document.getElementById( 'userPoint' ).textContent =
-                     format( '$$$,$$$ ', arg.latLng.lat, arg.latLng.lng );
+                     opener.format( '$$$,$$$ ', arg.latLng.lat, arg.latLng.lng );
              });
          }
 
