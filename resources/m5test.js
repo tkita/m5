@@ -1019,14 +1019,14 @@ $(function () {
     $( '#userPoint_map' ).hide();
     $( '#btnUserPoint' ).click( function() {
         if ( $( '#userPoint_map' ).is( ':hidden' ) ) {
-            $( '#userPoint_map' ).slideDown();
             drawUserPointMap();
+            $( '#userPoint_map' ).slideDown();
         }
     });
 });
 
 function drawUserPointMap () {
-    var map = makeMap( 'userPoint_map', '43.061945', '141.354395', { zoom: 18 } );
+    var map = makeMap( 'userPoint_map', '43.061945', '141.354395', { zoom: 15 } );
     google.maps.event.clearListeners( map, 'rightclick' );
     map.addListener( 'rightclick', function( arg ) {
         document.getElementById( 'userPoint' ).textContent = format( '$$$,$$$ ',
