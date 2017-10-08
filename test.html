@@ -91,16 +91,17 @@
 	<h1 id="yougu">交通用具 <span class="shortcut">route</span></h1>
 	<div class="contents">
 	    <div style="display: flex; flex-direction: row; margin-bottom: 1em;">
-		<div style="margin-right: 1em;">
-		    <label>
-			<input name="walk" type="radio" checked/> 徒歩
-		    </label><br>
-		    <label>
-			<input name="walk" type="radio" /> 自動車
-		    </label>
-		</div>
-
-		<button id="btnDist" onClick="measure_distance();">距離を測る</button>
+                <div style="display: flex; flex-direction: row; width: 20vw;">
+		    <div style="margin-right: 1em;">
+		        <label>
+			    <input name="walk" type="radio" checked/> 徒歩
+		        </label><br>
+		        <label>
+			    <input name="walk" type="radio" /> 自動車
+		        </label>
+		    </div>
+		    <button id="btnDist" onClick="measure_distance();">距離を測る</button>
+                </div>
 
                 <div class="border" style="width: 70%; display: flex; flex-direction: row; justify-content: space-between;">
                     <div id="waypoints"></div>
