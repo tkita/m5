@@ -464,6 +464,11 @@ var styles = { default: null,
                ]
              };
 
+function clearWaypoints () {
+    clearTextContent( 'waypoints' );
+    measure_distance();
+}
+
 // ＪＲ線・地下鉄
 function getNearStations ( lat, lng ) {
     // objStations ... 別ファイル [ id, name, lat, lng ]
