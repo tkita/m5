@@ -20,14 +20,18 @@ function fmtNumber( num ) {
     return String( num ).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,' );
 }
 
-function setInnerHTML ( domName, text ) {
-    document.getElementById( domName ).innerHTML = text;
+function setInnerHTML ( domId, text ) {
+    document.getElementById( domId ).innerHTML = text;
 }
 
 function clearGeocodeResult () {
-    [ 'faddr', 'stLat', 'stLng' ].forEach( function( elm ) {
-	setInnerHTML( elm, '' );
+    [ 'faddr', 'stLat', 'stLng' ].forEach( function( id ) {
+	setInnerHTML( id, '' );
     });
+}
+
+function clearTextContent ( id ) {
+    document.getElementById( id ).textContent = '';
 }
 
 function cbPaste () {
@@ -170,9 +174,7 @@ function checkInData () {
      	alert( '目的地が選択されていません' );
      	return false;
     }
-    var edLat = wp[3];
-    var edLng = wp[4];
-    return [ stLat, stLng, edLat, edLng, wp ];
+    return [ stLat, stLng, wp[3], wp[4], wp ];
 }
 
 function setBoundArea () {
@@ -300,16 +302,34 @@ function move () {
 // dom の更新を監視する
 //   https://msdn.microsoft.com/ja-jp/library/dn265034(v=vs.85).aspx
 function mutationObjectCallback ( mutationRecordsList ) {
-    var dom = document.getElementsByClassName( 'adp-summary' )[0];
-    if ( dom ) {
-	dom.style.borderColor = adpSummaryBorderColor;	
-	var km = [].filter.call( document.getElementsByTagName( 'span' ),
+    var dom = document.getElementsByClassName( 'adp-summary' );
+    if ( dom[0] ) {
+        [].forEach.call( dom, function(e) {
+            e.style.borderColor = adpSummaryBorderColor;
+        });
+
+        $(function () {
+            $( '.adp-summary' ).next().hide();
+            $( '.adp-summary' ).click( function() {
+                if ( $( this ).next().is( ':hidden' ) ) {
+                    $( this ).next().slideDown();
+                } else {
+                    $( this ).next().slideUp();
+                }
+            });
+        });
+
+	var span = [].filter.call( document.getElementsByTagName( 'span' ),
                                  function( n ) {
 	                             return ( n.textContent.match( / km/ ) );
 	                         });
+        var km = 0.0;
+        span.forEach( function(e) {
+            km = km + Number( e.textContent.replace( ' km', '' ) );
+        });
 	document.getElementById( 'distance' ).textContent =
 	    ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
-	    ': ' + km[0].textContent;
+	    ': ' + km + ' km';
     }
 }
 
@@ -321,23 +341,41 @@ observerObject.observe( document.getElementById( 'directionsPanel' ), // target 
 			    childList: true
 			});
 
+function getWaypoints () {
+    var ary = [];
+    var txt = document.getElementById( 'waypoints' ).textContent;
+    if ( txt != '' ) {
+        ary = txt.slice( 0, -1 ).split(' ').map( function(e) {
+            var coords = e.split(',');
+            return { location: new google.maps.LatLng( coords[0], coords[1] ) };
+        });
+    }
+    return ary;
+}
+
+var routeMap;
 function measure_distance () {
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
     }
-    var stLat = latlng[0];
-    var stLng = latlng[1];
-    var edLat = latlng[2];
-    var edLng = latlng[3];
-    var map = makeMap( 'yougu_map', stLat, stLng, { zoom: 18 } );
+    var originLat = latlng[0];
+    var originLng = latlng[1];
+
+    routeMap = makeMap( 'yougu_map', originLat, originLng, { zoom: 18 } );
+    google.maps.event.clearListeners( routeMap, 'rightclick' );
+    routeMap.addListener( 'rightclick', function( arg ) {
+        var element = document.getElementById( 'waypoints' );
+        element.textContent = element.textContent +
+            format( '$$$,$$$ ', arg.latLng.lat, arg.latLng.lng );
+    });
 
     // 地下鉄を強調表示
     var transitLayer = new google.maps.TransitLayer();
-    transitLayer.setMap( map );
+    transitLayer.setMap( routeMap );
 
     // 出発地点を半径１ｋｍの円で囲む
-    makeCircle( map, stLat, stLng );
+    makeCircle( routeMap, originLat, originLng );
 
     adpSummaryBorderColor = document.getElementsByName( 'walk' )[0].checked ?
 	'#FF66FF' :		// この関数 measure_distance() が終了したら
@@ -345,20 +383,28 @@ function measure_distance () {
 
     // ルート描画
     var directionsRenderer = new google.maps.DirectionsRenderer(
-	{ draggable: true,
+	{ draggable: false,
 	  polylineOptions: { strokeOpacity: 0.5,
 			     strokeWeight: 5,
-			     strokeColor: adpSummaryBorderColor }});
-    directionsRenderer.setMap( map );
+			     strokeColor: adpSummaryBorderColor }
+        });
+    directionsRenderer.setMap( routeMap );
 
-    var tMode = document.getElementsByName( "walk" )[0].checked ?
+    var tMode = document.getElementsByName( 'walk' )[0].checked ?
 	google.maps.DirectionsTravelMode.WALKING :
 	google.maps.DirectionsTravelMode.DRIVING;
-    var request = { origin: new google.maps.LatLng( stLat, stLng ),
-		    destination: new google.maps.LatLng( edLat, edLng ),
-		    avoidHighways: true,	// true = 高速道路を除外する
-		    avoidTolls: true,		// true = 有料区間を除外する
-		    travelMode: tMode
+    var keiyu = getWaypoints();
+    var userPoint = document.getElementById( 'userPoint' ).textContent;
+    if ( userPoint != '' ) {
+        latlng[2] = userPoint.split(',')[0];
+        latlng[3] = userPoint.split(',')[1];
+    }
+    var request = { origin: new google.maps.LatLng( originLat, originLng ),
+                    destination: new google.maps.LatLng( latlng[2], latlng[3] ),
+                    waypoints: keiyu,           // 経由地点
+                    avoidHighways: true,	// true = 高速道路を除外する
+                    avoidTolls: true,		// true = 有料区間を除外する
+                    travelMode: tMode
 		  };
     var directionsService = new google.maps.DirectionsService();
     directionsService.route( request,
@@ -370,8 +416,50 @@ function measure_distance () {
 				 }
 			     });
     directionsRenderer.setPanel( removeAllChilds( 'directionsPanel' ) );
-    drawBoundArea( map );
+    drawBoundArea( routeMap );
+
+    routeMap.controls[ google.maps.ControlPosition.TOP_LEFT ].push( styleControler );
+    routeMap.setOptions( { styles: styles[ 'hide' ] } );    // 初期動作
 }
+
+function changeStylePoi ( key ) {
+    routeMap.setOptions( { styles: styles[ key ] } );
+}
+
+// http://phpjavascriptroom.com/?t=ajax&p=googlemapsapiv3_styling#a_maptypestylefeaturetype
+// featureType: 'administrative.land_parcel' ... 土地区画
+//              'landscape'                  ... 景観
+//              'poi'                        ... 誰かが興味をもった場所. Points of Interest
+//              'road'                       ... 道路
+
+// elementType: 'all'      ... 'geometry' & 'labels'
+//              'geometry' ... その対象物 (featureType) の幾何学要素
+//              'labels'   ... その対象物に関連付けられたテキストラベル
+
+var styleControler = document.getElementById( 'style-selector-control' );
+var visibility_off = [ {visibility: 'off' } ];
+var styles = { default: null,
+               hide: [
+                   { featureType: 'poi.attraction',            // 観光スポット
+                     stylers: visibility_off },
+                   { featureType: 'poi.business',
+                     stylers: visibility_off },
+                   { featureType: 'poi.medical',
+                     stylers: visibility_off },
+                   { featureType: 'poi.place_of_worship',      // 教会、寺院
+                     stylers: visibility_off },
+                   { featureType: 'poi.sports_complex',        // スポーツ施設
+                     stylers: visibility_off },
+
+                   { featureType: 'poi.park',
+                     elementType: 'labels',
+                     stylers: visibility_off },
+
+//                 { featureType: 'transit',
+//                   elementType: 'labels.icon',
+//                   stylers: [ {visibility: 'off' } ] }
+               ]
+             };
 
 // ＪＲ線・地下鉄
 function getNearStations ( lat, lng ) {
@@ -397,20 +485,35 @@ function getNearStations ( lat, lng ) {
     return result.slice( 0, 5 ); // 上位５つ
 }
 
+// btnJrSubway
 function dispNearStation () {
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
     }
-
-    document.getElementById( 'jrdep' ).textContent = document.getElementById( 'faddr' ).textContent;
-    document.getElementById( 'jrarr' ).textContent = latlng[4][0] + '　' + latlng[4][1];
-
     var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 14 } );
+
+    // 出発地
+    document.getElementById( 'jrdep' ).textContent =
+        document.getElementById( 'faddr' ).textContent;
     var st = dispNearStationSub( map, latlng[0], latlng[1], 'green' );
     document.getElementById( 'jrdepstation' ).textContent = st[0].name;
+    var txt = st[0].name + '@';
+
+    // 目的地
+    var userPoint = document.getElementById( 'userPoint' ).textContent;
+    if ( userPoint == '' ) {
+        document.getElementById( 'jrarr' ).textContent = latlng[4][0] + '　' + latlng[4][1];
+    } else {
+        latlng[2] = userPoint.split(',')[0];
+        latlng[3] = userPoint.split(',')[1];
+        document.getElementById( 'jrarr' ).textContent = '任意地点';
+    }
     var st = dispNearStationSub( map, latlng[2], latlng[3], 'red' );
     document.getElementById( 'jrarrstation' ).textContent = st[0].name;
+    window.clipboardData.setData( 'Text', txt + st[0].name );
+
+    //
     drawBoundArea( map );
 }
 
@@ -454,18 +557,23 @@ function getNearBusStop ( lat, lng ) {
     return result.slice( 0, 10 ); // 上位
 }
 
+// btnBus
 function searchNearBusStop () {
     var lat, lng;
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
     }
+    var userPoint = document.getElementById( 'userPoint' ).textContent;
     if ( document.getElementsByName( 'busAround' )[0].checked ) {
 	lat = latlng[0];
 	lng = latlng[1];
-    } else {
+    } else if ( userPoint == '' ) {
 	lat = latlng[2];
 	lng = latlng[3];
+    } else {
+	lat = userPoint.split(',')[0];
+	lng = userPoint.split(',')[1];
     }
     var sel = removeOptions( 'busStops' );
     getNearBusStop( lat, lng ).forEach( function( e ) {
@@ -473,6 +581,7 @@ function searchNearBusStop () {
     });
 }
 
+// 名称でバス停検索
 function searchNameBusStop () {
     var kword = document.getElementById( 'busstopname' ).value;
     var result = Object.keys( objbusstops ).filter( function( id ) {
@@ -525,16 +634,24 @@ function dispBusRoute ( busRouteKey ) {
     if ( !latlng ) {
 	return false;
     }
-    var lat = latlng[0];
-    var lng = latlng[1];
+    var originLat = latlng[0];
+    var originLng = latlng[1];
 
-    var map = makeMap( 'bus_map', lat, lng, { zoom: 14 } );
+    var map = makeMap( 'bus_map', originLat, originLng, { zoom: 14 } );
     drawBoundArea( map );
     var transitLayer = new google.maps.TransitLayer();
     transitLayer.setMap( map );
 
-    makeMarker( map, lat,       lng,       URL_GOOGLE_ICONS + 'green-dot.png' );
-    makeCircle( map, lat, lng );
+    // 出発
+    makeMarker( map, originLat, originLng, URL_GOOGLE_ICONS + 'green-dot.png' );
+    makeCircle( map, originLat, originLng );
+
+    // 目的
+    var userPoint = document.getElementById( 'userPoint' ).textContent;
+    if ( userPoint != '' ) {
+        latlng[2] = userPoint.split(',')[0];
+        latlng[3] = userPoint.split(',')[1];
+    }
     makeMarker( map, latlng[2], latlng[3], URL_GOOGLE_ICONS + 'red-dot.png' );
 
     // バス停
@@ -721,7 +838,8 @@ var COMPANY_NAME = { 34: 'ＪＲバス',
 		     91: 'ＪＲ鉄道',
 		     92: '地下鉄',
 		     93: '市電',
-		     100: 'ランドマーク' }
+		     100: 'ランドマーク'
+                   };
 
 function getRoutePrediction ( word, id ) {
     var param = {};
@@ -965,4 +1083,13 @@ function setStationName () {
         document.getElementById( 'word_ebArr' ).value = str;
         ebChangeWord ( 'ebArr' );
     }
+}
+
+function showModal ( url ) {
+    window.showModalDialog(
+	url,   //移動先
+	this,  //ダイアログに渡すパラメータ（この例では、自分自身のwindowオブジェクト）
+	'dialogWidth=800px; dialogHeight=800px;'
+    );
+    //モーダルダイアログが終了すると、ここからスクリプトが続行される
 }
