@@ -355,6 +355,7 @@ function getWaypoints () {
     return ary;
 }
 
+var routeMap;
 function measure_distance () {
     var latlng = checkInData();
     if ( !latlng ) {
@@ -363,9 +364,9 @@ function measure_distance () {
     var originLat = latlng[0];
     var originLng = latlng[1];
 
-    var map = makeMap( 'yougu_map', originLat, originLng, { zoom: 18 } );
-    google.maps.event.clearListeners( map, 'rightclick' );
-    map.addListener( 'rightclick', function( arg ) {
+    routeMap = makeMap( 'yougu_map', originLat, originLng, { zoom: 18 } );
+    google.maps.event.clearListeners( routeMap, 'rightclick' );
+    routeMap.addListener( 'rightclick', function( arg ) {
         var element = document.getElementById( 'waypoints' );
         element.textContent = element.textContent +
             format( '$$$,$$$ ', arg.latLng.lat, arg.latLng.lng );
@@ -373,10 +374,10 @@ function measure_distance () {
 
     // 地下鉄を強調表示
     var transitLayer = new google.maps.TransitLayer();
-    transitLayer.setMap( map );
+    transitLayer.setMap( routeMap );
 
     // 出発地点を半径１ｋｍの円で囲む
-    makeCircle( map, originLat, originLng );
+    makeCircle( routeMap, originLat, originLng );
 
     adpSummaryBorderColor = document.getElementsByName( 'walk' )[0].checked ?
 	'#FF66FF' :		// この関数 measure_distance() が終了したら
@@ -389,7 +390,7 @@ function measure_distance () {
 			     strokeWeight: 5,
 			     strokeColor: adpSummaryBorderColor }
         });
-    directionsRenderer.setMap( map );
+    directionsRenderer.setMap( routeMap );
 
     var tMode = document.getElementsByName( 'walk' )[0].checked ?
 	google.maps.DirectionsTravelMode.WALKING :
@@ -417,19 +418,14 @@ function measure_distance () {
 				 }
 			     });
     directionsRenderer.setPanel( removeAllChilds( 'directionsPanel' ) );
-    drawBoundArea( map );
+    drawBoundArea( routeMap );
 
-    map.controls[ google.maps.ControlPosition.TOP_LEFT ].push( styleControler );
-    map.setOptions( { styles: styles[ 'hide' ] } );    // 初期動作
+    routeMap.controls[ google.maps.ControlPosition.TOP_LEFT ].push( styleControler );
+    routeMap.setOptions( { styles: styles[ 'hide' ] } );    // 初期動作
+}
 
-    // 他の map にも 'style-selector-control' を追加する場合は、
-    // ID '#hide-poi' ID '#show-poi' を個々にユニーク化する必要
-    document.getElementById( 'hide-poi' ).addEventListener( 'click', function() {
-        map.setOptions( { styles: styles[ 'hide' ] } );
-    });
-    document.getElementById( 'show-poi' ).addEventListener( 'click', function() {
-        map.setOptions( { styles: styles[ 'default' ] } );
-    });
+function changeStylePoi ( key ) {
+    routeMap.setOptions( { styles: styles[ key ] } );
 }
 
 // http://phpjavascriptroom.com/?t=ajax&p=googlemapsapiv3_styling#a_maptypestylefeaturetype
