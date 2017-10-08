@@ -32,11 +32,9 @@
 	<h1 id="top">投票所 <span class="shortcut">top</span></h1>
 	<div class="contents">
 	    <div id="groupkyoku">
-		<div style="margin: 0 0.2em 0.2em 0;"> <!-- top right bottom left -->
-		    <select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
-		</div>
+		<select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
 		<div id="hot"></div>
-	    </div> <!-- end groupkyoku -->
+	    </div>
 
 	    <div id="arrive">
 		<div style="margin-right: 2em;">
@@ -46,10 +44,20 @@
 			   onKeyPress="doSearchShokuba(event.keyCode);">
 		    <button id="btnShokuba" onClick="searchShokuba();">検索</button>
 		</div>
-		<div>
+
+		<div style="margin-right: 2em;">
 		    <button onClick="move();">投票所の位置情報を出発地へセット</button>
 		</div>
-	    </div>
+
+                <div class="border" style="margin-right: 0.5em; padding: 0.2em">
+                    <div class="flexBetween" style="margin-bottom: 0.4em;">
+                        <button id="btnUserPoint" onClick="showModal('userpoint.html');">目的地を地図上で任意に指定する</button>
+                        <button id="btnClearUserPoint" onClick="clearTextContent('userPoint');">クリア</button>
+                    </div>
+                    <div>緯度・経度 = <span id="userPoint"></span>
+                    </div>
+                </div>
+            </div>
 	</div> <!-- end contents -->
 
 	<h1 id="departure">自宅・出発地点 <span class="shortcut">departure</span></h1>
@@ -82,8 +90,8 @@
 
         <h1 id="vote">自宅近隣の投票所</h1>
         <div class="contents">
-	    <div style="margin-bottom: 1em;">
-		<button id="btnTouhyou" onClick="dispNearTouhyou();">自宅近隣の投票所を表示する</button>
+            <div style="margin-bottom: 1em;">
+            	<button id="btnTouhyou" onClick="dispNearTouhyou();">自宅近隣の投票所を表示する</button>
             </div>
             <div id="touhyou_map" class="border"></div>
         </div> <!-- end contents -->
@@ -91,15 +99,22 @@
 	<h1 id="yougu">交通用具 <span class="shortcut">route</span></h1>
 	<div class="contents">
 	    <div style="display: flex; flex-direction: row; margin-bottom: 1em;">
-		<div style="margin-right: 1em;">
-		    <label>
-			<input name="walk" type="radio" checked/> 徒歩
-		    </label><br>
-		    <label>
-			<input name="walk" type="radio" /> 自動車
-		    </label>
-		</div>
-		<button id="btnDist" onClick="measure_distance();">距離を測る</button>
+                <div style="display: flex; flex-direction: row; width: 20vw;">
+		    <div style="margin-right: 1em;">
+		        <label>
+			    <input name="walk" type="radio" checked/> 徒歩
+		        </label><br>
+		        <label>
+			    <input name="walk" type="radio" /> 自動車
+		        </label>
+		    </div>
+		    <button id="btnDist" onClick="measure_distance();">距離を測る</button>
+                </div>
+
+                <div class="border flexBetween" style="width: 70%;">
+                    <div id="waypoints"></div>
+                    <button onClick="clearTextContent('waypoints');">経由地情報をクリア</button>
+                </div>
 	    </div>
 
 	    <div style="display: flex; flex-direction: row;">
@@ -111,6 +126,17 @@
 	    </div>
 	</div>
 
+        <div id="style-selector-control" class="map-control">
+            <label>
+                <input type="radio" name="show-hide" class="selector-control"
+                       onClick="changeStylePoi('hide');" checked="checked">簡素化
+            </label>
+            <label>
+                <input type="radio" name="show-hide" class="selector-control"
+                       onClick="changeStylePoi('default');">全表示
+            </label>
+        </div>
+
 	<h1 id="jrsubway">ＪＲ線・地下鉄 <span class="shortcut">subway</span></h1>
 	<div class="contents">
 	    <div style="margin-bottom: 1em;">
@@ -118,7 +144,7 @@
 	    </div>
 
 	    <div style="display: flex; flex-direction: column;">
-		<div style="display: flex; flex-direction: row; justify-content: space-between;">
+		<div class="flexBetween">
 		    <div style="margin-right: 1em;">
 			<img src="https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png"
 			     style="height: 1em;">
@@ -138,16 +164,16 @@
 
 	<h1 id="bus">バス <span class="shortcut">bus</span></h1>
 	<div class="contents">
-            <div style="margin-bottom: 0.5em; display: flex; flex-direction: row; justify-content: space-between;">
+            <div class="flexBetween" style="margin-bottom: 0.5em;">
                 <div style="display: flex; flex-direction: row;">
 	            <div id="groupbusstop">
 		        <div style="display: flex; flex-direction: row;">
 		            <div style="padding: 0.5em; background: rgba(143, 201, 248, 1);">
 			        <label>
-			            <input name="busAround" type="radio" checked /> 自宅周辺
+			            <input name="busAround" type="radio" checked /> 自宅・出発地点の周辺
 			        </label><br>
 			        <label>
-			            <input name="busAround" type="radio" /> 職場周辺
+			            <input name="busAround" type="radio" /> 職場・目的地の周辺
 			        </label><br>
 			        <button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button><br>
 		            </div>
@@ -161,7 +187,8 @@
 		        </div> <!-- end flex -->
 
 		        <div>
-		            <select id="busStops" size="7" onChange="changeBusStop(this.value);"></select>
+		            <select id="busStops" size="7" onChange="changeBusStop(this.value);">
+                            </select>
 		        </div>
 	            </div> <!-- end groupbusstop -->
 
@@ -229,7 +256,7 @@
 	    </div>
 
             <div style="width: 100%;">
-                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <div class="flexBetween">
 		    <button id="ebBtnSearch" onClick="getSearchResult();">検索</button>
                     <button id="ebBtnSetStation" onClick="setStationName();">近隣駅をセット</button>
                 </div>
@@ -253,13 +280,13 @@
 	<script type="text/jscript" src="./data/objbusstoproute.js"></script>
 	<script type="text/jscript" src="./data/objbusstops.js"></script>
 	<script type="text/jscript" src="./data/objstations.js"></script>
-	<script type="text/jscript" src="./data/objtouhyou.js"></script>
+        <script type="text/jscript" src="./data/objtouhyou.js"></script>
         <script type="text/jscript" src="./data/objkuborder.js"></script>
 
         <script>
          var columnHeader = [ 'No.', '名称', '住所', 'lat', 'lng', 'dmy', '電話番号' ];
         </script>
-	<script type="text/jscript" src="./resources/m5.js"></script>
+	<script type="text/jscript" src="./resources/m5test.js"></script>
 	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
         <script src="./lib/jquery.funcResizeBox.js"></script>
         <script>
