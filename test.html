@@ -32,11 +32,9 @@
 	<h1 id="top">目的地 <span class="shortcut">top</span></h1>
 	<div class="contents">
 	    <div id="groupkyoku">
-		<div style="margin: 0 0.2em 0.2em 0;"> <!-- top right bottom left -->
-		    <select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
-		</div>
+		<select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
 		<div id="hot"></div>
-	    </div> <!-- end groupkyoku -->
+	    </div>
 
 	    <div id="arrive">
 		<div style="margin-right: 2em;">
@@ -46,17 +44,19 @@
 			   onKeyPress="doSearchShokuba(event.keyCode);">
 		    <button id="btnShokuba" onClick="searchShokuba();">検索</button>
 		</div>
-		<div>
+
+		<div style="margin-right: 2em;">
 		    <button onClick="move();">目的地の位置情報を出発地へセット</button>
 		</div>
-	    </div>
 
-            <div>
-                <div style="margin-bottom: 0.4em;">
-                    <button id="btnUserPoint" onClick="showModal('userpoint.html');">目的地を地図上で任意に指定する</button>
-                    <button id="btnClearUserPoint" onClick="clearTextContent('userPoint');">クリア</button>
+                <div>
+                    <div style="margin-bottom: 0.4em;">
+                        <button id="btnUserPoint" onClick="showModal('userpoint.html');">目的地を地図上で任意に指定する</button>
+                        <button id="btnClearUserPoint" onClick="clearTextContent('userPoint');">クリア</button>
+                    </div>
+                    <div>緯度・経度 = <span id="userPoint"></span>
+                    </div>
                 </div>
-                <div>緯度・経度 = <span id="userPoint"></span></div>
             </div>
 	</div> <!-- end contents -->
 
@@ -120,11 +120,11 @@
 
         <div id="style-selector-control" class="map-control">
             <label>
-                <input type="radio" name="show-hide" id="hide-poi" class="selector-control"
+                <input type="radio" name="show-hide" class="selector-control"
                        onClick="changeStylePoi('hide');" checked="checked">簡素化
             </label>
             <label>
-                <input type="radio" name="show-hide" id="show-poi" class="selector-control"
+                <input type="radio" name="show-hide" class="selector-control"
                        onClick="changeStylePoi('default');">全表示
             </label>
         </div>
