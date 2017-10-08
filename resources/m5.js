@@ -421,6 +421,8 @@ function measure_distance () {
 
     routeMap.controls[ google.maps.ControlPosition.TOP_LEFT ].push( styleControler );
     routeMap.setOptions( { styles: styles[ 'hide' ] } );    // 初期動作
+
+    document.getElementById( 'link_yougu' ).click();
 }
 
 function changeStylePoi ( key ) {
