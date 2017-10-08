@@ -368,6 +368,7 @@ function measure_distance () {
         var element = document.getElementById( 'waypoints' );
         element.textContent = element.textContent +
             format( '$$$,$$$ ', arg.latLng.lat, arg.latLng.lng );
+        measure_distance();
     });
 
     // 地下鉄を強調表示
