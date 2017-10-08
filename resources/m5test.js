@@ -438,24 +438,30 @@ function changeStylePoi ( key ) {
 //              'geometry' ... その対象物 (featureType) の幾何学要素
 //              'labels'   ... その対象物に関連付けられたテキストラベル
 
+var styleControler = document.getElementById( 'style-selector-control' );
+var visibility_off = [ {visibility: 'off' } ];
 var styles = { default: null,
                hide: [
                    { featureType: 'poi.attraction',            // 観光スポット
-                     stylers: [ {visibility: 'off'} ] },
+                     stylers: visibility_off },
                    { featureType: 'poi.business',
-                     stylers: [ {visibility: 'off'} ] },
+                     stylers: visibility_off },
                    { featureType: 'poi.medical',
-                     stylers: [ {visibility: 'off'} ] },
+                     stylers: visibility_off },
                    { featureType: 'poi.place_of_worship',      // 教会、寺院
-                     stylers: [ {visibility: 'off'} ] },
+                     stylers: visibility_off },
                    { featureType: 'poi.sports_complex',        // スポーツ施設
-                     stylers: [ {visibility: 'off'} ] },
+                     stylers: visibility_off },
+
+                   { featureType: 'poi.park',
+                     elementType: 'labels',
+                     stylers: visibility_off },
+
 //                 { featureType: 'transit',
 //                   elementType: 'labels.icon',
-//                   stylers: [ {visibility: 'off'} ] }
+//                   stylers: [ {visibility: 'off' } ] }
                ]
              };
-var styleControler = document.getElementById( 'style-selector-control' );
 
 // ＪＲ線・地下鉄
 function getNearStations ( lat, lng ) {
