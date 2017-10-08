@@ -174,9 +174,7 @@ function checkInData () {
      	alert( '目的地が選択されていません' );
      	return false;
     }
-    var edLat = wp[3];
-    var edLng = wp[4];
-    return [ stLat, stLng, edLat, edLng, wp ];
+    return [ stLat, stLng, wp[3], wp[4], wp ];
 }
 
 function setBoundArea () {
@@ -583,6 +581,7 @@ function searchNearBusStop () {
     });
 }
 
+// 名称でバス停検索
 function searchNameBusStop () {
     var kword = document.getElementById( 'busstopname' ).value;
     var result = Object.keys( objbusstops ).filter( function( id ) {
@@ -635,16 +634,24 @@ function dispBusRoute ( busRouteKey ) {
     if ( !latlng ) {
 	return false;
     }
-    var lat = latlng[0];
-    var lng = latlng[1];
+    var originLat = latlng[0];
+    var originLng = latlng[1];
 
-    var map = makeMap( 'bus_map', lat, lng, { zoom: 14 } );
+    var map = makeMap( 'bus_map', originLat, originLng, { zoom: 14 } );
     drawBoundArea( map );
     var transitLayer = new google.maps.TransitLayer();
     transitLayer.setMap( map );
 
-    makeMarker( map, lat,       lng,       URL_GOOGLE_ICONS + 'green-dot.png' );
-    makeCircle( map, lat, lng );
+    // 出発
+    makeMarker( map, originLat, originLng, URL_GOOGLE_ICONS + 'green-dot.png' );
+    makeCircle( map, originLat, originLng );
+
+    // 目的
+    var userPoint = document.getElementById( 'userPoint' ).textContent;
+    if ( userPoint != '' ) {
+        latlng[2] = userPoint.split(',')[0];
+        latlng[3] = userPoint.split(',')[1];
+    }
     makeMarker( map, latlng[2], latlng[3], URL_GOOGLE_ICONS + 'red-dot.png' );
 
     // バス停
