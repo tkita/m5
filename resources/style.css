@@ -50,6 +50,12 @@ button {
     margin-left: 1em;
 }
 
+.flexBetween {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 div.navibox {
     display: flex;
     flex-direction: row;

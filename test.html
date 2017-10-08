@@ -50,7 +50,7 @@
 		</div>
 
                 <div class="border" style="margin-right: 0.5em; padding: 0.2em">
-                    <div style="margin-bottom: 0.4em;">
+                    <div class="flexBetween" style="margin-bottom: 0.4em;">
                         <button id="btnUserPoint" onClick="showModal('userpoint.html');">目的地を地図上で任意に指定する</button>
                         <button id="btnClearUserPoint" onClick="clearTextContent('userPoint');">クリア</button>
                     </div>
@@ -103,7 +103,7 @@
 		    <button id="btnDist" onClick="measure_distance();">距離を測る</button>
                 </div>
 
-                <div class="border" style="width: 70%; display: flex; flex-direction: row; justify-content: space-between;">
+                <div class="border flexBetween" style="width: 70%;">
                     <div id="waypoints"></div>
                     <button onClick="clearTextContent('waypoints');">経由地情報をクリア</button>
                 </div>
@@ -136,7 +136,7 @@
 	    </div>
 
 	    <div style="display: flex; flex-direction: column;">
-		<div style="display: flex; flex-direction: row; justify-content: space-between;">
+		<div class="flexBetween">
 		    <div style="margin-right: 1em;">
 			<img src="https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png"
 			     style="height: 1em;">
@@ -156,7 +156,7 @@
 
 	<h1 id="bus">バス <span class="shortcut">bus</span></h1>
 	<div class="contents">
-            <div style="margin-bottom: 0.5em; display: flex; flex-direction: row; justify-content: space-between;">
+            <div class="flexBetween" style="margin-bottom: 0.5em;">
                 <div style="display: flex; flex-direction: row;">
 	            <div id="groupbusstop">
 		        <div style="display: flex; flex-direction: row;">
@@ -248,7 +248,7 @@
 	    </div>
 
             <div style="width: 100%;">
-                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <div class="flexBetween">
 		    <button id="ebBtnSearch" onClick="getSearchResult();">検索</button>
                     <button id="ebBtnSetStation" onClick="setStationName();">近隣駅をセット</button>
                 </div>
