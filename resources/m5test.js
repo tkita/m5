@@ -481,22 +481,35 @@ function getNearStations ( lat, lng ) {
     return result.slice( 0, 5 ); // 上位５つ
 }
 
+// btnJrSubway
 function dispNearStation () {
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
     }
-
-    document.getElementById( 'jrdep' ).textContent = document.getElementById( 'faddr' ).textContent;
-    document.getElementById( 'jrarr' ).textContent = latlng[4][0] + '　' + latlng[4][1];
-
     var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 14 } );
+
+    // 出発地
+    document.getElementById( 'jrdep' ).textContent =
+        document.getElementById( 'faddr' ).textContent;
     var st = dispNearStationSub( map, latlng[0], latlng[1], 'green' );
     document.getElementById( 'jrdepstation' ).textContent = st[0].name;
     var txt = st[0].name + '@';
+
+    // 目的地
+    var userPoint = document.getElementById( 'userPoint' ).textContent;
+    if ( userPoint == '' ) {
+        document.getElementById( 'jrarr' ).textContent = latlng[4][0] + '　' + latlng[4][1];
+    } else {
+        latlng[2] = userPoint.split(',')[0];
+        latlng[3] = userPoint.split(',')[1];
+        document.getElementById( 'jrarr' ).textContent = '任意地点';
+    }
     var st = dispNearStationSub( map, latlng[2], latlng[3], 'red' );
     document.getElementById( 'jrarrstation' ).textContent = st[0].name;
     window.clipboardData.setData( 'Text', txt + st[0].name );
+
+    //
     drawBoundArea( map );
 }
 
