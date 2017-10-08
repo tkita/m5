@@ -559,18 +559,23 @@ function getNearBusStop ( lat, lng ) {
     return result.slice( 0, 10 ); // 上位
 }
 
+// btnBus
 function searchNearBusStop () {
     var lat, lng;
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
     }
+    var userPoint = document.getElementById( 'userPoint' ).textContent;
     if ( document.getElementsByName( 'busAround' )[0].checked ) {
 	lat = latlng[0];
 	lng = latlng[1];
-    } else {
+    } else if ( userPoint == '' ) {
 	lat = latlng[2];
 	lng = latlng[3];
+    } else {
+	lat = userPoint.split(',')[0];
+	lng = userPoint.split(',')[1];
     }
     var sel = removeOptions( 'busStops' );
     getNearBusStop( lat, lng ).forEach( function( e ) {
