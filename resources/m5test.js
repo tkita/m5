@@ -419,9 +419,7 @@ function measure_distance () {
     directionsRenderer.setPanel( removeAllChilds( 'directionsPanel' ) );
     drawBoundArea( map );
 
-    map.controls[ google.maps.ControlPosition.TOP_LEFT ].push(
-        document.getElementById( 'style-selector-control' )
-    );
+    map.controls[ google.maps.ControlPosition.TOP_LEFT ].push( styleControler );
     map.setOptions( { styles: styles[ 'hide' ] } );    // 初期動作
 
     // 他の map にも 'style-selector-control' を追加する場合は、
@@ -461,6 +459,7 @@ var styles = { default: null,
 //                   stylers: [ {visibility: 'off'} ] }
                ]
              };
+var styleControler = document.getElementById( 'style-selector-control' );
 
 // ＪＲ線・地下鉄
 function getNearStations ( lat, lng ) {
