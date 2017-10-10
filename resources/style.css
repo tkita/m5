@@ -32,6 +32,7 @@ ul {
 
 select {
     border: none;
+    /* background-color: AliceBlue; */
 }
 
 button {
@@ -283,15 +284,6 @@ dd a:hover {
     display: block;             /* マップ配下に配置されたら表示 */
 }
 
-#groupbusstop {
-    margin-bottom: 0.5em;
-    padding-right: 1em;
-}
-
-#groupbusroute {
-    padding-right: 1em;
-}
-
 #bus_links {
     display: none;
 }
@@ -415,14 +407,6 @@ dd {
     }
 
     #bus_map {
-    }
-
-    #groupbusstop {
-	/* float: left; */
-    }
-
-    #groupbusroute {
-	/* margin-bottom: 0.5em; */
     }
 
     #bus_links {
