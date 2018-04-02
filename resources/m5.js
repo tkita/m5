@@ -523,6 +523,7 @@ function dispNearStation () {
 
     //
     drawBoundArea( map );
+    map.setCenter( new google.maps.LatLng( latlng[0], latlng[1] ) );
 }
 
 function dispNearStationSub ( map, lat, lng, color ) {
