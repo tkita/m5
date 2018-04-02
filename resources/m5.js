@@ -522,7 +522,7 @@ function dispNearStation () {
     window.clipboardData.setData( 'Text', txt + st[0].name );
 
     //
-//    drawBoundArea( map );
+    drawBoundArea( map );
 
     //
     var dmy = new google.maps.LatLng(
