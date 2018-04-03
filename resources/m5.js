@@ -524,14 +524,7 @@ function dispNearStation () {
     //
     drawBoundArea( map );
 
-    //
-    var dmy = new google.maps.LatLng(
-        43.061945, 141.354395
-        // latlng[0],
-        // Math.floor( latlng[1] * 1000000 ) / 1000000
-    );
-    map.setCenter( dmy );
-    // console.info( dmy );
+    // map.setCenter( new google.maps.LatLng( 43.061945, 141.354395 ) );
 }
 
 function dispNearStationSub ( map, lat, lng, color ) {
