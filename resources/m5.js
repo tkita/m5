@@ -499,7 +499,7 @@ function dispNearStation () {
     if ( !latlng ) {
 	return false;
     }
-    var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 14 } );
+    var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 18 } );
 
     // 出発地
     document.getElementById( 'jrdep' ).textContent =
@@ -530,7 +530,6 @@ function dispNearStation () {
 function dispNearStationSub ( map, lat, lng, color ) {
     makeMarker( map, lat, lng, format( URL_GOOGLE_ICONS + '$$$-dot.png', color) );
     makeCircle( map, lat, lng );
-    var from = new google.maps.LatLng( lat, lng );
     var stations = getNearStations( lat, lng );
     stations.forEach(
 	function( e, idx, ary ) {
