@@ -519,7 +519,7 @@ function dispNearStation () {
     }
     var st = dispNearStationSub( map, latlng[2], latlng[3], 'red' );
     document.getElementById( 'jrarrstation' ).textContent = st[0].name;
-    window.clipboardData.setData( 'Text', txt + st[0].name );
+//    window.clipboardData.setData( 'Text', txt + st[0].name );
 
     //
     drawBoundArea( map );
