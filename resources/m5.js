@@ -499,7 +499,7 @@ function dispNearStation () {
     if ( !latlng ) {
 	return false;
     }
-    var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 18 } );
+    var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 10 } );
 
     // 出発地
     document.getElementById( 'jrdep' ).textContent =
@@ -519,7 +519,7 @@ function dispNearStation () {
     }
     var st = dispNearStationSub( map, latlng[2], latlng[3], 'red' );
     document.getElementById( 'jrarrstation' ).textContent = st[0].name;
-//    window.clipboardData.setData( 'Text', txt + st[0].name );
+    window.clipboardData.setData( 'Text', txt + st[0].name );
 
     //
     drawBoundArea( map );
