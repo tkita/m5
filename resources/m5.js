@@ -541,8 +541,9 @@ function dispNearStationSub ( map, lat, lng, color ) {
                                              e['name'],
                                              fmtNumber( Math.floor( e['dist'] ) ) )
                                    );
-            console.info( idx );
-    	    google.maps.event.trigger( marker, 'click' );
+            if ( idx == 0 ) {
+                google.maps.event.trigger( marker, 'click' );
+            }
 	});
     return stations;
 }
