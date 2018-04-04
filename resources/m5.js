@@ -362,7 +362,9 @@ function measure_distance () {
     var originLat = latlng[0];
     var originLng = latlng[1];
 
-    routeMap = makeMap( 'yougu_map', originLat, originLng, { zoom: 18 } );
+    // 1.0 <- 地面から遠ざかる <- zoom -> 地面に近づく -> 21.0
+    routeMap = makeMap( 'yougu_map', originLat, originLng, { zoom: 18,
+                                                           gestureHandling: 'greedy' } );
     google.maps.event.clearListeners( routeMap, 'rightclick' );
     routeMap.addListener( 'rightclick', function( arg ) {
         var element = document.getElementById( 'waypoints' );
@@ -499,6 +501,7 @@ function dispNearStation () {
     if ( !latlng ) {
 	return false;
     }
+
     // 1.0 <- 地面から遠ざかる <- zoom -> 地面に近づく -> 21.0
     var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 12,
                                                                gestureHandling: 'greedy' } );
@@ -522,10 +525,7 @@ function dispNearStation () {
     document.getElementById( 'jrarrstation' ).textContent = st[0].name;
     window.clipboardData.setData( 'Text', txt + st[0].name );
 
-    //
     drawBoundArea( map );
-
-    // map.setCenter( new google.maps.LatLng( 43.061945, 141.354395 ) );
 }
 
 function dispNearStationSub ( map, lat, lng, color ) {
@@ -541,6 +541,7 @@ function dispNearStationSub ( map, lat, lng, color ) {
                                              e['name'],
                                              fmtNumber( Math.floor( e['dist'] ) ) )
                                    );
+            console.info( idx );
     	    google.maps.event.trigger( marker, 'click' );
 	});
     return stations;
@@ -647,7 +648,9 @@ function dispBusRoute ( busRouteKey ) {
     var originLat = latlng[0];
     var originLng = latlng[1];
 
-    var map = makeMap( 'bus_map', originLat, originLng, { zoom: 14 } );
+    // 1.0 <- 地面から遠ざかる <- zoom -> 地面に近づく -> 21.0
+    var map = makeMap( 'bus_map', originLat, originLng, { zoom: 14,
+                                                          gestureHandling: 'greedy' } );
     drawBoundArea( map );
     var transitLayer = new google.maps.TransitLayer();
     transitLayer.setMap( map );
