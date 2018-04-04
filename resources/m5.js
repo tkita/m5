@@ -526,6 +526,7 @@ function dispNearStation () {
     window.clipboardData.setData( 'Text', txt + st[0].name );
 
     drawBoundArea( map );
+    document.getElementById( 'jrsubway_map' ).focus();
 }
 
 function dispNearStationSub ( map, lat, lng, color ) {
