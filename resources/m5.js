@@ -768,7 +768,7 @@ function init () {
 	    event.keyCode = null;
 	    document.getElementById( 'link_jrsubway' ).click();
 	    return false;
-        } else if ( event.ctrlKey && event.keyCode == 65 ) { // CTRL-a
+        } else if ( event.ctrlKey && event.keyCode == 69 ) { // CTRL-e
 	    event.keyCode = null;
             document.getElementById( 'btnJrSubway' ).click();
             return false;
