@@ -500,8 +500,8 @@ function dispNearStation () {
 	return false;
     }
     // 1.0 <- 地面から遠ざかる <- zoom -> 地面に近づく -> 21.0
-    var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 12 } );
-
+    var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 12,
+                                                               gestureHandling: 'greedy' } );
     // 出発地
     document.getElementById( 'jrdep' ).textContent =
         document.getElementById( 'faddr' ).textContent;
