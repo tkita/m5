@@ -770,7 +770,7 @@ function init () {
 	    return false;
         } else if ( event.ctrlKey && event.keyCode == 65 ) { // CTRL-a
 	    event.keyCode = null;
-            document.getElementById( 'btnJrSubway' ).focus();
+            document.getElementById( 'btnJrSubway' ).click();
             return false;
 	} else if ( event.ctrlKey && event.keyCode == 84 ) { // CTRL-t
 	    event.keyCode = null;
