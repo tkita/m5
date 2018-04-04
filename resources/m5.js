@@ -499,7 +499,8 @@ function dispNearStation () {
     if ( !latlng ) {
 	return false;
     }
-    var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 10 } );
+    // 1.0 <- 地面から遠ざかる <- zoom -> 地面に近づく -> 21.0
+    var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 12 } );
 
     // 出発地
     document.getElementById( 'jrdep' ).textContent =
@@ -761,8 +762,9 @@ function init () {
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 83 ) { // CTRL-s
 	    event.keyCode = null;
+	    document.getElementById( 'btnJrSubway' ).click();
 	    document.getElementById( 'link_jrsubway' ).click();
-	    document.getElementById( 'btnJrSubway' ).focus();
+//	    document.getElementById( 'btnJrSubway' ).focus();
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 84 ) { // CTRL-t
 	    event.keyCode = null;
