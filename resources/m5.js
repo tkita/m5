@@ -766,9 +766,12 @@ function init () {
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 83 ) { // CTRL-s
 	    event.keyCode = null;
-            document.getElementById( 'btnJrSubway' ).focus();
 	    document.getElementById( 'link_jrsubway' ).click();
 	    return false;
+        } else if ( event.ctrlKey && event.keyCode == 65 ) { // CTRL-a
+	    event.keyCode = null;
+            document.getElementById( 'btnJrSubway' ).focus();
+            return false;
 	} else if ( event.ctrlKey && event.keyCode == 84 ) { // CTRL-t
 	    event.keyCode = null;
 	    document.getElementById( 'link_top' ).click();
