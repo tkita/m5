@@ -754,6 +754,11 @@ function init () {
 	    document.getElementById( 'link_departure' ).click();
 	    document.getElementById( 'btnPaste' ).focus();
 	    return false;
+        } else if ( event.ctrlKey && event.keyCode == 69 ) { // CTRL-e
+            event.keyCode = null;
+            current = 'ekibus';
+            document.getElementById( 'link_ekibus' ).click();
+            return false;
 	} else if ( event.ctrlKey && event.keyCode == 70 ) { // CTRL-f
 	    event.keyCode = null;
             current = false;
@@ -765,9 +770,13 @@ function init () {
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 82 ) { // CTRL-r
 	    event.keyCode = null;
-            current ='yougu';
-	    document.getElementById( 'link_yougu' ).click();
-	    document.getElementById( 'btnDist' ).focus();
+            if ( current == 'yougu' ) {
+                document.getElementById( 'btnDist' ).click();
+            } else {
+                current = 'yougu';
+	        document.getElementById( 'link_yougu' ).click();
+	        document.getElementById( 'btnDist' ).focus();
+            }
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 83 ) { // CTRL-s
 	    event.keyCode = null;
