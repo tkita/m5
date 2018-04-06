@@ -334,9 +334,10 @@ function mutationObjectCallback ( mutationRecordsList ) {
             console.info( k );
             km = km + k;
         });
-	document.getElementById( 'distance' ).textContent =
-	    ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
-	    ': ' + km + ' km';
+
+	// document.getElementById( 'distance' ).textContent =
+	//     ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
+	//     ': ' + km + ' km';
     }
 }
 
