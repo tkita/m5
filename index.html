@@ -100,7 +100,8 @@
 			    <input name="walk" type="radio" /> 自動車
 		        </label>
 		    </div>
-		    <button id="btnDist" onClick="measure_distance();">距離を測る</button>
+		    <button id="btnDist" onClick="measure_distance();">距離を測る <span class="shortcut">r</span>
+                    </button>
                 </div>
 
                 <div class="border flexBetween" style="width: 70%;">
@@ -132,7 +133,7 @@
 	<h1 id="jrsubway">ＪＲ線・地下鉄 <span class="shortcut">subway</span></h1>
 	<div class="contents">
 	    <div style="margin-bottom: 1em;">
-		<button id="btnJrSubway" onClick="dispNearStation();">近隣の駅を表示する <span class="shortcut">e</span>
+		<button id="btnJrSubway" onClick="dispNearStation();">近隣の駅を表示する <span class="shortcut">s</span>
                 </button>
 	    </div>
 
@@ -266,7 +267,7 @@
 	    <a href="#yougu" id="link_yougu">交通用具<span class="shortcut">r</span></a>
 	    <a href="#jrsubway" id="link_jrsubway">ＪＲ線・地下鉄<span class="shortcut">s</span></a>
 	    <a href="#bus" id="link_bus">バス<span class="shortcut">b</span></a>
-            <a href="#ekibus">えきバス</a>
+            <a href="#ekibus" id="link_ekibus">えきバス<span class="shortcut">e</span></a>
 	</div>
 
 	<script type="text/jscript" src="./data/objbound.js"></script>

@@ -1,6 +1,7 @@
 // -*- coding: utf-8 -*-
 var geocoder;
 var adpSummaryBorderColor;
+var current;
 
 var URL_GOOGLE_ICONS = 'https://maps.google.co.jp/mapfiles/ms/icons/';
 var URL_EKIBUS_API = 'https://ekibus-api.city.sapporo.jp/';
@@ -319,17 +320,24 @@ function mutationObjectCallback ( mutationRecordsList ) {
             });
         });
 
-	var span = [].filter.call( document.getElementsByTagName( 'span' ),
+	// var span = [].filter.call( document.getElementsByTagName( 'span' ),
+        //                          function( n ) {
+	//                              return ( n.textContent.match( / km/ ) );
+	//                          });
+	var span = [].filter.call( document.getElementsByClassName( 'adp-summary' ),
                                  function( n ) {
-	                             return ( n.textContent.match( / km/ ) );
+	                             return ( n.firstChild.textContent.match( / km/ ) );
 	                         });
         var km = 0.0;
         span.forEach( function(e) {
-            km = km + Number( e.textContent.replace( ' km', '' ) );
+            var k = Number( e.textContent.replace( ' km', '' ) );
+            console.info( k );
+            km = km + k;
         });
-	document.getElementById( 'distance' ).textContent =
-	    ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
-	    ': ' + km + ' km';
+
+	// document.getElementById( 'distance' ).textContent =
+	//     ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
+	//     ': ' + km + ' km';
     }
 }
 
@@ -743,16 +751,24 @@ function init () {
     document.onkeydown = function() {
 	if ( event.ctrlKey && event.keyCode == 66 ) { // CTRL-b
 	    event.keyCode = null;
+            current = 'bus';
 	    document.getElementById( 'link_bus' ).click();
 	    document.getElementById( 'btnBus' ).focus();
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 68 ) { // CTRL-d
 	    event.keyCode = null;
+            current = 'departure';
 	    document.getElementById( 'link_departure' ).click();
 	    document.getElementById( 'btnPaste' ).focus();
 	    return false;
+        } else if ( event.ctrlKey && event.keyCode == 69 ) { // CTRL-e
+            event.keyCode = null;
+            current = 'ekibus';
+            document.getElementById( 'link_ekibus' ).click();
+            return false;
 	} else if ( event.ctrlKey && event.keyCode == 70 ) { // CTRL-f
 	    event.keyCode = null;
+            current = false;
 	    document.getElementById( 'kword' ).focus();
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 71 ) { // CTRL-g
@@ -761,19 +777,26 @@ function init () {
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 82 ) { // CTRL-r
 	    event.keyCode = null;
-	    document.getElementById( 'link_yougu' ).click();
-	    document.getElementById( 'btnDist' ).focus();
+            if ( current == 'yougu' ) {
+                document.getElementById( 'btnDist' ).click();
+            } else {
+                current = 'yougu';
+	        document.getElementById( 'link_yougu' ).click();
+	        document.getElementById( 'btnDist' ).focus();
+            }
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 83 ) { // CTRL-s
 	    event.keyCode = null;
-	    document.getElementById( 'link_jrsubway' ).click();
+            if ( current == 'jrsubway' ) {
+                document.getElementById( 'btnJrSubway' ).click();
+            } else {
+                current ='jrsubway';
+	        document.getElementById( 'link_jrsubway' ).click();
+            }
 	    return false;
-        } else if ( event.ctrlKey && event.keyCode == 69 ) { // CTRL-e
-	    event.keyCode = null;
-            document.getElementById( 'btnJrSubway' ).click();
-            return false;
 	} else if ( event.ctrlKey && event.keyCode == 84 ) { // CTRL-t
 	    event.keyCode = null;
+            current = 'top';
 	    document.getElementById( 'link_top' ).click();
 	    return false;
 	} else if ( event.ctrlKey && event.keyCode == 86 ) { // CTRL-v
