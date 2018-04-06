@@ -320,9 +320,13 @@ function mutationObjectCallback ( mutationRecordsList ) {
             });
         });
 
-	var span = [].filter.call( document.getElementsByTagName( 'span' ),
+	// var span = [].filter.call( document.getElementsByTagName( 'span' ),
+        //                          function( n ) {
+	//                              return ( n.textContent.match( / km/ ) );
+	//                          });
+	var span = [].filter.call( document.getElementsByClassName( 'adp-summary' ),
                                  function( n ) {
-	                             return ( n.textContent.match( / km/ ) );
+	                             return ( n.firstChild.textContent.match( / km/ ) );
 	                         });
         var km = 0.0;
         span.forEach( function(e) {
