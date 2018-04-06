@@ -806,7 +806,9 @@ function init () {
 	    cbPaste();
 	    document.getElementById( 'btnGeo' ).focus();
 	    return false;
-	}
+	} else if ( event.ctrlKey && event.keyCode == 49 ) { // CTRL-1
+            alert( 'C-1' );
+        }
     }
 }
 
