@@ -326,7 +326,9 @@ function mutationObjectCallback ( mutationRecordsList ) {
 	                         });
         var km = 0.0;
         span.forEach( function(e) {
-            km = km + Number( e.textContent.replace( ' km', '' ) );
+            var k = Number( e.textContent.replace( ' km', '' ) );
+            console.info( k );
+            km = km + k;
         });
 	document.getElementById( 'distance' ).textContent =
 	    ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
