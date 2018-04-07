@@ -766,9 +766,19 @@ function init () {
 	if ( event.ctrlKey ) {
             switch ( event.keyCode ) {
             case 49: // CTRL-1
-                if ( currentMapObj[ current ] ) {
-                    console.info( currentMapObj[ current ].getZoom() );
+                var mapObj = currentMapObj[ current ];
+                if ( mapObj ) {
+                    mapObj.setZoom( mapObj.getZoom() + 1 );
                 }
+                console.info( mapObj.getZoom() );
+                break;
+
+            case 50: // CTRL-2
+                var mapObj = currentMapObj[ current ];
+                if ( mapObj ) {
+                    mapObj.setZoom( mapObj.getZoom() - 1 );
+                }
+                console.info( mapObj.getZoom() );
                 break;
 
             case 66: // CTRL-b
