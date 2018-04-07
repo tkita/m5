@@ -2,6 +2,7 @@
 var geocoder;
 var adpSummaryBorderColor;
 var current;
+var currentMapObj = {};
 
 var URL_GOOGLE_ICONS = 'https://maps.google.co.jp/mapfiles/ms/icons/';
 var URL_EKIBUS_API = 'https://ekibus-api.city.sapporo.jp/';
@@ -273,13 +274,11 @@ function searchShokuba () {
     }
 
     // キーワードが全角数字のみで構成されていれば、半角へ変換する
-    console.info( kword );
     if ( kword.match( /[０-９]/g ) ) {
         kword = kword.replace( /[０-９]/g, function( s ) {
 	    return String.fromCharCode( s.charCodeAt( 0 ) - 0xFEE0 );
         });
     }
-    console.info( kword );
 
     var result = [];
     Object.keys( objWorkplace ).forEach( function( key ) {
@@ -382,6 +381,8 @@ function measure_distance () {
     // 1.0 <- 地面から遠ざかる <- zoom -> 地面に近づく -> 21.0
     routeMap = makeMap( 'yougu_map', originLat, originLng, { zoom: 18,
                                                            gestureHandling: 'greedy' } );
+    currentMapObj[ 'yougu' ] = routeMap;
+
     google.maps.event.clearListeners( routeMap, 'rightclick' );
     routeMap.addListener( 'rightclick', function( arg ) {
         var element = document.getElementById( 'waypoints' );
@@ -522,6 +523,8 @@ function dispNearStation () {
     // 1.0 <- 地面から遠ざかる <- zoom -> 地面に近づく -> 21.0
     var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 12,
                                                                gestureHandling: 'greedy' } );
+    currentMapObj[ 'jrsubway' ] = map;
+
     // 出発地
     document.getElementById( 'jrdep' ).textContent =
         document.getElementById( 'faddr' ).textContent;
@@ -669,6 +672,8 @@ function dispBusRoute ( busRouteKey ) {
     // 1.0 <- 地面から遠ざかる <- zoom -> 地面に近づく -> 21.0
     var map = makeMap( 'bus_map', originLat, originLng, { zoom: 14,
                                                           gestureHandling: 'greedy' } );
+    currentMapObj[ 'bus' ] = map;
+
     drawBoundArea( map );
     var transitLayer = new google.maps.TransitLayer();
     transitLayer.setMap( map );
@@ -761,7 +766,9 @@ function init () {
 	if ( event.ctrlKey ) {
             switch ( event.keyCode ) {
             case 49: // CTRL-1
-                alert( 'C-1' );
+                if ( currentMapObj[ current ] ) {
+                    console.info( currentMapObj[ current ].getZoom() );
+                }
                 break;
 
             case 66: // CTRL-b
