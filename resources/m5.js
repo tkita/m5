@@ -758,65 +758,73 @@ function init () {
     geocoder = new google.maps.Geocoder();
 
     document.onkeydown = function() {
-	if ( event.ctrlKey && event.keyCode == 66 ) { // CTRL-b
-	    event.keyCode = null;
-            current = 'bus';
-	    document.getElementById( 'link_bus' ).click();
-	    document.getElementById( 'btnBus' ).focus();
-	    return false;
-	} else if ( event.ctrlKey && event.keyCode == 68 ) { // CTRL-d
-	    event.keyCode = null;
-            current = 'departure';
-	    document.getElementById( 'link_departure' ).click();
-	    document.getElementById( 'btnPaste' ).focus();
-	    return false;
-        } else if ( event.ctrlKey && event.keyCode == 69 ) { // CTRL-e
+	if ( event.ctrlKey ) {
+            switch ( event.keyCode ) {
+            case 49: // CTRL-1
+                alert( 'C-1' );
+                break;
+
+            case 66: // CTRL-b
+                current = 'bus';
+	        document.getElementById( 'link_bus' ).click();
+	        document.getElementById( 'btnBus' ).focus();
+                break;
+
+            case 68:// CTRL-d
+                current = 'departure';
+	        document.getElementById( 'link_departure' ).click();
+	        document.getElementById( 'btnPaste' ).focus();
+                break;
+
+            case 69: // CTRL-e
+                current = 'ekibus';
+                document.getElementById( 'link_ekibus' ).click();
+                break;
+
+            case 70: // CTRL-f
+                current = false;
+	        document.getElementById( 'kword' ).focus();
+                break;
+
+            case 71: // CTRL-g
+                current = false;
+                document.getElementById( 'btnGeo' ).click();
+                break;
+
+            case 82: // CTRL-r
+                if ( current == 'yougu' ) {
+                    document.getElementById( 'btnDist' ).click();
+                } else {
+                    current = 'yougu';
+	            document.getElementById( 'link_yougu' ).click();
+	            document.getElementById( 'btnDist' ).focus();
+                }
+                break;
+
+            case 83: // CTRL-s
+                if ( current == 'jrsubway' ) {
+                    document.getElementById( 'btnJrSubway' ).click();
+                } else {
+                    current ='jrsubway';
+	            document.getElementById( 'link_jrsubway' ).click();
+                }
+                break;
+
+            case 84: // CTRL-t
+                current = 'top';
+	        document.getElementById( 'link_top' ).click();
+                break;
+
+            case 86: // CTRL-v
+                current = false;
+	        document.getElementById( 'link_departure' ).click();
+	        document.getElementById( 'addr' ).value = '';
+	        cbPaste();
+	        document.getElementById( 'btnGeo' ).focus();
+                break;
+            }
             event.keyCode = null;
-            current = 'ekibus';
-            document.getElementById( 'link_ekibus' ).click();
             return false;
-	} else if ( event.ctrlKey && event.keyCode == 70 ) { // CTRL-f
-	    event.keyCode = null;
-            current = false;
-	    document.getElementById( 'kword' ).focus();
-	    return false;
-	} else if ( event.ctrlKey && event.keyCode == 71 ) { // CTRL-g
-	    event.keyCode = null;
-	    document.getElementById( 'btnGeo' ).click();
-	    return false;
-	} else if ( event.ctrlKey && event.keyCode == 82 ) { // CTRL-r
-	    event.keyCode = null;
-            if ( current == 'yougu' ) {
-                document.getElementById( 'btnDist' ).click();
-            } else {
-                current = 'yougu';
-	        document.getElementById( 'link_yougu' ).click();
-	        document.getElementById( 'btnDist' ).focus();
-            }
-	    return false;
-	} else if ( event.ctrlKey && event.keyCode == 83 ) { // CTRL-s
-	    event.keyCode = null;
-            if ( current == 'jrsubway' ) {
-                document.getElementById( 'btnJrSubway' ).click();
-            } else {
-                current ='jrsubway';
-	        document.getElementById( 'link_jrsubway' ).click();
-            }
-	    return false;
-	} else if ( event.ctrlKey && event.keyCode == 84 ) { // CTRL-t
-	    event.keyCode = null;
-            current = 'top';
-	    document.getElementById( 'link_top' ).click();
-	    return false;
-	} else if ( event.ctrlKey && event.keyCode == 86 ) { // CTRL-v
-	    event.keyCode = null;
-	    document.getElementById( 'link_departure' ).click();
-	    document.getElementById( 'addr' ).value = '';
-	    cbPaste();
-	    document.getElementById( 'btnGeo' ).focus();
-	    return false;
-	} else if ( event.ctrlKey && event.keyCode == 49 ) { // CTRL-1
-            alert( 'C-1' );
         }
     }
 }
