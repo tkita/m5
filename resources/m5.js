@@ -770,7 +770,6 @@ function init () {
                 if ( mapObj ) {
                     mapObj.setZoom( mapObj.getZoom() + 1 );
                 }
-                console.info( mapObj.getZoom() );
                 break;
 
             case 50: // CTRL-2
@@ -778,7 +777,6 @@ function init () {
                 if ( mapObj ) {
                     mapObj.setZoom( mapObj.getZoom() - 1 );
                 }
-                console.info( mapObj.getZoom() );
                 break;
 
             case 66: // CTRL-b
