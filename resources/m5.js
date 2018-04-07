@@ -274,7 +274,7 @@ function searchShokuba () {
 
     // キーワードが全角数字のみで構成されていれば、半角へ変換する
     console.info( kword );
-    if ( kword.match( /０-９/g ) ) {
+    if ( kword.match( /[０-９]/g ) ) {
         kword = kword.replace( /[０-９]/g, function( s ) {
 	    return String.fromCharCode( s.charCodeAt( 0 ) - 0xFEE0 );
         });
