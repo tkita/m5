@@ -9,6 +9,7 @@
 
 	<style>
 	 .gm-style > div > div > div > div > div > div {
+	     font-size: small;
 	     opacity: 0.7;
 	 }
 	</style>
@@ -44,41 +45,41 @@
 
 	     // main
 
-	     var markerColor = {
-		 '10': 'red', // 代表
-		 '11': 'red', // 総務局
-		 '12': 'red', // 財政局
-		 '13': 'red', // 市民文化局
-		 '14': 'red', // 経済観光局
-		 '15': 'red', // スポーツ局
-		 '16': 'red', // 保健福祉局
-		 '17': 'red', // 子ども未来局
-		 '18': 'red', // ちあふる
-		 '19': 'red', // 保育園
-		 '20': 'red', // 環境局
-		 '21': 'red', // 建設局
-		 '22': 'red', // 下水道河川局
-		 '23': 'red', // 交通局
-		 '24': 'red', // 水道局
-		 '25': 'red', // 市立札幌病院
-		 '26': 'red', // 消防局
-		 '27': 'red', // 土木センター
-		 '28': 'red', // まちセン
-		 '29': 'red', // 教育委員会
-		 '30': 'red', // 図書館
-		 '31': 'red', // 小学校
-		 '32': 'red', // 中学校
-		 '33': 'red', // 高等学校
-		 '34': 'red', // 中等教育学校
-		 '35': 'red', // 特別支援学校
-		 '36': 'red', // 幼稚園
-		 '37': 'green', // 地下鉄
-		 '38': 'green', // ＪＲ駅
+	     var markerImage = {
+		 '10': 'build', // 代表
+		 '11': 'build', // 総務局
+		 '12': 'build', // 財政局
+		 '13': 'build', // 市民文化局
+		 '14': 'build', // 経済観光局
+		 '15': 'build', // スポーツ局
+		 '16': 'build', // 保健福祉局
+		 '17': 'build', // 子ども未来局
+		 '18': 'build', // ちあふる
+		 '19': 'build', // 保育園
+		 '20': 'build', // 環境局
+		 '21': 'build', // 建設局
+		 '22': 'build', // 下水道河川局
+		 '23': 'build', // 交通局
+		 '24': 'build', // 水道局
+		 '25': 'build', // 市立札幌病院
+		 '26': 'fire', // 消防局
+		 '27': 'build', // 土木センター
+		 '28': 'people', // まちセン
+		 '29': 'build', // 教育委員会
+		 '30': 'build', // 図書館
+		 '31': 'school', // 小学校
+		 '32': 'school', // 中学校
+		 '33': 'school', // 高等学校
+		 '34': 'school', // 中等教育学校
+		 '35': 'school', // 特別支援学校
+		 '36': 'school', // 幼稚園
+		 '37': 'station', // 地下鉄
+		 '38': 'station', // ＪＲ駅
 	     };
 
              Object.keys( objWorkplace ).forEach( function ( key ) {
-		 var image = 'https://tkita.github.io/m5/resources/mm_20_' +
-			     markerColor[key] + '.png';
+		 var image = 'https://tkita.github.io/m5/resources/' +
+			     markerImage[key] + '.png';
                  objWorkplace[ key ].data.forEach( function ( data ) {
 		     var name = data.split( ',' )[0]
 		     var build = data.split( ',' )[1]
