@@ -70,7 +70,8 @@
 	     };
 
              Object.keys( objWorkplace ).forEach( function ( key ) {
-		 var IMAGE = 'https://tkita.github.io/m5/resources/mm_20_' + key + '.png';
+		 var IMAGE = 'https://tkita.github.io/m5/resources/mm_20_' +
+			     markerColor[key] + '.png';
                  objWorkplace[ key ].data.forEach( function ( data ) {
 		     var name = data.split( ',' )[0]
 		     var build = data.split( ',' )[1]
