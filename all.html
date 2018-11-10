@@ -15,7 +15,14 @@
 	</style>
 
 	<script>
-	 var opener = window.dialogArguments;
+	 // var opener = window.dialogArguments;
+
+	 function drawPolyline ( map, path, option ) {
+	     option.path = path;
+	     option.geodesic = true;
+	     var objPolyline = new google.maps.Polyline( option );
+	     objPolyline.setMap( map );
+	 }
 
 	 function makeMarker( map, lat, lng, image, opt_msg ) {
 	     var marker = new google.maps.Marker(
@@ -91,6 +98,18 @@
 					      name + '<br>' + build + '<br>' + addr );
                  });
              });
+
+	     Object.keys( objKuBorder ).forEach( function ( ku ) {
+		 var path = objKuBorder[ ku ].split( ' ' ).map( function( e ) {
+		     var c = e.split( ',' );
+		     return { lat: Number( c[1] ),
+			      lng: Number( c[0] ) }
+		 });
+
+		 drawPolyline( map, path, { strokeColor: 'red',
+					    strokeOpacity: 0.5,
+					    strokeWeight: 2 } );
+	     });
          }
 
         </script>
@@ -106,6 +125,7 @@
     <body>
         <div id="all_map"></div>
 	<script type="text/jscript" src="./data/objwp.js"></script>
+	<script type="text/jscript" src="./data/objkuborder.js"></script>
 	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
     </body>
 </html>
