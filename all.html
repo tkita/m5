@@ -36,13 +36,49 @@
              var map = new google.maps.Map( document.getElementById( 'all_map' ), options );
 
 	     // main
-	     var IMAGE = 'https://tkita.github.io/m5/resources/mm_20_red.png';
+
+	     var markerColor = {
+		 '10': 'red', // 代表
+		 '11': 'red', // 総務局
+		 '12': 'red', // 財政局
+		 '13': 'red', // 市民文化局
+		 '14': 'red', // 経済観光局
+		 '15': 'red', // スポーツ局
+		 '16': 'red', // 保健福祉局
+		 '17': 'red', // 子ども未来局
+		 '18': 'red', // ちあふる
+		 '19': 'red', // 保育園
+		 '20': 'red', // 環境局
+		 '21': 'red', // 建設局
+		 '22': 'red', // 下水道河川局
+		 '23': 'red', // 交通局
+		 '24': 'red', // 水道局
+		 '25': 'red', // 市立札幌病院
+		 '26': 'red', // 消防局
+		 '27': 'red', // 土木センター
+		 '28': 'red', // まちセン
+		 '29': 'red', // 教育委員会
+		 '30': 'red', // 図書館
+		 '31': 'red', // 小学校
+		 '32': 'red', // 中学校
+		 '33': 'red', // 高等学校
+		 '34': 'red', // 中等教育学校
+		 '35': 'red', // 特別支援学校
+		 '36': 'red', // 幼稚園
+		 '37': 'green', // 地下鉄
+		 '38': 'green', // ＪＲ駅
+	     };
+
              Object.keys( objWorkplace ).forEach( function ( key ) {
+		 var IMAGE = 'https://tkita.github.io/m5/resources/mm_20_' + key + '.png';
                  objWorkplace[ key ].data.forEach( function ( data ) {
+		     var name = data.split( ',' )[0]
+		     var build = data.split( ',' )[1]
+		     var addr = data.split( ',' )[2]
                      var lat = data.split( ',' )[3]
                      var lng = data.split( ',' )[4]
                      // console.info( lat, lng );
-		     var marker = makeMarker( map, lat, lng, IMAGE, '' );
+		     var marker = makeMarker( map, lat, lng, IMAGE, name + '@' + build );
 
                  });
              });
