@@ -6,6 +6,13 @@
 	<meta name="viewport"
 	      content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
 	<title>m5</title>
+
+	<style>
+	 .gm-style > div > div > div > div > div > div {
+	     opacity: 0.7;
+	 }
+	</style>
+
 	<script>
 	 var opener = window.dialogArguments;
 
@@ -70,7 +77,7 @@
 	     };
 
              Object.keys( objWorkplace ).forEach( function ( key ) {
-		 var IMAGE = 'https://tkita.github.io/m5/resources/mm_20_' +
+		 var image = 'https://tkita.github.io/m5/resources/mm_20_' +
 			     markerColor[key] + '.png';
                  objWorkplace[ key ].data.forEach( function ( data ) {
 		     var name = data.split( ',' )[0]
@@ -79,8 +86,8 @@
                      var lat = data.split( ',' )[3]
                      var lng = data.split( ',' )[4]
                      // console.info( lat, lng );
-		     var marker = makeMarker( map, lat, lng, IMAGE, name + '@' + build );
-
+		     var marker = makeMarker( map, lat, lng, image,
+					      name + '<br>' + build + '<br>' + addr );
                  });
              });
          }
