@@ -1163,7 +1163,7 @@ function showModal ( url ) {
     window.showModalDialog(
 	url,   //移動先
 	this,  //ダイアログに渡すパラメータ（この例では、自分自身のwindowオブジェクト）
-	'dialogWidth=800px; dialogHeight=800px;'
+	'dialogWidth=1200px; dialogHeight=800px;'
     );
     //モーダルダイアログが終了すると、ここからスクリプトが続行される
 }
