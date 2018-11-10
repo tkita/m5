@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta charset="UTF-8">
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=11" /> -->
+	<meta name="viewport"
+	      content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+	<title>m5</title>
+	<script>
+	 var opener = window.dialogArguments;
+
+	 function makeMarker( map, lat, lng, image, opt_msg ) {
+	     var marker = new google.maps.Marker(
+		 { map: map,
+		   position: new google.maps.LatLng( lat, lng ),
+		   icon: new google.maps.MarkerImage( image )
+		 } );
+	     if ( opt_msg ) {
+		 google.maps.event.addListener( marker, 'click',
+						function( event ) {
+						    new google.maps.InfoWindow( { content: opt_msg } ).
+							       open( marker.getMap(), marker );
+						});
+	     }
+	     return marker;
+	 }
+
+         function init () {
+             var options = { center: new google.maps.LatLng( '43.061945', '141.354395' ),
+                             panControl: false,
+                             scaleControl: true,
+                             zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
+                             zoom: 12,
+                             mapTypeId: google.maps.MapTypeId.ROADMAP
+             };
+             var map = new google.maps.Map( document.getElementById( 'all_map' ), options );
+
+	     // main
+	     var IMAGE = 'https://tkita.github.io/m5/resources/mm_20_red.png';
+             Object.keys( objWorkplace ).forEach( function ( key ) {
+                 objWorkplace[ key ].data.forEach( function ( data ) {
+                     var lat = data.split( ',' )[3]
+                     var lng = data.split( ',' )[4]
+                     // console.info( lat, lng );
+		     var marker = makeMarker( map, lat, lng, IMAGE, '' );
+
+                 });
+             });
+         }
+
+        </script>
+
+        <style>
+         #all_map {
+             width: 800px;
+             height: 800px;
+         }
+        </style>
+    </head>
+
+    <body>
+        <div id="all_map"></div>
+	<script type="text/jscript" src="./data/objwp.js"></script>
+	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
+    </body>
+</html>
