@@ -149,7 +149,6 @@
 	     console.info( code );
 	     if ( code == 13 ) {
 		 var searchWord = document.getElementById( 'searchWord' ).value;
-		 console.info( searchWord );
 		 if ( searchWord != '' ) {
 		     doSearchMain( searchWord );
 		 }
@@ -157,9 +156,11 @@
 	 }
 
 	 function doSearchMain ( searchWord ) {
+	     console.info( searchWord );
 	     geocoder.geocode( { address: searchWord },
 			       function ( results, status ) {
 				   if ( status == google.maps.GeocoderStatus.OK ) {
+				       console.info( results );
 				       var l = results[0].geometry.location;
 				       var marker = makeMarker( map, l.lat(), l.lng(),
 								'https://tkita.github.io/m5/resources/mm_20_red.png',
