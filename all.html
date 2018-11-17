@@ -146,8 +146,10 @@
          }
 
 	 function doSearch ( code ) {
+	     console.info( code );
 	     if ( code == 13 ) {
 		 var searchWord = document.getElementById( 'searchWord' ).value;
+		 console.info( searchWord );
 		 if ( searchWord != '' ) {
 		     doSearchMain( searchWord );
 		 }
@@ -174,7 +176,7 @@
     <body>
 	<div id="searchBox" style="padding: 0.5em;">
 	    <input id="searchWord" type="text" size="30" style="font-size: 18px;"
-		   onKeyPress="doSearch(event.keyCode);">
+		   onKeyDown="doSearch(event.keyCode);">
 	</div>
 
         <div id="all_map"></div>
