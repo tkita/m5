@@ -108,6 +108,9 @@
 		 '38': 'station',   // ＪＲ駅
 	     };
 
+	     delete objWorkplace[ '37' ];
+	     delete objWorkplace[ '38' ];
+
              Object.keys( objWorkplace ).forEach( function ( key ) {
 		 var image = 'https://tkita.github.io/m5/resources/' +
 			     markerImage[key] + '.png';
