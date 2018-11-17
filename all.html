@@ -22,7 +22,8 @@
 	</style>
 
 	<script>
-	 // var opener = window.dialogArguments;
+	 var geocoder;
+	 var map;
 
 	 function drawPolyline ( map, path, option ) {
 	     option.path = path;
@@ -60,6 +61,7 @@
 	 }
 
          function init () {
+	     geocoder = new google.maps.Geocoder();
              var options = { center: new google.maps.LatLng( '43.061945', '141.354395' ),
                              panControl: false,
                              scaleControl: true,
@@ -67,7 +69,11 @@
                              zoom: 12,
                              mapTypeId: google.maps.MapTypeId.ROADMAP
              };
-             var map = new google.maps.Map( document.getElementById( 'all_map' ), options );
+             map = new google.maps.Map( document.getElementById( 'all_map' ), options );
+
+	     //
+	     map.controls[ google.maps.ControlPosition.TOP_RIGHT ].
+		 push( document.getElementById( 'searchBox' ) );
 
 	     // 地下鉄を強調表示
 	     var transitLayer = new google.maps.TransitLayer();
@@ -137,13 +143,29 @@
 					    strokeOpacity: 0.5,
 					    strokeWeight: 2 } );
 	     });
-
-
-	     //
-	     map.controls[ google.maps.ControlPosition.TOP_RIGHT ].
-		 push( document.getElementById( 'searchBox' ) );
-
          }
+
+	 function doSearch ( code ) {
+	     if ( code == 13 ) {
+		 var searchWord = document.getElementById( 'searchWord' ).value;
+		 if ( searchWord != '' ) {
+		     doSearchMain( searchWord );
+		 }
+	     }
+	 }
+
+	 function doSearchMain ( searchWord ) {
+	     geocoder.geocode( { address: searchWord },
+			       function ( results, status ) {
+				   if ( status == google.maps.GeocoderStatus.OK ) {
+				       var l = results[0].geometry.location;
+				       var marker = makeMarker( map, l.lat(), l.lng(),
+								'https://tkita.github.io/m5/resources/mm_20_red.png',
+								results[0].formatted_address );
+				   } else {
+				       alert( 'Google Geocoder Faild：' + status );
+				   }});
+	 }
 
         </script>
 
@@ -151,7 +173,8 @@
 
     <body>
 	<div id="searchBox" style="padding: 0.5em;">
-	    <input type="text">
+	    <input id="searchWord" type="text" size="30" style="font-size: 18px;"
+		   onKeyPress="doSearch(event.keyCode);">
 	</div>
 
         <div id="all_map"></div>
