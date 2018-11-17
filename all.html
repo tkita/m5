@@ -146,7 +146,6 @@
          }
 
 	 function doSearch ( code ) {
-	     console.info( code );
 	     if ( code == 13 ) {
 		 var searchWord = document.getElementById( 'searchWord' ).value;
 		 if ( searchWord != '' ) {
@@ -163,7 +162,7 @@
 				       console.info( results );
 				       var l = results[0].geometry.location;
 				       var marker = makeMarker( map, l.lat(), l.lng(),
-								'https://tkita.github.io/m5/resources/mm_20_red.png',
+								'https://tkita.github.io/m5/resources/red-blank.png',
 								results[0].formatted_address );
 				   } else {
 				       alert( 'Google Geocoder Faild：' + status );
@@ -176,7 +175,7 @@
 
     <body>
 	<div id="searchBox" style="padding: 0.5em;">
-	    <input id="searchWord" type="text" size="30" style="font-size: 18px;"
+	    <input id="searchWord" type="text" size="40" style="font-size: 18px;"
 		   onKeyDown="doSearch(event.keyCode);">
 	</div>
 
