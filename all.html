@@ -137,6 +137,12 @@
 					    strokeOpacity: 0.5,
 					    strokeWeight: 2 } );
 	     });
+
+
+	     //
+	     map.controls[ google.maps.ControlPosition.TOP_RIGHT ].
+		 push( document.getElementById( 'searchBox' ) );
+
          }
 
         </script>
@@ -144,7 +150,12 @@
     </head>
 
     <body>
+	<div id="searchBox" style="padding: 0.5em;">
+	    <input type="text">
+	</div>
+
         <div id="all_map"></div>
+
 	<script type="text/jscript" src="./data/objwp.js"></script>
 	<script type="text/jscript" src="./data/objkuborder.js"></script>
 	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
