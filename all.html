@@ -69,6 +69,11 @@
              };
              var map = new google.maps.Map( document.getElementById( 'all_map' ), options );
 
+	     // 地下鉄を強調表示
+	     var transitLayer = new google.maps.TransitLayer();
+	     transitLayer.setMap( map );
+
+
 	     // main
 
 	     var markerImage = {
