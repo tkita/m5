@@ -16,7 +16,7 @@
 	 #icon {
 	     width: 24px;
 	     height: 24px;
-	     background: white;
+	     background: yellow;
 	     border: 1px solid black;
 	 }
 
@@ -95,19 +95,33 @@
 	     });
 
 	     marker.addListener( 'click', function () {
-		 
+
+		 //
+		 new google.maps.Circle(
+		     { strokeColor: 'green',
+		       strokeOpacity: 0.3,
+		       strokeWeight: 3,
+		       fillColor: '#ff1493',
+		       fillOpacity: 0,
+		       clickable: false,
+		       map: map,
+		       center: new google.maps.LatLng( lat, lng ),
+		       radius: 1000   // 半径 1000 m
+		     } );
+
+		 //		 
 		 if ( infoWindow ) {
 		     infoWindow.close();
 		 }
-		 console.info( marker.position );
 		 placesService.search( { location: marker.position,
-					 radius: 200,
+					 radius: 1000,
 					 types: [ 'bus_station' ] },
 				       function ( result, status ) {
-					   console.info( result, status );
 					   if ( status == google.maps.places.PlacesServiceStatus.OK ) {
 					       result.forEach( function ( r ) {
-						   console.info( r.name, r.geometry.location );
+						   console.info( r.name );
+						   console.info( r.geometry.location[0] );
+						   console.info( r.geometry.location[1] );
 					       });
 					   }
 				       });
