@@ -57,7 +57,7 @@
 
 	     google.maps.event.
 		    addListener( marker, 'click',
-				 function( event ) {
+				 function ( event ) {
 				     new google.maps.InfoWindow( { content: opt_msg } ).
 						open( marker.getMap(), marker );
 
@@ -73,6 +73,27 @@
 					   radius: 1000   // 半径 1000 m
 					 } );
 				 });
+
+	     var placeReq = {
+		 location: marker.position,
+		 radius: 200,
+		 types: [ 'bus_station' ]
+	     }
+
+	     google.maps.event.
+		    addListener( marker, 'rightclick',
+				 function ( event ) {
+				     var service = new google.maps.places.PlacesService( map );
+				     service.search( placeReq, function ( result, status ) {
+					 if ( status == google.maps.places.PlacesServiceStatus.OK ) {
+					     result.forEach( function ( r ) {
+						 console.info( r.name, r.geometry.location );
+					     });
+					 }
+				     });
+				 });
+
+	     //
 	     return marker;
 	 }
 
