@@ -8,6 +8,20 @@
 	<title>m5</title>
 
 	<style>
+	 #searchBox {
+	     display: flex;
+	     padding: 0.5em;
+	 }
+
+	 #icon {
+	     width: 24px;
+	     height: 24px;
+	 }
+
+	 #searchWord {
+	     font-size: 18px;
+	 }
+
          #all_map {
 	     position: relative;
 	     padding: 0 0 56%;
@@ -174,9 +188,13 @@
     </head>
 
     <body>
-	<div id="searchBox" style="padding: 0.5em;">
-	    <input id="searchWord" type="text" size="50" style="font-size: 18px;"
-		   onKeyDown="doSearch(event.keyCode);"
+	<div id="searchBox">
+            <span id="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+                    <path d="M 15.5 14 h -0.79 l -0.28 -0.27 A 6.471 6.471 0 0 0 16 9.5 A 6.5 6.5 0 1 0 9.5 16 c 1.61 0 3.09 -0.59 4.23 -1.57 l 0.27 0.28 v 0.79 l 5 4.99 L 20.49 19 l -4.99 -5 Z m -6 0 C 7.01 14 5 11.99 5 9.5 S 7.01 5 9.5 5 S 14 7.01 14 9.5 S 11.99 14 9.5 14 Z" />
+                </svg>
+            </span>
+	    <input id="searchWord" type="text" size="50" onKeyDown="doSearch(event.keyCode);"
 		   placeholder=" 名称や住所を入力">
 	</div>
 
