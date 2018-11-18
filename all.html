@@ -16,7 +16,7 @@
 	 #icon {
 	     width: 24px;
 	     height: 24px;
-	     background: yellow;
+	     background: white;
 	     border: 1px solid black;
 	 }
 
@@ -48,6 +48,7 @@
 	     objPolyline.setMap( map );
 	 }
 
+	 var infoWindow = [];
 	 function makeMarker( map, lat, lng, image, opt_msg ) {
 	     var marker = new google.maps.Marker(
 		 { map: map,
@@ -55,24 +56,41 @@
 		   icon: new google.maps.MarkerImage( image )
 		 } );
 
-	     google.maps.event.
-		    addListener( marker, 'click',
-				 function ( event ) {
-				     new google.maps.InfoWindow( { content: opt_msg } ).
-						open( marker.getMap(), marker );
+	     /* google.maps.event.
+		addListener( marker, 'click',
+		function ( event ) {
+		new google.maps.InfoWindow( { content: opt_msg } ).
+		open( marker.getMap(), marker );
 
-				     new google.maps.Circle(
-					 { strokeColor: 'green',
-					   strokeOpacity: 0.3,
-					   strokeWeight: 3,
-					   fillColor: '#ff1493',
-					   fillOpacity: 0,
-					   clickable: false,
-					   map: map,
-					   center: new google.maps.LatLng( lat, lng ),
-					   radius: 1000   // 半径 1000 m
-					 } );
-				 });
+		new google.maps.Circle(
+		{ strokeColor: 'green',
+		strokeOpacity: 0.3,
+		strokeWeight: 3,
+		fillColor: '#ff1493',
+		fillOpacity: 0,
+		clickable: false,
+		map: map,
+		center: new google.maps.LatLng( lat, lng ),
+		radius: 1000   // 半径 1000 m
+		} );
+		}); */
+
+	     //
+	     marker.addListener( 'mouseover', function () {
+		 infoWindow = new google.maps.InfoWindow( {
+		     map: map,
+		     content: opt_msg
+		 });
+
+		 infoWindow.setPosition( new google.maps.LatLng( lat, lng ) );
+	     });
+
+	     //
+	     marker.addListener( 'mouseout', function () {
+		 if ( infoWindow ) {
+		     infoWindow.close();
+		 }
+	     });
 
 	     var placeReq = {
 		 location: marker.position,
@@ -90,7 +108,7 @@
 	     }
 
 	     google.maps.event.
-		    addListener( marker, 'rightclick',
+		    addListener( marker, 'click',
 				 function ( event ) {
 				     var service = new google.maps.places.PlacesService( map );
 				     service.search( placeReq, funcRightClick );
