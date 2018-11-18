@@ -16,7 +16,7 @@
 	 #icon {
 	     width: 24px;
 	     height: 24px;
-	     background: white;
+	     background: yellow;
 	     border: 1px solid black;
 	 }
 
@@ -50,12 +50,13 @@
 	 }
 
 	 function makePlace ( map, latlng, icon, msg ) {
+	     icon = 'https://tkita.github.io/m5/resources/mm_20_yellow.png';
 	     var marker = new google.maps.Marker( { map: map,
 						    position: latlng,
 						    icon: icon });
 	     marker.addListener( 'click', function () {
 		 new google.maps.InfoWindow( { map: map,
-					       content: opt_msg }
+					       content: msg }
 		 );
 	     });
 	 }
