@@ -16,7 +16,7 @@
 	 #icon {
 	     width: 24px;
 	     height: 24px;
-	     background: white;
+	     background: yellow;
 	     border: 1px solid black;
 	 }
 
@@ -94,6 +94,10 @@
 	     });
 
 	     marker.addListener( 'click', function () {
+		 console.info( 'click' );
+		 if ( infoWindow ) {
+		     infoWindow.close();
+		 }
 		 var service = new google.maps.places.PlacesService( map );
 		 service.search( { location: marker.position,
 				   radius: 200,
