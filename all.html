@@ -16,7 +16,7 @@
 	 #icon {
 	     width: 24px;
 	     height: 24px;
-	     background: white;
+	     background: yellow;
 	     border: 1px solid black;
 	 }
 
@@ -80,17 +80,20 @@
 		 types: [ 'bus_station' ]
 	     }
 
+	     function funcRightClick ( result, status ) {
+		 if ( status == google.maps.places.PlacesServiceStatus.OK ) {
+		     console.info( result );
+		     result.forEach( function ( r ) {
+			 console.info( r.name, r.geometry.location );
+		     });
+		 }
+	     }
+
 	     google.maps.event.
 		    addListener( marker, 'rightclick',
 				 function ( event ) {
 				     var service = new google.maps.places.PlacesService( map );
-				     service.search( placeReq, function ( result, status ) {
-					 if ( status == google.maps.places.PlacesServiceStatus.OK ) {
-					     result.forEach( function ( r ) {
-						 console.info( r.name, r.geometry.location );
-					     });
-					 }
-				     });
+				     service.search( placeReq, funcRightClick );
 				 });
 
 	     //
