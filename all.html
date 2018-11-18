@@ -16,7 +16,7 @@
 	 #icon {
 	     width: 24px;
 	     height: 24px;
-	     background: yellow;
+	     background: white;
 	     border: 1px solid black;
 	 }
 
@@ -47,6 +47,17 @@
 	     option.geodesic = true;
 	     var objPolyline = new google.maps.Polyline( option );
 	     objPolyline.setMap( map );
+	 }
+
+	 function makePlace ( map, latlng, icon, msg ) {
+	     var marker = new google.maps.Marker( { map: map,
+						    position: latlng,
+						    icon: icon });
+	     marker.addListener( 'click', function () {
+		 new google.maps.InfoWindow( { map: map,
+					       content: opt_msg }
+		 );
+	     });
 	 }
 
 	 var infoWindow = [];
@@ -95,8 +106,6 @@
 	     });
 
 	     marker.addListener( 'click', function () {
-
-		 //
 		 new google.maps.Circle(
 		     { strokeColor: 'green',
 		       strokeOpacity: 0.3,
@@ -109,7 +118,6 @@
 		       radius: 1000   // 半径 1000 m
 		     } );
 
-		 //		 
 		 if ( infoWindow ) {
 		     infoWindow.close();
 		 }
@@ -119,9 +127,7 @@
 				       function ( result, status ) {
 					   if ( status == google.maps.places.PlacesServiceStatus.OK ) {
 					       result.forEach( function ( r ) {
-						   console.info( r.name );
-						   console.info( r.geometry.location[0] );
-						   console.info( r.geometry.location[1] );
+						   makePlace( map, r.geometry.location, r.icon, r.name )
 					       });
 					   }
 				       });
