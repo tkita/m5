@@ -41,6 +41,7 @@
 	 var geocoder;
 	 var map;
 	 var placesService;
+	 var markerObjects;
 
 	 function drawPolyline ( map, path, option ) {
 	     option.path = path;
@@ -187,7 +188,7 @@
 		 '36': 'school',    // 幼稚園
 	     };
 
-	     var markerObjects = {
+	     markerObjects = {
 		 '10': [],     // 代表
 		 '11': [],     // 総務局
 		 '12': [],     // 財政局
