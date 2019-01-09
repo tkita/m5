@@ -41,6 +41,7 @@
 	 var geocoder;
 	 var map;
 	 var placesService;
+	 var markerObjects;
 
 	 function drawPolyline ( map, path, option ) {
 	     option.path = path;
@@ -72,8 +73,7 @@
 
 	 function makeMarker( map, lat, lng, image, opt_msg ) {
 	     var marker = new google.maps.Marker(
-		 { map: map,
-		   position: new google.maps.LatLng( lat, lng ),
+		 { position: new google.maps.LatLng( lat, lng ),
 		   icon: new google.maps.MarkerImage( image )
 		 } );
 
@@ -107,7 +107,8 @@
 
 		 if ( infoWindow ) {
 		     infoWindow.close();
-		 }
+		 };
+
 		 placesService.search( { location: marker.position,
 					 radius: 1000,
 					 types: [ 'bus_station' ] },
@@ -118,11 +119,20 @@
 					       });
 					   }
 				       });
-	     });
+	     } );
 
-	     //
 	     return marker;
-	 }
+	 };
+
+	 function drawMarker( t, b ) {
+	     markerObjects[ t ].forEach( function ( m ) {
+		 if ( b ) {
+		     m.setMap( map );
+		 } else {
+		     m.setMap( null );
+		 };
+	     });
+	 };
 
          function init () {
 	     geocoder = new google.maps.Geocoder();
@@ -176,25 +186,50 @@
 		 '34': 'school',    // 中等教育学校
 		 '35': 'school',    // 特別支援学校
 		 '36': 'school',    // 幼稚園
-		 '37': 'station',   // 地下鉄
-		 '38': 'station',   // ＪＲ駅
 	     };
 
-	     delete objWorkplace[ '37' ];
-	     delete objWorkplace[ '38' ];
+	     markerObjects = {
+		 '10': [],     // 代表
+		 '11': [],     // 総務局
+		 '12': [],     // 財政局
+		 '13': [],     // 市民文化局
+		 '14': [],     // 経済観光局
+		 '15': [],     // スポーツ局
+		 '16': [],     // 保健福祉局
+		 '17': [],     // 子ども未来局
+		 '18': [],     // ちあふる
+		 '19': [],     // 保育園
+		 '20': [],     // 環境局
+		 '21': [],     // 建設局
+		 '22': [],     // 下水道河川局
+		 '23': [],     // 交通局
+		 '24': [],     // 水道局
+		 '25': [],     // 市立札幌病院
+		 '26': [],      // 消防局
+		 '27': [],     // 土木センター
+		 '28': [],    // まちセン
+		 '29': [],     // 教育委員会
+		 '30': [],     // 図書館
+		 '31': [],    // 小学校
+		 '32': [],    // 中学校
+		 '33': [],    // 高等学校
+		 '34': [],    // 中等教育学校
+		 '35': [],    // 特別支援学校
+		 '36': [],    // 幼稚園
+	     };
 
              Object.keys( objWorkplace ).forEach( function ( key ) {
 		 var image = 'https://tkita.github.io/m5/resources/' +
-			     markerImage[key] + '.png';
+			     markerImage[ key ] + '.png';
+
                  objWorkplace[ key ].data.forEach( function ( data ) {
-		     var name = data.split( ',' )[0]
-		     var build = data.split( ',' )[1]
-		     var addr = data.split( ',' )[2]
-                     var lat = data.split( ',' )[3]
-                     var lng = data.split( ',' )[4]
-                     // console.info( lat, lng );
-		     var marker = makeMarker( map, lat, lng, image,
-					      name + '<br>' + build + '<br>' + addr );
+		     var name = data.split( ',' )[0];
+		     var build = data.split( ',' )[1];
+		     var addr = data.split( ',' )[2];
+                     var lat = data.split( ',' )[3];
+                     var lng = data.split( ',' )[4];
+		     markerObjects[ key ].push( makeMarker( map, lat, lng, image,
+							    name + '<br>' + build + '<br>' + addr ) );
                  });
              });
 
@@ -251,6 +286,45 @@
 	</div>
 
         <div id="all_map"></div>
+
+	<div style="display: flex; flex-direction: row; margin-right: 3em;">
+	    <div>
+		<label><input type="checkbox" onclick="drawMarker( '10', this.checked );">代表</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '11', this.checked );">総務局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '12', this.checked );">財政局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '13', this.checked );">市民文化局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '14', this.checked );">経済観光局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '15', this.checked );">スポーツ局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '16', this.checked );">保健福祉局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '17', this.checked );">子ども未来局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '18', this.checked );">ちあふる</label><br>
+	    </div>
+
+	    <div>
+		<label><input type="checkbox" onclick="drawMarker( '19', this.checked );">保育園</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '20', this.checked );">環境局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '21', this.checked );">建設局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '22', this.checked );">下水道河川局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '23', this.checked );">交通局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '24', this.checked );">水道局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '25', this.checked );">市立札幌病院</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '26', this.checked );">消防局</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '27', this.checked );">土木センター</label><br>
+	    </div>
+
+	    <div>
+		<label><input type="checkbox" onclick="drawMarker( '28', this.checked );">まちセン</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '29', this.checked );">教育委員会</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '30', this.checked );">図書館</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '31', this.checked );">小学校</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '32', this.checked );">中学校</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '33', this.checked );">高等学校</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '34', this.checked );">中等教育学校</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '35', this.checked );">特別支援学校</label><br>
+		<label><input type="checkbox" onclick="drawMarker( '36', this.checked );">幼稚園</label>
+	    </div>
+
+	</div>
 
 	<script type="text/jscript" src="./data/objwp.js"></script>
 	<script type="text/jscript" src="./data/objkuborder.js"></script>
