@@ -125,13 +125,10 @@
 	     return marker;
 	 };
 
-	 function drawMarker( t, b ) {
-	     markerObjects[ t ].forEach( function ( m ) {
-		 if ( b ) {
-		     m.setMap( map );
-		 } else {
-		     m.setMap( null );
-		 };
+	 function drawMarker( key, checked ) {
+	     var tmp = checked ? map : null;
+	     markerObjects[ key ].forEach( function ( marker ) {
+		     marker.setMap( tmp );
 	     });
 	 };
 
@@ -219,6 +216,7 @@
 		 '36': [],    // 幼稚園
 	     };
 
+	     console.info( '* * * * *' );
              Object.keys( objWorkplace ).forEach( function ( key ) {
 		 var image = 'https://tkita.github.io/m5/resources/' +
 			     markerImage[ key ] + '.png';
@@ -234,6 +232,7 @@
                  });
              });
 
+	     console.info( '** ** ** ** **' );
 	     Object.keys( objKuBorder ).forEach( function ( ku ) {
 		 var path = objKuBorder[ ku ].split( ' ' ).map( function( e ) {
 		     var c = e.split( ',' );
@@ -245,6 +244,8 @@
 					    strokeOpacity: 0.5,
 					    strokeWeight: 2 } );
 	     });
+
+	     console.info( '*** *** *** *** ***' );
          };
 
 	 function doSearch ( code ) {
