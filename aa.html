@@ -218,16 +218,22 @@
 
 	     console.info( '** ** ** ** **' );
 	     borderObjects = {
-		 '10': [],
-		 '20': [],
-		 '30': [],
-		 '40': [],
-		 '45': [],
-		 '50': [],
-		 '55': [],
-		 '60': [],
-		 '70': [],
-		 '75': []
+		 '10': {},
+		 '20': {},
+		 '30': {},
+		 '40': {},
+		 '45': {},
+		 '50': {},
+		 '55': {},
+		 '60': {},
+		 '70': {},
+		 '75': {}
+	     };
+
+	     var option = { strokeColor: 'red',
+			    strokeOpacity: 0.5,
+			    strokeWeight: 2,
+			    geodesic: true
 	     };
 
 	     Object.keys( objKuBorder ).forEach( function ( ku ) {
@@ -236,15 +242,8 @@
 		     return { lat: Number( c[1] ),
 			      lng: Number( c[0] ) }
 		 });
-
-		 var option = { strokeColor: 'red',
-				strokeOpacity: 0.5,
-				strokeWeight: 2,
-				geodesic: true,
-				path: path
-		 };
-
-		 borderObjects[ ku ].push( new google.maps.Polyline( option ) );
+		 option.path = path;
+		 borderObjects[ ku ] = new google.maps.Polyline( option );
 	     });
 
 	     console.info( '* * * * *' );
