@@ -44,11 +44,12 @@
 	 var markerObjects;
 
 	 function drawPolyline ( map, path, option ) {
+	     console.info( path );
 	     option.path = path;
 	     option.geodesic = true;
 	     var objPolyline = new google.maps.Polyline( option );
 	     objPolyline.setMap( map );
-	 }
+	 };
 
 	 var infoWindow = [];
 	 function makePlace ( map, latlng, icon, msg ) {
@@ -244,7 +245,7 @@
 					    strokeOpacity: 0.5,
 					    strokeWeight: 2 } );
 	     });
-         }
+         };
 
 	 function doSearch ( code ) {
 	     if ( code == 13 ) {
