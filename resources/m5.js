@@ -724,10 +724,10 @@ function unlock () {
 function setupShokuba () {
     var dom = document.getElementById( 'kyoku' );
     Object.keys( objWorkplace ).forEach( function( e ) {
-	addOption( dom, e, objWorkplace[e].name );
+	addOption( dom, e, objWorkplace[ e ].name );
     });
     dom.selectedIndex = 0;
-    changeKyoku( getOptionValue('kyoku') );
+    changeKyoku( getOptionValue( 'kyoku' ) );
 }
 
 function setupBoundCity () {
