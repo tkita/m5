@@ -25,6 +25,7 @@
 	     display: flex;
 	     flex-direction: row;
 	     border: 1px solid black;
+	     border-radius: 0.5em;
 	     margin-right: 1em;
 	 }
 
@@ -34,12 +35,12 @@
 
 	 #controller {
 	     border: 1px solid black;
+	     border-radius: 0.5em;
 	     padding: 1em;
 	 }
 
 	 #searchBox {
 	     display: flex;
-	     padding: 1em;
 	 }
 
 	 #searchIcon {
@@ -294,6 +295,7 @@
 				       var marker = makeMarker( map, l.lat(), l.lng(),
 								'https://tkita.github.io/m5/resources/red-blank.png',
 								results[0].formatted_address );
+				       marker.setMap( map );
 				   } else {
 				       alert( 'Google Geocoder Faild：' + status );
 				   }});
