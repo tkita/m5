@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta charset="UTF-8">
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=11" /> -->
+	<meta name="viewport"
+	      content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+	<title>m5</title>
+
+	<style>
+	 #searchBox {
+	     display: flex;
+	     padding: 0.5em;
+	 }
+
+	 #icon {
+	     width: 24px;
+	     height: 24px;
+	     background: white;
+	     border: 1px solid black;
+	 }
+
+	 #searchWord {
+	     font-size: 18px;
+	 }
+
+         #all_map {
+	     position: relative;
+	     padding: 0 0 56%;
+	     height: 0;
+	     overflow: hidden;
+         }
+
+	 .gm-style > div > div > div > div > div > div {
+	     font-size: small;
+	     opacity: 0.7;
+	 }
+	</style>
+
+	<script>
+	 var geocoder;
+	 var map;
+	 var placesService;
+	 var markerObjects;
+	 var borderObjects;
+
+	 var infoWindow = [];
+	 function makePlace ( map, latlng, icon, msg ) {
+	     icon = 'https://tkita.github.io/m5/resources/mm_20_orange.png';
+	     var marker = new google.maps.Marker( { map: map,
+						    position: latlng,
+						    icon: icon });
+	     marker.addListener( 'mouseover', function () {
+		 infoWindow = new google.maps.InfoWindow( { map: map,
+							    content: msg,
+							    pixelOffset: new google.maps.Size( 0, -20 )
+		 });
+		 infoWindow.setPosition( latlng );
+	     });
+
+	     marker.addListener( 'mouseout', function () {
+		 if ( infoWindow ) {
+		     infoWindow.close();
+		 }
+	     });
+	 }
+
+	 function makeMarker( map, lat, lng, image, opt_msg ) {
+	     var marker = new google.maps.Marker(
+		 { position: new google.maps.LatLng( lat, lng ),
+		   icon: new google.maps.MarkerImage( image )
+		 } );
+
+	     marker.addListener( 'mouseover', function () {
+		 infoWindow = new google.maps.InfoWindow( {
+		     map: map,
+		     content: opt_msg,
+		     pixelOffset: new google.maps.Size( 0, -20 )
+		 });
+		 infoWindow.setPosition( new google.maps.LatLng( lat, lng ) );
+	     });
+
+	     marker.addListener( 'mouseout', function () {
+		 if ( infoWindow ) {
+		     infoWindow.close();
+		 }
+	     });
+
+	     marker.addListener( 'click', function () {
+		 new google.maps.Circle(
+		     { strokeColor: 'green',
+		       strokeOpacity: 0.3,
+		       strokeWeight: 3,
+		       fillColor: '#ff1493',
+		       fillOpacity: 0,
+		       clickable: false,
+		       map: map,
+		       center: new google.maps.LatLng( lat, lng ),
+		       radius: 1000   // 半径 1000 m
+		     } );
+
+		 if ( infoWindow ) {
+		     infoWindow.close();
+		 };
+
+		 placesService.search( { location: marker.position,
+					 radius: 1000,
+					 types: [ 'bus_station' ] },
+				       function ( result, status ) {
+					   if ( status == google.maps.places.PlacesServiceStatus.OK ) {
+					       result.forEach( function ( r ) {
+						   makePlace( map, r.geometry.location, r.icon, r.name )
+					       });
+					   }
+				       });
+	     } );
+
+	     return marker;
+	 };
+
+	 function drawMarker( key, checked ) {
+	     var tmp = checked ? map : null;
+	     markerObjects[ key ].forEach( function ( marker ) {
+		     marker.setMap( tmp );
+	     });
+	 };
+
+	 function drawBorder( checked ) {
+	     var tmp = checked ? map : null;
+	     Object.keys( borderObjects ).forEach( function ( ku ) {
+		 borderObjects[ ku ].setMap( tmp );
+	     });
+	 };
+
+         function init () {
+	     geocoder = new google.maps.Geocoder();
+
+             var options = { center: new google.maps.LatLng( '43.061945', '141.354395' ),
+                             panControl: false,
+                             scaleControl: true,
+                             zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
+                             zoom: 12,
+                             mapTypeId: google.maps.MapTypeId.ROADMAP
+             };
+             map = new google.maps.Map( document.getElementById( 'all_map' ), options );
+	     placesService = new google.maps.places.PlacesService( map );
+
+	     // 地下鉄を強調表示
+	     var transitLayer = new google.maps.TransitLayer();
+	     transitLayer.setMap( map );
+
+
+	     // main
+	     var markerImage = {
+		 '10': 'build',     // 代表
+		 '11': 'build',     // 総務局
+		 '12': 'build',     // 財政局
+		 '13': 'build',     // 市民文化局
+		 '14': 'build',     // 経済観光局
+		 '15': 'build',     // スポーツ局
+		 '16': 'build',     // 保健福祉局
+		 '17': 'build',     // 子ども未来局
+		 '18': 'tulip',     // ちあふる
+		 '19': 'tulip',     // 保育園
+		 '20': 'build',     // 環境局
+		 '21': 'build',     // 建設局
+		 '22': 'build',     // 下水道河川局
+		 '23': 'build',     // 交通局
+		 '24': 'build',     // 水道局
+		 '25': 'build',     // 市立札幌病院
+		 '26': 'fire',      // 消防局
+		 '27': 'build',     // 土木センター
+		 '28': 'people',    // まちセン
+		 '29': 'build',     // 教育委員会
+		 '30': 'build',     // 図書館
+		 '31': 'school',    // 小学校
+		 '32': 'school',    // 中学校
+		 '33': 'school',    // 高等学校
+		 '34': 'school',    // 中等教育学校
+		 '35': 'school',    // 特別支援学校
+		 '36': 'school',    // 幼稚園
+	     };
+
+	     markerObjects = {
+		 '10': [],     // 代表
+		 '11': [],     // 総務局
+		 '12': [],     // 財政局
+		 '13': [],     // 市民文化局
+		 '14': [],     // 経済観光局
+		 '15': [],     // スポーツ局
+		 '16': [],     // 保健福祉局
+		 '17': [],     // 子ども未来局
+		 '18': [],     // ちあふる
+		 '19': [],     // 保育園
+		 '20': [],     // 環境局
+		 '21': [],     // 建設局
+		 '22': [],     // 下水道河川局
+		 '23': [],     // 交通局
+		 '24': [],     // 水道局
+		 '25': [],     // 市立札幌病院
+		 '26': [],      // 消防局
+		 '27': [],     // 土木センター
+		 '28': [],    // まちセン
+		 '29': [],     // 教育委員会
+		 '30': [],     // 図書館
+		 '31': [],    // 小学校
+		 '32': [],    // 中学校
+		 '33': [],    // 高等学校
+		 '34': [],    // 中等教育学校
+		 '35': [],    // 特別支援学校
+		 '36': []    // 幼稚園
+	     };
+
+	     console.info( '** ** ** ** **' );
+	     borderObjects = {
+		 '10': {},
+		 '20': {},
+		 '30': {},
+		 '40': {},
+		 '45': {},
+		 '50': {},
+		 '55': {},
+		 '60': {},
+		 '70': {},
+		 '75': {}
+	     };
+
+	     var option = { strokeColor: 'red',
+			    strokeOpacity: 0.5,
+			    strokeWeight: 2,
+			    geodesic: true
+	     };
+
+	     Object.keys( objKuBorder ).forEach( function ( ku ) {
+		 var path = objKuBorder[ ku ].split( ' ' ).map( function( e ) {
+		     var c = e.split( ',' );
+		     return { lat: Number( c[1] ),
+			      lng: Number( c[0] ) }
+		 });
+		 option.path = path;
+		 borderObjects[ ku ] = new google.maps.Polyline( option );
+	     });
+
+	     console.info( '* * * * *' );
+             Object.keys( objWorkplace ).forEach( function ( key ) {
+		 var image = 'https://tkita.github.io/m5/resources/' +
+			     markerImage[ key ] + '.png';
+
+                 objWorkplace[ key ].data.forEach( function ( data ) {
+		     var cc =data.split( ',' );
+		     var name = cc[0];
+		     var build = cc[1];
+		     var addr = cc[2];
+                     var lat = cc[3];
+                     var lng = cc[4];
+		     markerObjects[ key ].push( makeMarker( map, lat, lng, image,
+							    name + '<br>' + build + '<br>' + addr ) );
+                 });
+             });
+
+	     console.info( '*** *** *** *** ***' );
+         };
+
+	 function doSearch ( code ) {
+	     if ( code == 13 ) {
+		 var searchWord = document.getElementById( 'searchWord' ).value;
+		 if ( searchWord != '' ) {
+		     doSearchMain( searchWord );
+		 }
+	     }
+	 };
+
+	 function doSearchMain ( searchWord ) {
+	     geocoder.geocode( { address: searchWord },
+			       function ( results, status ) {
+				   if ( status == google.maps.GeocoderStatus.OK ) {
+				       var l = results[0].geometry.location;
+				       var marker = makeMarker( map, l.lat(), l.lng(),
+								'https://tkita.github.io/m5/resources/red-blank.png',
+								results[0].formatted_address );
+				   } else {
+				       alert( 'Google Geocoder Faild：' + status );
+				   }});
+	 };
+
+        </script>
+
+    </head>
+
+    <body>
+        <div id="all_map"></div>
+
+	<div style="display: flex; flex-direction: row; border: 1px solid black; margin-right: 1em;">
+	    <div style="display: flex; flex-direction: row;">
+		<div style="margin: 1em;">
+		    <label><input type="checkbox" onclick="drawMarker( '10', this.checked );">代表</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '11', this.checked );">総務局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '12', this.checked );">財政局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '13', this.checked );">市民文化局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '14', this.checked );">経済観光局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '15', this.checked );">スポーツ局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '16', this.checked );">保健福祉局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '17', this.checked );">子ども未来局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '18', this.checked );">ちあふる</label><br>
+		</div>
+
+		<div style="margin: 1em;">
+		    <label><input type="checkbox" onclick="drawMarker( '19', this.checked );">保育園</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '20', this.checked );">環境局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '21', this.checked );">建設局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '22', this.checked );">下水道河川局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '23', this.checked );">交通局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '24', this.checked );">水道局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '25', this.checked );">市立札幌病院</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '26', this.checked );">消防局</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '27', this.checked );">土木センター</label><br>
+		</div>
+
+		<div style="margin: 1em;">
+		    <label><input type="checkbox" onclick="drawMarker( '28', this.checked );">まちセン</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '29', this.checked );">教育委員会</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '30', this.checked );">図書館</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '31', this.checked );">小学校</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '32', this.checked );">中学校</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '33', this.checked );">高等学校</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '34', this.checked );">中等教育学校</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '35', this.checked );">特別支援学校</label><br>
+		    <label><input type="checkbox" onclick="drawMarker( '36', this.checked );">幼稚園</label>
+		</div>
+	    </div>
+
+	    <div>
+		<label style="margin: 1em;">
+		    <input type="checkbox" onclick="drawBorder( this.checked );">区の境界線を表示
+		</label>
+
+		<div id="searchBox">
+		    <span id="icon">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+			    <path d="M 15.5 14 h -0.79 l -0.28 -0.27 A 6.471 6.471 0 0 0 16 9.5 A 6.5 6.5 0 1 0 9.5 16 c 1.61 0 3.09 -0.59 4.23 -1.57 l 0.27 0.28 v 0.79 l 5 4.99 L 20.49 19 l -4.99 -5 Z m -6 0 C 7.01 14 5 11.99 5 9.5 S 7.01 5 9.5 5 S 14 7.01 14 9.5 S 11.99 14 9.5 14 Z" />
+			</svg>
+		    </span>
+		    <input id="searchWord" type="text" size="50" onKeyDown="doSearch(event.keyCode);"
+			   placeholder=" 名称や住所を入力">
+		</div>
+
+	    </div>
+
+	</div>
+
+	<script type="text/jscript" src="./data/objwp.js"></script>
+	<script type="text/jscript" src="./data/objkuborder.js"></script>
+	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&libraries=places&callback=init"></script>
+    </body>
+</html>
