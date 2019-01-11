@@ -229,7 +229,6 @@
 		 '36': []    // 幼稚園
 	     };
 
-	     console.info( '** ** ** ** **' );
 	     borderObjects = {
 		 '10': {},
 		 '20': {},
@@ -259,7 +258,6 @@
 		 borderObjects[ ku ] = new google.maps.Polyline( option );
 	     });
 
-	     console.info( '* * * * *' );
              Object.keys( objWorkplace ).forEach( function ( key ) {
 		 var image = 'https://tkita.github.io/m5/resources/' +
 			     markerImage[ key ] + '.png';
@@ -275,11 +273,10 @@
 							    name + '<br>' + build + '<br>' + addr ) );
                  });
              });
-
-	     console.info( '*** *** *** *** ***' );
          };
 
 	 function doSearch ( code ) {
+	     console.info( code );
 	     if ( code == 13 ) {
 		 var searchWord = document.getElementById( 'searchWord' ).value;
 		 if ( searchWord != '' ) {
@@ -289,6 +286,7 @@
 	 };
 
 	 function doSearchMain ( searchWord ) {
+	     console.info( searchWord );
 	     geocoder.geocode( { address: searchWord },
 			       function ( results, status ) {
 				   if ( status == google.maps.GeocoderStatus.OK ) {
