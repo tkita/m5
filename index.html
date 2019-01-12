@@ -27,17 +27,6 @@
 	 });
 	</script>
 
-	<style>
-	 #all {
-	     border: 1px solid rgb( 48, 66, 81 );
-	     transition: background-color 0.5s;
-	 }
-
-	 #all:hover {
-	     background-color: #928b8b;
-	 }
-	</style>
-
     </head>
 
     <body>
@@ -87,13 +76,18 @@
             <br>
 
 	    <h2>Geocode 変換</h2>
-	    <div class="subcontents">
-	        <button id="btnGeo" onClick="getGeocode();">実行 <span class="shortcut">g</span></button>
-	        <ul>
-		    <li>formatted_address = <span id="faddr"></span></li>
-		    <li>lat = <span id="stLat"></span></li>
-		    <li>lng = <span id="stLng"></span></li>
-	        </ul>
+	    <div class="subcontents flexBetween">
+		<div>
+	            <button id="btnGeo" onClick="getGeocode();">実行 <span class="shortcut">g</span></button>
+	            <ul>
+			<li>formatted_address = <span id="faddr"></span></li>
+			<li>lat = <span id="stLat"></span></li>
+			<li>lng = <span id="stLng"></span></li>
+	            </ul>
+		</div>
+		<div>
+		    <button id="btnWeb" onClick="doWebSearch();">WEB ルート検索</button>
+		</div>
 	    </div>
             <br>
 

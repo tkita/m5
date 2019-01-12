@@ -97,6 +97,15 @@ div.border {
     display: none;
 }
 
+#all {
+    border: 1px solid rgb( 48, 66, 81 );
+    transition: background-color 0.5s;
+}
+
+#all:hover {
+    background-color: #928b8b;
+}
+
 #arrive {
     display: flex;
     flex-direction: column;

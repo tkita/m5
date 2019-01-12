@@ -233,6 +233,10 @@ function getGeocode () {
     setBoundArea();
 }
 
+function doWebSearch () {
+    alert( 'test' );
+}
+
 var hot = new Handsontable( document.getElementById( 'hot' ) ,
 			    { data: [ [ '', '', '', '', '', '', '' ] ],
 			      autoColumnSize: true,
