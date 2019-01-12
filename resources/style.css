@@ -36,7 +36,7 @@ select {
 }
 
 button {
-    padding: 0.2em;
+    padding: 0.2em 0.5em;
 }
 
 .contents {
@@ -110,6 +110,10 @@ div.border {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+}
+
+#arrive div {
+    margin-right: 2em;
 }
 
 #kword {
