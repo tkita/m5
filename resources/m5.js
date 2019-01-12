@@ -239,10 +239,9 @@ function doWebSearch () {
 	return false;
     }
 
-    window.open( 'https://www.google.co.jp/maps/dir/' +
-		 latlng[0] + ',' + latlng[1] + '/' +
-		 latlng[2] + ',' + latlng[3],
-		 '_blank' );
+    var url = format( 'https://www.google.co.jp/maps/dir/?api=1&origin=$$$,$$$&destination=$$$,$$$&travelmode=transit',
+		      latlng[0], latlng[1], latlng[2], latlng[3] );
+    window.open( url, '_blank' );
 }
 
 var hot = new Handsontable( document.getElementById( 'hot' ) ,
