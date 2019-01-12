@@ -234,7 +234,15 @@ function getGeocode () {
 }
 
 function doWebSearch () {
-    alert( 'test' );
+    var latlng = checkInData();
+    if ( !latlng ) {
+	return false;
+    }
+
+    window.open( 'https://www.google.co.jp/maps/dir/' +
+		 latlng[0] + ',' + latlng[1] + '/' +
+		 latlng[2] + ',' + latlng[3],
+		 '_blank' );
 }
 
 var hot = new Handsontable( document.getElementById( 'hot' ) ,
