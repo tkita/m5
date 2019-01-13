@@ -157,6 +157,20 @@
 	     width: 100%;
 	     z-index: 200;
 	 }
+
+	 nav a {
+	     transition: background 0.3s, color 0.3s;
+	 }
+
+	 nav a:hover {
+	     color: white;
+	     background: teal;
+	 }
+
+	 #jrsubway_map {
+	     height: 80vh;
+	 }
+
         </style>
     </head>
 
@@ -259,6 +273,24 @@
 
         <article>
             <h1 id="jrsubway">ＪＲ線・地下鉄 <span class="shortcut">subway</span></h1>
+	    <button id="btnJrSubway" onClick="dispNearStation();">
+		近隣の駅を表示する <span class="shortcut">s</span>
+            </button>
+
+	    <div class="flex around">
+		<section>
+		    <img src="https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png">
+		    <span id="jrdep"></span>（<span id="jrdepstation"></span>）
+		</section>
+
+		<section>
+		    （<span id="jrarrstation"></span>）
+		    <img src="https://maps.google.co.jp/mapfiles/ms/icons/red-dot.png">
+		    <span id="jrarr"></span>
+		</section>
+	    </div>
+
+	    <div id="jrsubway_map" class="border"></div>
         </article>
 
         <article>
