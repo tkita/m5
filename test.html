@@ -19,6 +19,7 @@
          article {
              background-color: #2e3436;
 	     padding: 1em;
+	     margin-bottom: 1em;
          }
 
          article h1 {
@@ -31,6 +32,11 @@
 
 	 #kyoku {
 	     margin-right: 0.5em;
+	     font-size: 16px;
+	 }
+
+	 option:nth-child(odd) {
+	     background: #f5f5f5;
 	 }
 
 	 #hot {
@@ -38,6 +44,10 @@
 	     height: 38vh;
 	     overflow: hidden;
 	     width: 100%;
+	 }
+
+	 .handsontable .currentRow {
+	     background: MistyRose;
 	 }
 
 
@@ -52,7 +62,7 @@
 		<div id="hot"></div>
             </section>
 
-            <section>
+            <section class="flex">
 		<button onClick="window.open('./all.html', '_blank');">すべての施設を表示</button>
 
 		<div>
