@@ -18,17 +18,13 @@
 
          article {
              background-color: #2e3436;
-	     padding: 1em;
+	     padding: 0 1em 1em 1em;
 	     margin-bottom: 1em;
          }
 
          article h1 {
              text-align: center;
          }
-
-	 button {
-	     display: block;
-	 }
 
 	 .flex {
 	     display: flex;
@@ -71,7 +67,9 @@
             </section>
 
             <section class="flex between">
-		<button onClick="window.open('./all.html', '_blank');">すべての施設を表示</button>
+		<div>
+		    <button onClick="window.open('./all.html', '_blank');">すべての施設を表示</button>
+		</div>
 
 		<div>
 		    <input type="text" id="kword"
@@ -81,7 +79,9 @@
 		    <button id="btnShokuba" onClick="searchShokuba();">検索</button>
 		</div>
 
-		<button onClick="move();">目的地の位置情報を出発地へセット</button>
+		<div>
+		    <button onClick="move();">目的地の位置情報を出発地へセット</button>
+		</div>
 
 		<div>
 		    <div>
