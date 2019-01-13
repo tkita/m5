@@ -26,8 +26,16 @@
              text-align: center;
          }
 
+	 button {
+	     display: block;
+	 }
+
 	 .flex {
 	     display: flex;
+	 }
+
+	 .between {
+	     justify-content: space-between;
 	 }
 
 	 #kyoku {
@@ -62,7 +70,7 @@
 		<div id="hot"></div>
             </section>
 
-            <section class="flex">
+            <section class="flex between">
 		<button onClick="window.open('./all.html', '_blank');">すべての施設を表示</button>
 
 		<div>
