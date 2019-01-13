@@ -91,6 +91,11 @@
 	     margin-bottom: 1em;
 	 }
 
+	 #addr {
+	     font-size: 16px;
+	     width: 90%;
+	 }
+
         </style>
     </head>
 
@@ -152,7 +157,7 @@
 	            </ul>
 		</section>
 
-		<sectionclass="border">
+		<section class="border">
 		    <h2>マップに表示する条丁目境界線</h2>
 		    <select id="boundCity" onChange="changeCity(this.value);"></select><br>
 		    <select id="boundAddr"></select>
@@ -166,6 +171,23 @@
 
         <article>
             <h1 id="yougu">交通用具 <span class="shortcut">route</span></h1>
+	    <section>
+		<label>
+		    <input name="walk" type="radio" checked/> 徒歩
+		</label><br>
+		<label>
+		    <input name="walk" type="radio" /> 自動車
+		</label>
+		<button id="btnDist" onClick="measure_distance();">距離を測る <span class="shortcut">r</span></button>
+	    </section>
+
+	    <section>
+                <div id="waypoints"></div>
+                <button onClick="clearWaypoints();">経由地情報をクリア</button>
+	    </section>
+
+	    <section id="directionsPanel"></section>
+	    <section id="yougu_map"></section>
         </article>
 
         <article>
