@@ -1074,15 +1074,15 @@ function getTimeTable ( from_id, from_name, to_id, to_name ) {
 }
 
 function dispTimeTable ( obj, from_id, from_name, to_id, to_name ) {
-    var objTimeTable = obj.time_table[0]; // dia_flg = 1
+    var objTimeTable = obj.time_table[ 0 ]; // dia_flg = 1
     var aryHeader = objTimeTable.header_table;
     var company = objTimeTable.company_name;
     var aryTimes = objTimeTable.times;
 
     var dl = document.createElement( 'dl' );
-    aryHeader.forEach( function(e) {
+    aryHeader.forEach( function( e ) {
 	var dt = document.createElement( 'dt' );
-	dt.appendChild( document.createTextNode( format( '$$$＠$$$',
+	dt.appendChild( document.createTextNode( format( '$$$ ＠ $$$',
 							 e.line_name,
 							 company ) ) );
 	dl.appendChild( dt );
@@ -1095,13 +1095,13 @@ function dispTimeTable ( obj, from_id, from_name, to_id, to_name ) {
 	var fn = format( 'showLine("$$$", "$$$", "$$$");', e.line_id, from_id, to_id );
 	course.setAttribute( 'onClick', fn );
 	dd.appendChild( course );
-	dd.appendChild( document.createTextNode( e.course_name ) );
+	dd.appendChild( document.createTextNode( ' ' + e.course_name ) );
 	dl.appendChild( dd );
 
 	var tt = '';
-	aryTimes.filter( function(t) {
+	aryTimes.filter( function( t ) {
 	    return ( t.course_id == e.course_id )
-	}).forEach( function(e) {
+	}).forEach( function( e ) {
 	    tt = tt + e.time + ' / ';
 	});
 	var dd = document.createElement( 'dd' );
@@ -1122,9 +1122,9 @@ function dispTimeTable ( obj, from_id, from_name, to_id, to_name ) {
 
 function showLine ( line_id, from_id, to_id ) {
     var param = {};
-    param['kind']    = 0;
-    param['line_id'] = line_id;
-    param['lang']    = '';
+    param[ 'kind' ]    = 0;
+    param[ 'line_id' ] = line_id;
+    param[ 'lang' ]    = '';
 
     var obj = JSON.parse(
 	$.ajax( { url: URL_EKIBUS_API + 'get_route_station',
