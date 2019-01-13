@@ -172,7 +172,7 @@
         <article>
             <h1 id="yougu">交通用具 <span class="shortcut">route</span></h1>
 	    <div class="flex between">
-		<section class="border">
+		<section class="flex border">
 		    <div>
 			<label>
 			    <input name="walk" type="radio" checked/> 徒歩
@@ -184,7 +184,7 @@
 		    <button id="btnDist" onClick="measure_distance();">距離を測る <span class="shortcut">r</span></button>
 		</section>
 
-		<section class="border">
+		<section class="flex border">
                     <div id="waypoints"></div>
                     <button onClick="clearWaypoints();">経由地情報をクリア</button>
 		</section>
@@ -209,7 +209,12 @@
         </article>
 
         <nav>
-            
+	    <a href="#top" id="link_top">TOP<span class="shortcut">t</span></a>
+	    <a href="#departure" id="link_departure">出発地点<span class="shortcut">d</span></a>
+	    <a href="#yougu" id="link_yougu">交通用具<span class="shortcut">r</span></a>
+	    <a href="#jrsubway" id="link_jrsubway">ＪＲ線・地下鉄<span class="shortcut">s</span></a>
+	    <a href="#bus" id="link_bus">バス<span class="shortcut">b</span></a>
+            <a href="#ekibus" id="link_ekibus">えきバス<span class="shortcut">e</span></a>
         </nav>
 
 	<script type="text/jscript" src="./data/objbound.js"></script>
