@@ -439,45 +439,35 @@
 
         <article>
             <h1 id="ekibus">えきバス</h1>
-	    <div class="flex">
+	    <button id="ebBtnSetStation" onClick="setStationName();">「近隣の駅」を投入</button>
+
+	    <section class="border bgblue">
+		<h2>出発</h2>
 		<div>
-		    <section class="border bgblue">
-			<h2>出発</h2>
-			<div>
-			    <input type="text"
-				   id="word_ebDep"
-				   placeholder="名称（ローマ字可）"
-				   onFocus="this.select();"
-				   onKeyUp="ebChangeWord('ebDep');">
-			</div>
-			<select id="ebDep" size="15"></select>
-		    </section>
-
-		    <section class="border bgred">
-			<h2>到着</h2>
-			<div>
-			    <input type="text"
-				   id="word_ebArr"
-				   placeholder="名称（ローマ字可）"
-				   onFocus="this.select();"
-				   onKeyUp="ebChangeWord('ebArr');">
-			</div>
-			<select id="ebArr" size="15"></select>
-		    </section>
+		    <input type="text"
+			   id="word_ebDep"
+			   placeholder="名称（ローマ字可）"
+			   onFocus="this.select();"
+			   onKeyUp="ebChangeWord('ebDep');">
 		</div>
+		<select id="ebDep" size="15"></select>
+	    </section>
 
-		<div style="width: 100%;">
-		    <section class="flex between">
-			<button id="ebBtnSearch" onClick="getSearchResult();">検索</button>
-			<button id="ebBtnSetStation" onClick="setStationName();">近隣駅をセット</button>
-		    </section>
-
-		    <div>
-			<section id="result"></section>
-			<section id="timetable"></section>
-		    </div>
+	    <section class="border bgred">
+		<h2>到着</h2>
+		<div>
+		    <input type="text"
+			   id="word_ebArr"
+			   placeholder="名称（ローマ字可）"
+			   onFocus="this.select();"
+			   onKeyUp="ebChangeWord('ebArr');">
 		</div>
-	    </div>
+		<select id="ebArr" size="15"></select>
+	    </section>
+
+	    <button id="ebBtnSearch" onClick="getSearchResult();">検索</button>
+	    <section id="result"></section>
+	    <section id="timetable"></section>
         </article>
 
         <nav>
