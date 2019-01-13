@@ -148,6 +148,39 @@
 	     height: 80vh;
 	 }
 
+	 img {
+	     height: 1em;
+	 }
+
+	 #jrsubway_map {
+	     height: 80vh;
+	 }
+
+	 /* InfoWindow */
+	 .gm-style > div > div > div > div > div > div {
+	     color: purple;
+	     opacity: 0.7;
+	 }
+
+	 #busStops {
+	     font-size: 16px;
+	     width: 100%;
+	 }
+
+	 dd a {
+	     text-decoration: none;
+	     transition: background 0.3s, color 0.3s;
+	 }
+
+	 dd a:hover {
+	     color: white;
+	     background: teal;
+	 }
+
+	 #bus_map {
+	     height: 60vh;
+	 }
+
 	 nav {
 	     display: flex;
 	     justify-content: space-around;
@@ -172,25 +205,6 @@
 	     color: white;
 	     background: teal;
 	 }
-
-	 img {
-	     height: 1em;
-	 }
-
-	 #jrsubway_map {
-	     height: 80vh;
-	 }
-
-	 /* InfoWindow */
-	 .gm-style > div > div > div > div > div > div {
-	     color: purple;
-	     opacity: 0.7;
-	 }
-
-	 #bus_map {
-	     height: 60vh;
-	 }
-
         </style>
     </head>
 
@@ -319,31 +333,41 @@
 
 	    <div class="flex between">
 		<section class="border">
-		    <section>
-			<label>
-			    <input name="busAround" type="radio" checked /> 自宅・出発地点の周辺
-			</label><br>
-			<label>
-			    <input name="busAround" type="radio" /> 職場・目的地の周辺
-			</label><br>
-			<button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button>
-		    </section>
-		    <section>
-			<input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
-			       onFocus="this.select();"
-			       class="ime-active"><br>
-			<button onClick="searchNameBusStop();">名称でバス停検索</button>
-		    </section>
+		    <div class="flex between">
+			<section>
+			    <label>
+				<input name="busAround" type="radio" checked /> 自宅・出発地点の周辺
+			    </label><br>
+			    <label>
+				<input name="busAround" type="radio" /> 職場・目的地の周辺
+			    </label><br>
+			    <button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button>
+			</section>
+			<section>
+			    <input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
+				   onFocus="this.select();"
+				   class="ime-active"><br>
+			    <button onClick="searchNameBusStop();">名称でバス停検索</button>
+			</section>
+		    </div>
 		    <select id="busStops" size="7" onChange="changeBusStop(this.value);"></select>
 		</section>
 
 		<section class="border">
-		    選択したバス停を含む路線<img src="https://maps.google.co.jp/mapfiles/ms/icons/orange.png">
-		    <select id="busRoutes" size="7" onClick="dispBusRoute(this.value);"></select>
-		    <button id="btnLock" onClick="lock();">路線を固定する</button>
-		    <img src="https://maps.google.co.jp/mapfiles/ms/icons/green.png">
-		    <input type="text" id="lock" disabled="disabled" size="30">
-		    <button onClick="unlock();">解除</button>
+		    <div>
+			選択したバス停を含む路線<img src="https://maps.google.co.jp/mapfiles/ms/icons/orange.png">
+		    </div>
+		    <div>
+			<select id="busRoutes" size="7" onClick="dispBusRoute(this.value);"></select>
+		    </div>
+		    <div>
+			<button id="btnLock" onClick="lock();">路線を固定する</button>
+			<img src="https://maps.google.co.jp/mapfiles/ms/icons/green.png">
+		    </div>
+		    <div>
+			<input type="text" id="lock" disabled="disabled" size="30">
+			<button onClick="unlock();">解除</button>
+		    </div>
 		</section>
 
 		<section class="border">
