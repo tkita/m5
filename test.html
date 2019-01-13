@@ -96,6 +96,10 @@
 	     width: 90%;
 	 }
 
+	 #btnDist {
+	     margin-left: 1em;
+	 }
+
 	 #waypoints {
 	     width: 70%;
 	 }
@@ -141,6 +145,18 @@
 	     height: 80vh;
 	 }
 
+	 nav {
+	     display: flex;
+	     justify-content: space-around;
+	     background: blue;
+	     font-weight: bold;
+	     border-radius: 0.5em;
+
+	     position: fixed;
+	     bottom: 0.5em;
+	     width: 100%;
+	     z-index: 200;
+	 }
         </style>
     </head>
 
@@ -231,7 +247,7 @@
 
 		<section class="flex">
                     <div id="waypoints" class="border"></div>
-                    <button onClick="clearWaypoints();">経由地情報をクリア</button>
+                    <div><button onClick="clearWaypoints();">経由地情報をクリア</button></div>
 		</section>
 	    </div>
 
