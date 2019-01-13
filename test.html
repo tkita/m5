@@ -26,6 +26,27 @@
              text-align: center;
          }
 
+	 .shortcut {
+	     display: inline-block;
+	 }
+
+	 .shortcut::before { 
+	     content: "(";
+	 }
+
+	 .shortcut::after { 
+	     content: ")";
+	 }
+
+	 .shortcut:first-letter {
+	     text-decoration: underline;
+	     text-transform: capitalize;
+	 }
+
+	 .ime-active {
+	     ime-mode: active;
+	 }
+
 	 .flex {
 	     display: flex;
 	 }
@@ -97,6 +118,35 @@
 
         <article>
             <h1 id="departure">出発地点 <span class="shortcut">departure</span></h1>
+	    <section>
+		<h2>住所</h2>
+	        <button id="btnPaste" onClick="cbPaste();" tabindex="-1">
+		    クリップボードから貼り付け <span class="shortcut">v</span>
+		</button>
+	        <input type="text" id="addr" placeholder="漢字住所" class="ime-active">
+	    </section>
+
+	    <div class="flex">
+		<section>
+		    <h2>Geocode 変換</h2>
+		    <button id="btnGeo" onClick="getGeocode();">実行 <span class="shortcut">g</span></button>
+	            <ul>
+			<li>formatted_address = <span id="faddr"></span></li>
+			<li>lat = <span id="stLat"></span></li>
+			<li>lng = <span id="stLng"></span></li>
+	            </ul>
+		</section>
+
+		<section>
+		    <h2>マップに表示する条丁目境界線</h2>
+		    <select id="boundCity" onChange="changeCity(this.value);"></select>
+		    <select id="boundAddr"></select>
+		</section>
+	    </div>
+
+	    <section>
+		<button id="btnWeb" onClick="doWebSearch();">WEB ルート検索</button>
+	    </section>
         </article>
 
         <article>
