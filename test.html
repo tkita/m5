@@ -181,6 +181,16 @@
 	     height: 60vh;
 	 }
 
+	 .bgblue {
+	     color: white;
+	     background: rgba( 48, 97, 198, 1 );
+	 }
+
+	 .bgred {
+	     color: white;
+	     background: rgba( 200, 48, 48, 1 );
+	 }
+
 	 nav {
 	     display: flex;
 	     justify-content: space-around;
@@ -389,6 +399,35 @@
 
         <article>
             <h1 id="ekibus">えきバス</h1>
+	    <section class="border bgblue">
+		<h2>出発</h2>
+		<input type="text"
+		       id="word_ebDep"
+                       placeholder="名称（ローマ字可）"
+		       onFocus="this.select();"
+		       onKeyUp="ebChangeWord('ebDep');">
+		<select id="ebDep" size="15"></select>
+	    </section>
+
+	    <section class="border bgred">
+		<h2>到着</h2>
+		<input type="text"
+		       id="word_ebArr"
+                       placeholder="名称（ローマ字可）"
+		       onFocus="this.select();"
+		       onKeyUp="ebChangeWord('ebArr');">
+		<select id="ebArr" size="15"></select>
+	    </section>
+
+	    <section class="flex between">
+		<button id="ebBtnSearch" onClick="getSearchResult();">検索</button>
+                <button id="ebBtnSetStation" onClick="setStationName();">近隣駅をセット</button>
+	    </section>
+
+	    <div>
+	        <section id="result"></section>
+	        <section id="timetable"></section>
+	    </div>
         </article>
 
         <nav>
