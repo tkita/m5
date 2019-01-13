@@ -199,6 +199,14 @@
 	     background: rgba( 200, 48, 48, 1 );
 	 }
 
+	 .center {
+	     text-align: center;
+	 }
+
+	 #addr, #busstopname, #word_ebDep, #word_ebArr {
+	     margin: 0.5em 0em;
+	 }
+
 	 #ebDep, #ebArr {
 	     width: 100%;
 	 }
@@ -397,7 +405,7 @@
 		<div class="flex">
 		    <section class="border margin-right">
 			<div class="flex between">
-			    <section class="border">
+			    <section class="border margin-right">
 				<label>
 				    <input name="busAround" type="radio" checked /> 自宅・出発地点の周辺
 				</label><br>
@@ -406,6 +414,7 @@
 				</label><br>
 				<button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button>
 			    </section>
+
 			    <section class="border">
 				<input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
 				       onFocus="this.select();"
@@ -461,7 +470,7 @@
 		<div class="margin-right">
 		    <button id="ebBtnSetStation" onClick="setStationName();">「近隣の駅」を投入</button>
 		    <section class="border bgblue">
-			<h2>出発</h2>
+			<h2 class="center">出発</h2>
 			<div>
 			    <input type="text"
 				   id="word_ebDep"
@@ -473,7 +482,7 @@
 		    </section>
 
 		    <section class="border bgred">
-			<h2>到着</h2>
+			<h2 class="center">到着</h2>
 			<div>
 			    <input type="text"
 				   id="word_ebArr"
