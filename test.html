@@ -171,23 +171,29 @@
 
         <article>
             <h1 id="yougu">交通用具 <span class="shortcut">route</span></h1>
-	    <section>
-		<label>
-		    <input name="walk" type="radio" checked/> 徒歩
-		</label><br>
-		<label>
-		    <input name="walk" type="radio" /> 自動車
-		</label>
-		<button id="btnDist" onClick="measure_distance();">距離を測る <span class="shortcut">r</span></button>
-	    </section>
+	    <div class="flex between">
+		<section class="border">
+		    <div>
+			<label>
+			    <input name="walk" type="radio" checked/> 徒歩
+			</label><br>
+			<label>
+			    <input name="walk" type="radio" /> 自動車
+			</label>
+		    </div>
+		    <button id="btnDist" onClick="measure_distance();">距離を測る <span class="shortcut">r</span></button>
+		</section>
 
-	    <section>
-                <div id="waypoints"></div>
-                <button onClick="clearWaypoints();">経由地情報をクリア</button>
-	    </section>
+		<section class="border">
+                    <div id="waypoints"></div>
+                    <button onClick="clearWaypoints();">経由地情報をクリア</button>
+		</section>
+	    </div>
 
-	    <section id="directionsPanel"></section>
-	    <section id="yougu_map"></section>
+	    <section class="flex">
+		<div id="directionsPanel"></div>
+		<div id="yougu_map"></div>
+	    </section>
         </article>
 
         <article>
