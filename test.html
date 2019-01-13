@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+        <title>m5</title>
+
+	<script src="./lib/handsontable.full.min.js"></script>
+	<link rel="stylesheet" href="./lib/handsontable.full.min.css">
+	<script type="text/jscript" src="./lib/jquery-3.1.1.min.js"></script>
+
+
+        <style>
+         body {
+             color: #d3d7cf;
+         }
+
+         article {
+             background-color: #2e3436;
+         }
+
+         article h1 {
+             text-align: center;
+         }
+
+	 .flex {
+	     display: flex;
+	 }
+
+        </style>
+    </head>
+
+    <body>
+        <article>
+            <h1 id="top">目的地 <span class="shortcut">top</span></h1>
+            <section class="flex">
+		<select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
+		<div id="hot"></div>
+            </section>
+
+            <section>
+                section
+            </section>
+        </article>
+
+        <article>
+            <h1 id="departure">出発地点 <span class="shortcut">departure</span></h1>
+        </article>
+
+        <article>
+            <h1 id="yougu">交通用具 <span class="shortcut">route</span></h1>
+        </article>
+
+        <article>
+            <h1 id="jrsubway">ＪＲ線・地下鉄 <span class="shortcut">subway</span></h1>
+        </article>
+
+        <article>
+            <h1 id="bus">バス <span class="shortcut">bus</span></h1>
+        </article>
+
+        <article>
+            <h1 id="ekibus">えきバス</h1>
+        </article>
+
+        <nav>
+            
+        </nav>
+
+	<script type="text/jscript" src="./data/objbound.js"></script>
+	<script type="text/jscript" src="./data/objboundline.js"></script>
+	<script type="text/jscript" src="./data/objbusstoproute.js"></script>
+	<script type="text/jscript" src="./data/objbusstops.js"></script>
+	<script type="text/jscript" src="./data/objstations.js"></script>
+	<script type="text/jscript" src="./data/objwp.js"></script>
+
+        <script>
+         var columnHeader = [ '名称', '建物', '住所', 'lat', 'lng', '通勤不便', '電話番号' ];
+        </script>
+
+	<script type="text/jscript" src="./resources/m5.js"></script>
+	<script type="text/jscript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78j0reQqOofNHQxsINRTt21UgyVK1MTo&libraries=geometry&callback=init"></script>
+        <script src="./lib/jquery.funcResizeBox.js"></script>
+        <script>
+         var RESIZE_OPTION = { isWidthResize: false };
+         $( '#yougu_map'    ).funcResizeBox( RESIZE_OPTION );
+         $( '#jrsubway_map' ).funcResizeBox( RESIZE_OPTION );
+         $( '#bus_map'      ).funcResizeBox( RESIZE_OPTION );
+        </script>
+
+    </body>
+</html>
