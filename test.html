@@ -18,6 +18,7 @@
 
          article {
              background-color: #2e3436;
+	     padding: 1em;
          }
 
          article h1 {
@@ -27,6 +28,18 @@
 	 .flex {
 	     display: flex;
 	 }
+
+	 #kyoku {
+	     margin-right: 0.5em;
+	 }
+
+	 #hot {
+	     flex-grow: 1;
+	     height: 38vh;
+	     overflow: hidden;
+	     width: 100%;
+	 }
+
 
         </style>
     </head>
@@ -40,7 +53,27 @@
             </section>
 
             <section>
-                section
+		<button onClick="window.open('./all.html', '_blank');">すべての施設を表示</button>
+
+		<div>
+		    <input type="text" id="kword"
+			   placeholder="名称、住所、電話番号"
+			   onFocus="this.select();"
+			   onKeyPress="doSearchShokuba(event.keyCode);">
+		    <button id="btnShokuba" onClick="searchShokuba();">検索</button>
+		</div>
+
+		<button onClick="move();">目的地の位置情報を出発地へセット</button>
+
+		<div>
+		    <div>
+			<button id="btnUserPoint" onClick="showModal('userpoint.html');">目的地を地図上で任意に指定する</button>
+                        <button id="btnClearUserPoint" onClick="clearTextContent('userPoint');">クリア</button>
+		    </div>
+		    <div>
+			緯度・経度 = <span id="userPoint"></span>
+		    </div>
+		</div>
             </section>
         </article>
 
