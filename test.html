@@ -163,6 +163,7 @@
 
 	 nav a {
 	     flex-grow: 1;
+	     text-align: center;
 	     text-decoration: none;
 	     transition: background 0.3s, color 0.3s;
 	 }
@@ -184,6 +185,10 @@
 	 .gm-style > div > div > div > div > div > div {
 	     color: purple;
 	     opacity: 0.7;
+	 }
+
+	 #bus_map {
+	     height: 60vh;
 	 }
 
         </style>
@@ -294,8 +299,9 @@
 
 	    <div class="flex around">
 		<section>
+		    <span id="jrdep"></span>
 		    <img src="https://maps.google.co.jp/mapfiles/ms/icons/green-dot.png">
-		    <span id="jrdep"></span>（<span id="jrdepstation"></span>）
+		    （<span id="jrdepstation"></span>）
 		</section>
 
 		<section>
@@ -310,6 +316,51 @@
 
         <article>
             <h1 id="bus">バス <span class="shortcut">bus</span></h1>
+
+	    <div class="flex between">
+		<section class="border">
+		    <section>
+			<label>
+			    <input name="busAround" type="radio" checked /> 自宅・出発地点の周辺
+			</label><br>
+			<label>
+			    <input name="busAround" type="radio" /> 職場・目的地の周辺
+			</label><br>
+			<button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button>
+		    </section>
+		    <section>
+			<input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
+			       onFocus="this.select();"
+			       class="ime-active"><br>
+			<button onClick="searchNameBusStop();">名称でバス停検索</button>
+		    </section>
+		    <select id="busStops" size="7" onChange="changeBusStop(this.value);"></select>
+		</section>
+
+		<section class="border">
+		    選択したバス停を含む路線<img src="https://maps.google.co.jp/mapfiles/ms/icons/orange.png">
+		    <select id="busRoutes" size="7" onClick="dispBusRoute(this.value);"></select>
+		    <button id="btnLock" onClick="lock();">路線を固定する</button>
+		    <img src="https://maps.google.co.jp/mapfiles/ms/icons/green.png">
+		    <input type="text" id="lock" disabled="disabled" size="30">
+		    <button onClick="unlock();">解除</button>
+		</section>
+
+		<section class="border">
+                    <dl>
+			<dt>ＪＲ北海道バス</dt>
+			<dd><a href="http://www.jhbunchin.com/" target="_blank">片道・定期券運賃、距離照会</a></dd>
+			<dt>北海道中央バス</dt>
+			<dd><a href="http://www.chuo-bus.co.jp/city_route/rate_table/" target="_blank">片道・定期運賃・キロ数検索</a></dd>
+			<dd><a href="http://www.bustei.com/" target="_blank">時刻表</a></dd>
+			<dt>じょうてつバス</dt>
+			<dd><a href="http://www.jotetsu.co.jp/bus/pdf/price_list.pdf" target="_blank">バス料金表</a></dd>
+			<dt>えにわコミュニティバス</dt>
+			<dd><a href="http://www.city.eniwa.hokkaido.jp/www/genre/0000000000000/1361178700197/index.html">えにわコミュニティバス</a></dd>
+                    </dl>
+		</section>
+	    </div>
+	    <div id="bus_map" class="border"></div>
         </article>
 
         <article>
