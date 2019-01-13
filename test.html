@@ -191,6 +191,27 @@
 	     background: rgba( 200, 48, 48, 1 );
 	 }
 
+	 .station {
+	     background: rgb( 54, 73, 82 );
+	     color: rgb( 28, 148, 156 );
+	     border: 1px solor rgb( 54, 73, 82 );
+	     border-radius: 6px;
+	     padding: 0.1em;
+	 }
+
+	 .linename {
+	     cursor: pointer;
+	     color: rgb( 33, 150, 243 );
+	     border: 2px solid rgb( 48, 66, 81 );
+	     border-radius: 6px;
+	     padding: 0.1em;
+	     transition: background 0.3s;
+	 }
+
+	 .linename:hover {
+	     background-color: LightPink;
+	 }
+
 	 nav {
 	     display: flex;
 	     justify-content: space-around;
@@ -400,7 +421,7 @@
         <article>
             <h1 id="ekibus">えきバス</h1>
 	    <div class="flex between">
-		<div>
+		<div class="border">
 		    <section class="border bgblue">
 			<h2>出発</h2>
 			<div>
@@ -426,7 +447,7 @@
 		    </section>
 		</div>
 
-		<div>
+		<div class="border">
 		    <section class="flex between">
 			<button id="ebBtnSearch" onClick="getSearchResult();">検索</button>
 			<button id="ebBtnSetStation" onClick="setStationName();">近隣駅をセット</button>
