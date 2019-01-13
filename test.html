@@ -62,6 +62,10 @@
 	     justify-content: space-around;
 	 }
 
+	 .margin-right {
+	     margin-right: 1em;
+	 }
+
 	 #kyoku {
 	     margin-right: 0.5em;
 	     font-size: 16px;
@@ -189,6 +193,10 @@
 	 .bgred {
 	     color: white;
 	     background: rgba( 200, 48, 48, 1 );
+	 }
+
+	 #ebDep, #ebArr {
+	     width: 100%;
 	 }
 
 	 table {
@@ -382,43 +390,48 @@
             <h1 id="bus">バス <span class="shortcut">bus</span></h1>
 
 	    <div class="flex between">
-		<section class="border">
-		    <div class="flex between">
-			<section class="border">
-			    <label>
-				<input name="busAround" type="radio" checked /> 自宅・出発地点の周辺
-			    </label><br>
-			    <label>
-				<input name="busAround" type="radio" /> 職場・目的地の周辺
-			    </label><br>
-			    <button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button>
-			</section>
-			<section class="border">
-			    <input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
-				   onFocus="this.select();"
-				   class="ime-active"><br>
-			    <button onClick="searchNameBusStop();">名称でバス停検索</button>
-			</section>
-		    </div>
-		    <select id="busStops" size="7" onChange="changeBusStop(this.value);"></select>
-		</section>
+		<div>
+		    <section class="border margin-right">
+			<div class="flex between">
+			    <section class="border">
+				<label>
+				    <input name="busAround" type="radio" checked /> 自宅・出発地点の周辺
+				</label><br>
+				<label>
+				    <input name="busAround" type="radio" /> 職場・目的地の周辺
+				</label><br>
+				<button id="btnBus" onClick="searchNearBusStop();">近隣のバス停を検索</button>
+			    </section>
+			    <section class="border">
+				<input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
+				       onFocus="this.select();"
+				       class="ime-active"><br>
+				<button onClick="searchNameBusStop();">名称でバス停検索</button>
+			    </section>
+			</div>
+			<select id="busStops" size="7" onChange="changeBusStop(this.value);"></select>
+		    </section>
 
-		<section class="border">
-		    <div>
-			選択したバス停を含む路線<img src="https://maps.google.co.jp/mapfiles/ms/icons/orange.png">
-		    </div>
-		    <div>
-			<select id="busRoutes" size="7" onClick="dispBusRoute(this.value);"></select>
-		    </div>
-		    <div>
-			<button id="btnLock" onClick="lock();">路線を固定する</button>
-			<img src="https://maps.google.co.jp/mapfiles/ms/icons/green.png">
-		    </div>
-		    <div>
-			<input type="text" id="lock" disabled="disabled" size="30">
-			<button onClick="unlock();">解除</button>
-		    </div>
-		</section>
+		    <section>
+			<div class="border">
+			    <div>
+				選択したバス停を含む路線<img src="https://maps.google.co.jp/mapfiles/ms/icons/orange.png">
+			    </div>
+			    <div>
+				<select id="busRoutes" size="7" onClick="dispBusRoute(this.value);"></select>
+			    </div>
+			</div>
+
+			<div>
+			    <button id="btnLock" onClick="lock();">路線を固定する</button>
+			    <img src="https://maps.google.co.jp/mapfiles/ms/icons/green.png">
+			</div>
+			<div>
+			    <input type="text" id="lock" disabled="disabled" size="30">
+			    <button onClick="unlock();">解除</button>
+			</div>
+		    </section>
+		</div>
 
 		<section class="border">
                     <dl>
@@ -441,7 +454,7 @@
             <h1 id="ekibus">えきバス</h1>
 
 	    <div class="flex">
-		<div>
+		<div class="margin-right">
 		    <button id="ebBtnSetStation" onClick="setStationName();">「近隣の駅」を投入</button>
 		    <section class="border bgblue">
 			<h2>出発</h2>
