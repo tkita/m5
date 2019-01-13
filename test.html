@@ -87,6 +87,7 @@
 	 .border {
 	     border: 1px solid #d3d7cf;
 	     border-radius: 0.5em;
+	     padding: 0.5em;
 	     margin-bottom: 1em;
 	 }
 
@@ -141,7 +142,7 @@
 	    </section>
 
 	    <div class="flex between">
-		<section>
+		<section class="border">
 		    <h2>Geocode 変換</h2>
 		    <button id="btnGeo" onClick="getGeocode();">実行 <span class="shortcut">g</span></button>
 	            <ul>
@@ -151,7 +152,7 @@
 	            </ul>
 		</section>
 
-		<section>
+		<sectionclass="border">
 		    <h2>マップに表示する条丁目境界線</h2>
 		    <select id="boundCity" onChange="changeCity(this.value);"></select><br>
 		    <select id="boundAddr"></select>
