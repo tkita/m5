@@ -99,7 +99,7 @@ function makeMarker( map, lat, lng, image, opt_msg ) {
           position: new google.maps.LatLng( lat, lng ),
 //	  icon: new google.maps.MarkerImage( image )
 	  icon: {
-	      labelOrigin: new google.maps.Point( 0, 0 ),
+	      labelOrigin: new google.maps.Point( 0, -10 ),
 	      url: image
 	  }
         } );
