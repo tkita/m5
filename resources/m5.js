@@ -98,10 +98,6 @@ function makeMarker( map, lat, lng, image, opt_msg ) {
 	{ map: map,
           position: new google.maps.LatLng( lat, lng ),
 	  icon: new google.maps.MarkerImage( image )
-	  // icon: {
-	  //     labelOrigin: new google.maps.Point( 0, 0 ),
-	  //     url: image
-	  // }
         } );
     if ( opt_msg ) {
         google.maps.event.addListener( marker, 'click',
@@ -882,8 +878,8 @@ function getNearTouhyou ( stLat, stLng ) {
 function drawTouhyouMarker ( map, ary, color, tooltip ) {
     ary.forEach( function( e, idx, ary ) {
         var marker = makeMarker( map, e[ 'lat' ], e[ 'lng' ],
-//                                 URL_GOOGLE_ICONS + color + '.png',
-//				 'https://tkita.github.io/m5/resources/number_' + e[ 'id' ] + '.png',
+				 // URL_GOOGLE_ICONS + color + '.png',
+				 // 'https://tkita.github.io/m5/resources/number_' + e[ 'id' ] + '.png',
 				 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + e[ 'id' ] + '|FF0000|000000',
                                  format( '($$$) $$$<br>$$$m',
                                          e[ 'id' ], e[ 'name' ],
