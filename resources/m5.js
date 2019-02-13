@@ -97,11 +97,11 @@ function makeMarker( map, lat, lng, image, opt_msg ) {
     var marker = new google.maps.Marker(
 	{ map: map,
           position: new google.maps.LatLng( lat, lng ),
-//	  icon: new google.maps.MarkerImage( image )
-	  icon: {
-	      labelOrigin: new google.maps.Point( 0, 0 ),
-	      url: image
-	  }
+	  icon: new google.maps.MarkerImage( image )
+	  // icon: {
+	  //     labelOrigin: new google.maps.Point( 0, 0 ),
+	  //     url: image
+	  // }
         } );
     if ( opt_msg ) {
         google.maps.event.addListener( marker, 'click',
