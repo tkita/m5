@@ -883,7 +883,13 @@ function drawTouhyouMarker ( map, ary, color, tooltip ) {
                                          e[ 'id' ], e[ 'name' ],
                                          fmtNumber( Math.floor( e[ 'dist' ] ) ) )
                                );
-	marker.setLabel( e[ 'id' ] );
+	marker.setLabel( {
+	    color:      'white',
+	    fontSize:   '12px',
+	    fontWeight: 'bold',
+	    text:       e[ 'id' ]
+	} );
+
         if ( tooltip ) {
             google.maps.event.trigger( marker, 'click' );
         }
