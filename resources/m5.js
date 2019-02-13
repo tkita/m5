@@ -882,17 +882,18 @@ function getNearTouhyou ( stLat, stLng ) {
 function drawTouhyouMarker ( map, ary, color, tooltip ) {
     ary.forEach( function( e, idx, ary ) {
         var marker = makeMarker( map, e[ 'lat' ], e[ 'lng' ],
-                                 URL_GOOGLE_ICONS + color + '.png',
+//                                 URL_GOOGLE_ICONS + color + '.png',
+				 'https://tkita.github.io/m5/resources/number_' + e[ 'id' ] + '.png',
                                  format( '($$$) $$$<br>$$$m',
                                          e[ 'id' ], e[ 'name' ],
                                          fmtNumber( Math.floor( e[ 'dist' ] ) ) )
                                );
-	marker.setLabel( {
-	    color:      'white',
-	    fontSize:   '12px',
-	    fontWeight: 'bold',
-	    text:       e[ 'id' ]
-	} );
+	// marker.setLabel( {
+	//     color:      'white',
+	//     fontSize:   '12px',
+	//     fontWeight: 'bold',
+	//     text:       e[ 'id' ]
+	// } );
 
         if ( tooltip ) {
             google.maps.event.trigger( marker, 'click' );
