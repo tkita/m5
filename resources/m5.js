@@ -857,7 +857,7 @@ function init () {
 
 function getNearTouhyou ( stLat, stLng ) {
     var fromLatLng = new google.maps.LatLng( stLat, stLng );
-    var result = objWorkplace[ getOptionValue('kyoku') ].data.map(
+    var result = objWorkplace[ getOptionValue( 'kyoku' ) ].data.map(
 	function( s ) {
             var e = s.split( ',' );
 	    return { id:   e[0],
@@ -877,12 +877,13 @@ function getNearTouhyou ( stLat, stLng ) {
 
 function drawTouhyouMarker ( map, ary, color, tooltip ) {
     ary.forEach( function( e, idx, ary ) {
-        var marker = makeMarker( map, e['lat'], e['lng'],
+        var marker = makeMarker( map, e[ 'lat' ], e[ 'lng' ],
                                  URL_GOOGLE_ICONS + color + '.png',
                                  format( '($$$) $$$<br>$$$m',
-                                         e['id'], e['name'],
-                                         fmtNumber( Math.floor( e['dist'] ) ) )
-                                        );
+                                         e[ 'id' ], e[ 'name' ],
+                                         fmtNumber( Math.floor( e[ 'dist' ] ) ) )
+                               );
+	marker.setLabel( e[ 'id' ] );
         if ( tooltip ) {
             google.maps.event.trigger( marker, 'click' );
         }
