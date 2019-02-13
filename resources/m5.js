@@ -890,6 +890,10 @@ function drawTouhyouMarker ( map, ary, color, tooltip ) {
 	    text:       e[ 'id' ]
 	} );
 
+	marker.setIcon(
+	    labelOrigin: new google.maps.Point( 0, 0 )
+	);
+
         if ( tooltip ) {
             google.maps.event.trigger( marker, 'click' );
         }
