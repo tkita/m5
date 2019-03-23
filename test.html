@@ -73,6 +73,10 @@
              return value;
          };
 
+	 var fmtNumber = function ( num ) {
+	     return String( num ).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,' );
+	 }
+
          var init = function () {
              ymap = new Y.Map( 'map', { configure : { doubleClickZoom : false,
                                                       scrollWheelZoom : true,
@@ -94,7 +98,7 @@
 
              routeLayer = new Y.RouteSearchLayer();
              routeLayer.bind( 'drawend', function ( summary ) {
-                 setText( 'dist', summary.TotalDistance );
+                 setText( 'dist', fmtNumber( summary.TotalDistance ) );
                  setText( 'time', summary.TotalTime );
              });
              ymap.addLayer( routeLayer );
@@ -137,7 +141,6 @@
 
              routeLayer.execute( latlngs, config );
          };
-         
 
         </script>
     </head>
