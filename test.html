@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=11" />
+
+        <script type="text/javascript"
+                src="./lib/jquery-3.1.1.min.js">
+        </script>
+        <script type="text/javascript"
+                charset="utf-8"
+                src="https://map.yahooapis.jp/js/V1/jsapi?appid=dj00aiZpPTVucG5sTDNqOE1sdiZzPWNvbnN1bWVyc2VjcmV0Jng9MGM-">
+        </script>
+
+        <style>
+         body {
+             display: flex;
+         }
+
+         nav {
+             background-color: rgba(234, 233, 226, 1);
+         }
+
+         fieldset {
+             border: 1px solid black;
+         }
+
+         .mb {
+             margin-bottom: 2em;
+         }
+
+         .mb02 {
+             margin-bottom: 0.2em;
+         }
+
+         ul {
+             margin: 0.5em 0px 0.5em 0px;
+             padding-left: 1em;
+         }
+
+         li {
+             margin-bottom: 0.2em;
+             font-size: small;
+             font-family: monospace;
+         }
+
+         .block {
+             display: block;
+         }
+
+         .align-right {
+             margin: 0 0 0 auto;
+         }
+
+         #map {
+             height: 800px;
+             border: 1px solid black;
+             flex: 1;
+         }
+        </style>
+
+        <script type="text/javascript">
+         var ymap;
+         var routeLayer;
+         var appid = 'appid=dj00aiZpPTVucG5sTDNqOE1sdiZzPWNvbnN1bWVyc2VjcmV0Jng9MGM-';
+
+         var getText = function ( dom ) {
+             return document.getElementById( dom ).textContent;
+         };
+
+         var setText = function ( dom, value ) {
+             document.getElementById( dom ).textContent = value;
+             return value;
+         };
+
+         var init = function () {
+             ymap = new Y.Map( 'map', { configure : { doubleClickZoom : false,
+                                                      scrollWheelZoom : true,
+                                                      continuousZoom : true,
+                                                      singleClickPan : false,
+                                                      dragging : true }
+             } );
+             ymap.drawMap( new Y.LatLng( 43.062087, 141.354333 ), 17, Y.LayerSetId.NORMAL );
+
+             ymap.addControl( new Y.LayerSetControl() );
+             ymap.addControl( new Y.ScaleControl() );
+
+             ymap.bind( 'click', function ( latlng ) {
+                 setText( 'lat', latlng[ 'Lat' ] );
+                 setText( 'lon', latlng[ 'Lon' ] );
+                 var marker = new Y.Marker( new Y.LatLng( latlng[ 'Lat' ], latlng[ 'Lon' ] ) );
+                 ymap.addFeature( marker );
+             });
+
+             routeLayer = new Y.RouteSearchLayer();
+             routeLayer.bind( 'drawend', function ( summary ) {
+                 setText( 'dist', summary.TotalDistance );
+                 setText( 'time', summary.TotalTime );
+             });
+             ymap.addLayer( routeLayer );
+
+         };
+
+         var doGeocode = function ( dom ) {
+             var uri = 'https://map.yahooapis.jp/geocode/V1/geoCoder?'
+             var query = '&query=' + encodeURI( document.getElementById( dom + 'addr' ).value );
+             var output = '&output=json';
+             $.ajax( { url: uri + appid + query + output,
+                       type: 'GET' }
+             ).done( function ( res, status, xhr ) {
+                 var coords = res.Feature[0].Geometry.Coordinates;
+                 setText( dom + 'name', res.Feature[0].Name );
+                 setText( dom + 'lat', coords.split( ',' )[1] );
+                 setText( dom + 'lon', coords.split( ',' )[0] );
+             } );
+         };
+
+         var move = function ( dom ) {
+             [ 'lat', 'lon' ].forEach( function ( e ) {
+                 setText( dom + e, getText(e) );
+             });
+         };
+
+         var getRoute = function () {
+             var latlngs = [
+                 new Y.LatLng( getText( 'dep_lat' ), getText( 'dep_lon' ) ),
+                 new Y.LatLng( getText( 'arr_lat' ), getText( 'arr_lon' ) )
+             ];
+
+             var config = {
+                 'useCar': false
+             };
+
+             if ( document.getElementById( 'car' ).checked ) {
+                 config[ 'useCar' ] = true;
+             };
+
+             routeLayer.execute( latlngs, config );
+         };
+         
+
+        </script>
+    </head>
+
+    <body onLoad="init();">
+        <nav>
+            <fieldset class="mb">
+                <legend>出発地点</legend>
+                <input id="dep_addr" type="text" class="block mb02" size="40"
+                       placeholder="漢字住所を入力">
+                <button class="block align-right" onClick="doGeocode('dep_');">座標へ変換</button>
+                <ul>
+                    <li><span id="dep_name"></span></li>
+                    <li><span id="dep_lat"></span></li>
+                    <li><span id="dep_lon"></span></li>
+                </ul>
+            </fieldset>
+
+            <fieldset class="mb">
+                <legend>到着地点</legend>
+                <input id="arr_addr" type="text" class="block mb02" size="40"
+                       placeholder="漢字住所を入力">
+                <button class="block align-right" onClick="doGeocode('arr_');">座標へ変換</button>
+                <ul>
+                    <li><span id="arr_name"></span></li>
+                    <li><span id="arr_lat"></span></li>
+                    <li><span id="arr_lon"></span></li>
+                </ul>
+            </fieldset>
+
+            <fieldset class="mb">
+                <legend>マウスクリックした地点</legend>
+                <ul>
+                    <li><span id="lat"></span></li>
+                    <li><span id="lon"></span></li>
+                </ul>
+                <button onClick="move('dep_');">出発地点へセット</button>
+                <button onClick="move('arr_');">到着地点へセット</button>
+            </fieldset>
+
+            <fieldset>
+                <legend>ルート検索</legend>
+                <label>
+                    <input type="radio" name="type" value="walk">徒歩
+                </label>
+                <label>
+                    <input id="car" type="radio" name="type" value="car" checked="checked">自動車
+                </label>
+                <button class="block align-right" onClick="getRoute();">ルート検索</button>
+                <ul>
+                    <li>総距離: <span id="dist"></span> メートル</li>
+                    <li>総時間: <span id="time"></span> 分</li>
+                </ul>
+            </fieldset>
+        </nav>
+
+        <article id="map">
+        </article>
+    </body>
+</html>
