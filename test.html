@@ -83,12 +83,19 @@
                  default:
                      return false;
                      break;
-             }
-             // return document.getElementById( dom ).textContent;
+             };
          };
 
          var setText = function ( dom, value ) {
-             document.getElementById( dom ).textContent = value;
+             var d = document.getElementById( dom );
+             switch ( d.tagName ) {
+                 case 'SPAN':
+                     d.textContent = value;
+                     break;
+                 case 'INPUT':
+                     d.value = value;
+                     break;
+             };
              return value;
          };
 
@@ -145,6 +152,10 @@
          var move = function ( dom ) {
              [ 'lat', 'lon' ].forEach( function ( e ) {
                  setText( dom + e, getText(e) );
+             });
+
+             [ 'name', 'addr' ].forEach( function ( e ) {
+                 setText( dom + e, '' );
              });
          };
 
