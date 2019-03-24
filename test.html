@@ -5,9 +5,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=11" />
 
         <script type="text/javascript"
-                src="./lib/jquery-3.1.1.min.js">
-        </script>
-        <script type="text/javascript"
                 charset="utf-8"
                 src="https://map.yahooapis.jp/js/V1/jsapi?appid=dj00aiZpPTVucG5sTDNqOE1sdiZzPWNvbnN1bWVyc2VjcmV0Jng9MGM-">
         </script>
@@ -57,15 +54,37 @@
              border: 1px solid black;
              flex: 1;
          }
+
+         .yolp-ctrl {
+             padding: 0.2em;
+             background-color: black;
+         }
+
+         .yolp-ctrl li {
+             padding-left: 0.5em;
+             padding-right: 0.5em;
+         }
+
         </style>
 
         <script type="text/javascript">
          var ymap;
          var routeLayer;
-         var appid = 'appid=dj00aiZpPTVucG5sTDNqOE1sdiZzPWNvbnN1bWVyc2VjcmV0Jng9MGM-';
 
          var getText = function ( dom ) {
-             return document.getElementById( dom ).textContent;
+             var d = document.getElementById( dom );
+             switch ( d.tagName ) {
+                 case 'SPAN':
+                     return d.textContent;
+                     break;
+                 case 'INPUT':
+                     return d.value;
+                     break;
+                 default:
+                     return false;
+                     break;
+             }
+             // return document.getElementById( dom ).textContent;
          };
 
          var setText = function ( dom, value ) {
@@ -73,16 +92,22 @@
              return value;
          };
 
-	 var fmtNumber = function ( num ) {
-	     return String( num ).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,' );
-	 }
+         var fmtNumber = function ( num ) {
+             return String( num ).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,' );
+         }
 
          var init = function () {
-             ymap = new Y.Map( 'map', { configure : { doubleClickZoom : false,
-                                                      scrollWheelZoom : true,
-                                                      continuousZoom : true,
-                                                      singleClickPan : false,
-                                                      dragging : true }
+             var layerSets = {};
+             layerSets[ 'myRailway' ] = new Y.LayerSet( '鉄道路線', [ new Y.StyleMapLayer( 'railway' ) ] );
+             layerSets[ Y.LayerSetId.NORMAL ] = new Y.LayerSet( '地図', [ new Y.NormalLayer() ] );
+
+             ymap = new Y.Map( 'map', {
+                 layerSets: layerSets,
+                 configure: { doubleClickZoom: false,
+                              scrollWheelZoom: true,
+                              continuousZoom: true,
+                              singleClickPan: false,
+                              dragging: true }
              } );
              ymap.drawMap( new Y.LatLng( 43.062087, 141.354333 ), 17, Y.LayerSetId.NORMAL );
 
@@ -106,17 +131,15 @@
          };
 
          var doGeocode = function ( dom ) {
-             var uri = 'https://map.yahooapis.jp/geocode/V1/geoCoder?'
-             var query = '&query=' + encodeURI( document.getElementById( dom + 'addr' ).value );
-             var output = '&output=json';
-             $.ajax( { url: uri + appid + query + output,
-                       type: 'GET' }
-             ).done( function ( res, status, xhr ) {
-                 var coords = res.Feature[0].Geometry.Coordinates;
-                 setText( dom + 'name', res.Feature[0].Name );
-                 setText( dom + 'lat', coords.split( ',' )[1] );
-                 setText( dom + 'lon', coords.split( ',' )[0] );
-             } );
+             var geocoder = new Y.GeoCoder();
+             geocoder.execute( { query: getText( dom + 'addr' ) },
+                               function ( result ) {
+                                   if ( result.features.length > 0 ) {
+                                       setText( dom + 'name', result.features[0].name);
+                                       setText( dom + 'lat', result.features[0].latlng[ 'Lat' ] );
+                                       setText( dom + 'lon', result.features[0].latlng[ 'Lon' ] );
+                                   }
+                               } );
          };
 
          var move = function ( dom ) {
@@ -132,14 +155,28 @@
              ];
 
              var config = {
-                 'useCar': false
+                 useCar: false
              };
 
              if ( document.getElementById( 'car' ).checked ) {
-                 config[ 'useCar' ] = true;
+                 config.useCar = true;
              };
 
              routeLayer.execute( latlngs, config );
+         };
+
+         var itsmo = function () {
+             // 世界測地系(GoogleMap) から 日本測地系 へ変換
+             var lat = parseFloat( getText( 'lat' ) );
+             var lon = parseFloat( getText( 'lon' ) );
+             var x = lat + 0.000106961 * lat - 0.000017467 * lon - 0.004602017;
+             var y = lon + 0.000046047 * lat + 0.000083049 * lon - 0.010041046;
+
+             // 度表記 から 秒表記(its-mo)
+             x = Math.floor( x * 3600 * 1000 );
+             y = Math.floor( y * 3600 * 1000 );
+             var url = 'https://www.its-mo.com/map/top_z/' + x + '_' + y + '_13//#top'
+             window.open( url );
          };
 
         </script>
@@ -178,7 +215,8 @@
                     <li><span id="lon"></span></li>
                 </ul>
                 <button onClick="move('dep_');">出発地点へセット</button>
-                <button onClick="move('arr_');">到着地点へセット</button>
+                <button class="mb02" onClick="move('arr_');">到着地点へセット</button>
+                <button class="block align-right" onClick="itsmo();">いつもNAVIで開く</button>
             </fieldset>
 
             <fieldset>
