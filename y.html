@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=11" />
+
+        <script type="text/javascript" charset="utf-8"
+                src="https://map.yahooapis.jp/js/V1/jsapi?appid=dj00aiZpPTVucG5sTDNqOE1sdiZzPWNvbnN1bWVyc2VjcmV0Jng9MGM-">
+        </script>
+
+	<script src="./lib/handsontable.full.min.js"></script>
+	<link rel="stylesheet" href="./lib/handsontable.full.min.css">
+
+        <link rel="stylesheet" href="./lib/materialize.css">
+
+        <style>
+         body {
+             padding-bottom: 4em;
+         }
+
+         .container {
+             margin: 1em;
+             max-width: 100%;
+             width: 97%;
+         }
+
+         .navbar-fixed {
+             position: fixed;
+             bottom: 0;
+         }
+
+         select {
+             display: block;
+         }
+
+         #kyoku {
+             height: 100%;
+         }
+
+	 option:nth-child(odd) {
+	     background: #e0f2f1;
+	 }
+
+         #hot {
+             height: 45em;
+             overflow: scroll;
+         }
+
+	 .handsontable .currentRow {
+	     background: MistyRose;
+         }
+
+         #map_yougu {
+             height: 42em;
+         }
+
+         #map_jrsubway {
+             height: 42em;
+         }
+        </style>
+
+    </head>
+
+    <body onLoad="init();">
+        <div class="navbar-fixed">
+            <nav>
+                <div class="nav-wrapper">
+                    <ul class="side-nav">
+                        <li><a href="#top">目的地</a></li>
+                        <li><a href="#departure">出発地点</a></li>
+                        <li><a href="#yougu">交通用具</a></li>
+                        <li><a href="#jrsubway">ＪＲ線・地下鉄</a></li>
+                        <li><a href="#bus">バス</a></li>
+                        <li><a href="#ekibus">えきバス</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <div class="container">
+
+            <article class="card" id="top">
+                <div class="card-content">
+                    <span class="card-title">目的地</span>
+                    <div class="row">
+                        <div class="col s2">
+                            <select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
+                        </div>
+                        <div id="hot" class="col s10"></div>
+                    </div>
+
+                </div>
+            </article>
+
+            <article class="card" id="departure">
+                <div class="card-content">
+                    <span class="card-title">出発地点</span>
+                    <fieldset>
+                        <legend>漢字住所</legend>
+                        <p class="btn" onClick="pasteAddr();">クリップボードから貼り付け</p>
+                        <input id="dep_addr" type="text" size="40"
+                               placeholder="漢字住所を入力">
+                    </fieldset>
+
+                    <div class="row">
+                        <div class="col s8">
+                            <fieldset>
+                                <legend>Geocode 変換</legend>
+                                <p id="btnGeocode" class="btn" onClick="doGeocode('dep_');">実行（漢字住所を緯度・経度へ変換）</p>
+                                <ul>
+                                    <li>formatted_address = <span id="dep_name"></span></li>
+                                    <li>lat = <span id="dep_lat"></span></li>
+                                    <li>lon = <span id="dep_lon"></span></li>
+                                </ul>
+                            </fieldset>
+                        </div>
+
+                        <div class="col s4">
+                            <fieldset>
+                                <legend>マップに表示する条丁目境界線</legend>
+		                <select id="boundCity" onChange="changeCity(this.value);"></select><br>
+		                <select id="boundAddr"></select>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card" id="yougu">
+                <div class="card-content">
+                    <span class="card-title">交通用具</span>
+                    <div class="row">
+                        <div class="col s2">
+                            <fieldset>
+                                <legend>方法</legend>
+                                <label>
+                                    <input type="radio" class="with-gap" name="type" value="walk" />
+                                    <span>徒歩</span>
+                                </label><br>
+                                <label>
+                                    <input id="car" type="radio" class="with-gap" name="type" value="car" checked="checked" />
+                                    <span>自動車</span>
+                                </label>
+                            </fieldset>
+                        </div>
+
+                        <div class="col s6">
+                            <fieldset>
+                                <legend>ルート検索</legend>
+                                <p class="btn col" onClick="getRoute();">ルート検索</p>
+                                <ul class="col" style="margin: 0px;">
+                                    <li>総距離: <span id="dist"></span> メートル</</li>
+                                    <li>総時間: <span id="time"></span> 分</li>
+                                </ul>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div id="map_yougu"></div>
+                </div>
+            </article>
+
+            <article class="card" id="jrsubway">
+                <div class="card-content">
+                    <span class="card-title">ＪＲ線・地下鉄</span>
+                    <p class="btn" onClick="dispNearStation();">近隣の駅を表示する</p>
+                    <div id="map_jrsubway"></div>
+                </div>
+            </article>
+
+            <article class="card" id="bus">
+                <div class="card-content">
+                    <span class="card-title">バス</span>
+                    <p>I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information.</p>
+                </div>
+            </article>
+
+            <article class="card" id="ekibus">
+                <div class="card-content">
+                    <span class="card-title">えきバス</span>
+                    <p>I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information.</p>
+                </div>
+            </article>
+        </div>
+
+        <script type="text/jscript" src="./data/objbound.js"></script>
+        <script type="text/jscript" src="./data/objboundline.js"></script>
+        <script type="text/javascript" src="./data/objwp.js"></script>
+        <script type="text/javascript" src="./resources/y.js"></script>
+
+    </body>
+</html>
