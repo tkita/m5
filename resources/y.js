@@ -305,13 +305,69 @@ var itsmo = function () {
     window.open( url );
 };
 
-var dispNearStationSub = function ( map, latlng, color ) {
-    var marker = new Y.Marker( new Y.LatLng( Number( latlng.Lat ),
-                                             Number( latlng.Lon ) ),
-                               { icon: new Y.Icon( RESOURCES_URL + color + '-dot.png' )
-                               });
-    map.addFeature( marker );
+// ＪＲ線・地下鉄
+var getNearStations = function ( lat, lng ) {
+    // objStations ... 別ファイル [ id, name, lat, lng ]
+    var result = objStations.map(
+	function( s ) {
+            var da = Math.abs( Number( lat ) - Number( s[2] ) );
+            var db = Math.abs( Number( lng ) - Number( s[3] ) );
+	    return { id:   s[0],
+		     name: s[1],
+		     lat:  s[2],
+		     lng:  s[3],
+		     // dist: google.maps.geometry.spherical.computeDistanceBetween(
+                     //     new google.maps.LatLng( lat, lng ),
+                     //     new google.maps.LatLng( s[2], s[3] ) )
+                     dist: da * da + db * db
+                   };
+	});
 
+    result.sort( function( a, b ) {
+	if ( a.dist < b.dist ) return -1;
+	if ( a.dist > b.dist ) return 1;
+	return 0;
+    });
+
+    return result.slice( 0, 5 ); // 上位５つ
+}
+
+var dispNearStationSub = function ( map, latlng, color ) {
+    // latlng は Y.LatLng オブジェクト
+
+    // var yLatLng = new Y.LatLng( Number( latlng.Lat ),
+    //                             Number( latlng.Lon ) );
+
+    map.addFeature( new Y.Marker( latlng,
+                                  { icon: new Y.Icon( RESOURCES_URL + color + '-dot.png' )
+                                  })
+                  );
+    makeCircle( map, latlng, '00ff00' );
+
+    var stations = getNearStations( latlng.Lat, latlng.Lon );
+    stations.forEach( function ( e, idx, ary ) {
+        var marker = new Y.Marker( new Y.LatLng( Number( e.lat ), Number( e.lng )),
+                                   { icon: new Y.Icon( RESOURCES_URL + 'mm_20_' + color + '.png' ),
+                                     title: e.name
+                                   });
+        map.addFeature( marker );
+    });
+
+    // stations.forEach(
+    //     function( e, idx, ary ) {
+    //         var marker = makeMarker( map, e['lat'], e['lng'],
+    //                                  format( '$$$resources/mm_20_$$$.png', URL_TKITA_GITHUB, color ),
+    //                                  format( '($$$) $$$: $$$m',
+    //                                          ( idx + 1 ),
+    //                                          e['name'],
+    //                                          fmtNumber( Math.floor( e['dist'] ) ) )
+    //                                );
+    //         if ( idx == 0 ) {
+    //             google.maps.event.trigger( marker, 'click' );
+    //         }
+    //     });
+
+    return stations;
 }
 
 var dispNearStation = function () {
