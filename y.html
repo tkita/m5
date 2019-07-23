@@ -57,6 +57,11 @@
          #map_jrsubway {
              height: 42em;
          }
+
+         #map_bus {
+             height: 42em;
+         }
+
         </style>
 
     </head>
@@ -72,6 +77,7 @@
                         <li><a href="#jrsubway">ＪＲ線・地下鉄</a></li>
                         <li><a href="#bus">バス</a></li>
                         <li><a href="#ekibus">えきバス</a></li>
+                        <li><a href="#links">リンク</a></li>
                     </ul>
                 </div>
             </nav>
@@ -170,7 +176,47 @@
             <article class="card z-depth-2" id="bus">
                 <div class="card-content">
                     <span class="card-title">バス</span>
-                    <p>I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information.</p>
+                    <div class="row">
+                        <div class="col s2">
+                            <fieldset>
+                                <legend>近隣のバス停を検索</legend>
+			        <label>
+			            <input name="busAround" type="radio" class="with-gap" checked />
+                                    <span>目的地の近隣</span>
+			        </label><br>
+			        <label>
+			            <input name="busAround" type="radio" class="with-gap" />
+                                    <span>出発地点の近隣</span>
+			        </label><br>
+			        <p class="btn" onClick="searchNearBusStop();">検索を実行</p>
+                            </fieldset>
+                        </div>
+
+                        <div class="col s2">
+                            <fieldset>
+                                <legend>名称でバス停を検索</legend>
+			        <input type="text" id="busstopname" placeholder="バス停の名称（漢字）"
+			               onFocus="this.select();"
+			               class="ime-active"><br>
+                                <p class="btn" onClick="searchNameBusStop();">検索を実行</p>
+                            </fieldset>
+                        </div>
+
+                        <div class="col s3">
+                            <fieldset style="height: 12em;">
+                                <legend>バス停検索の結果</legend>
+                                <select id="busStops" size="4" style="height: 9em;" onChange="changeBusStop(this.value);"></select>
+                            </fieldset>
+                        </div>
+
+                        <div class="col s5">
+                            <fieldset style="height: 12em;">
+                                <legend>選択したバス停を含むバス路線</legend>
+                                <select id="busRoutes" size="4" style="height: 9em;" onClick="dispBusRoute(this.value);"></select>
+                            </fieldset>
+                        </div>
+                    </div> <!-- row -->
+                    <div id="map_bus"></div>
                 </div>
             </article>
 
@@ -180,10 +226,29 @@
                     <p>I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information.</p>
                 </div>
             </article>
+
+            <article class="card z-depth-2" id="links">
+                <div class="card-content">
+                    <span class="card-title">リンク</span>
+                    <dl>
+	                <dt>ＪＲ北海道バス</dt>
+	                <dd><a href="http://www.jhbunchin.com/" target="_blank">片道・定期券運賃、距離照会</a></dd>
+	                <dt>北海道中央バス</dt>
+	                <dd><a href="http://www.chuo-bus.co.jp/city_route/rate_table/" target="_blank">片道・定期運賃・キロ数検索</a></dd>
+	                <dd><a href="http://www.bustei.com/" target="_blank">時刻表</a></dd>
+	                <dt>じょうてつバス</dt>
+	                <dd><a href="http://www.jotetsu.co.jp/bus/pdf/price_list.pdf" target="_blank">バス料金表</a></dd>
+	                <dt>えにわコミュニティバス</dt>
+	                <dd><a href="https://www.city.eniwa.hokkaido.jp/kurashi/kurashi_tetsuzuki/kotsu/eniwacommunitybus/index.html" target="_blank">えにわコミュニティバス</a></dd>
+                    </dl>
+                </div>
+            </article>
         </div>
 
         <script type="text/jscript" src="./data/objbound.js"></script>
         <script type="text/jscript" src="./data/objboundline.js"></script>
+        <script type="text/jscript" src="./data/objbusstoproute.js"></script>
+        <script type="text/jscript" src="./data/objbusstops.js"></script>
         <script type="text/jscript" src="./data/objstations.js"></script>
         <script type="text/javascript" src="./data/objwp.js"></script>
         <script type="text/javascript" src="./resources/y.js"></script>

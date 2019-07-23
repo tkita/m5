@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-var RESOURCES_URL = 'https://tkita.github.io/m5/resources/'
+var RESOURCES_URL = 'https://tkita.github.io/m5/resources/';
 
 var getText = function ( dom ) {
     var d = document.getElementById( dom );
@@ -310,8 +310,6 @@ var getNearStations = function ( lat, lng ) {
     // objStations ... 別ファイル [ id, name, lat, lng ]
     var result = objStations.map(
 	function( s ) {
-            var da = Math.abs( Number( lat ) - Number( s[2] ) );
-            var db = Math.abs( Number( lng ) - Number( s[3] ) );
 	    return { id:   s[0],
 		     name: s[1],
 		     lat:  s[2],
@@ -319,7 +317,8 @@ var getNearStations = function ( lat, lng ) {
 		     // dist: google.maps.geometry.spherical.computeDistanceBetween(
                      //     new google.maps.LatLng( lat, lng ),
                      //     new google.maps.LatLng( s[2], s[3] ) )
-                     dist: da * da + db * db
+                     dist: Math.abs( Number( lat ) - Number( s[2] ) ) ** 2 +
+                           Math.abs( Number( lng ) - Number( s[3] ) ) ** 2
                    };
 	});
 
@@ -334,9 +333,6 @@ var getNearStations = function ( lat, lng ) {
 
 var dispNearStationSub = function ( map, latlng, color ) {
     // latlng は Y.LatLng オブジェクト
-
-    // var yLatLng = new Y.LatLng( Number( latlng.Lat ),
-    //                             Number( latlng.Lon ) );
 
     map.addFeature( new Y.Marker( latlng,
                                   { icon: new Y.Icon( RESOURCES_URL + color + '-dot.png' )
@@ -380,4 +376,136 @@ var dispNearStation = function () {
     dispNearStationSub( ymap, latlngs[0], 'green' );
     dispNearStationSub( ymap, latlngs[1], 'red' );
 
+}
+
+var getNearBusStop = function ( lat, lng ) {
+     var result = Object.keys( objbusstops ).
+	map( function( key ) {
+	    var v = objbusstops[ key ].split( ',' );
+	    var h1 = Math.abs( lat - v[0] );
+	    var h2 = Math.abs( lng - v[1] );
+	    return { id:   key,
+		     lat:  v[0],
+		     lng:  v[1],
+		     name: v[2],
+		     dist: h1 * h1 + h2 * h2 };
+	});
+
+    result.sort( function( a, b ) {
+	if ( a.dist < b.dist ) return -1;
+	if ( a.dist > b.dist ) return 1;
+	return 0;
+    });
+    return result.slice( 0, 10 ); // 上位
+}
+
+var searchNearBusStop = function () {
+    var latlngs = getData();
+    if ( !latlngs ) {
+        return;
+    }
+
+    if ( document.getElementsByName( 'busAround' )[0].checked ) {
+	lat = latlngs[1].Lat;
+	lng = latlngs[1].Lon;
+    } else {
+	lat = latlngs[0].Lat;
+	lng = latlngs[0].Lon;
+    }
+    var sel = removeOptions( 'busStops' );
+    getNearBusStop( lat, lng ).forEach( function( e ) {
+	addOption( sel, e.id, e.name );
+    });
+}
+
+var changeBusStop = function ( id ) {
+    var sel = removeOptions( 'busRoutes' );
+    var aryCompany = Object.keys( objBusStopRoute ); 
+    aryCompany.forEach( function ( c ) {
+	var aryRoute = Object.keys( objBusStopRoute[ c ].route );
+	aryRoute.forEach( function ( r ) {
+	    if ( objBusStopRoute[ c ].route[ r ].data.indexOf( id ) > -1 ) {
+		addOption( sel, [ c, r ],
+                           '【' + objBusStopRoute[ c ].company + '】' +
+                           objBusStopRoute[ c ].route[ r ].name );
+	    }
+	});
+    });
+}
+
+var searchNameBusStop = function () {
+    var kword = getText( 'busstopname' );
+    var result = Object.keys( objbusstops ).filter( function ( id ) {
+	return ( objbusstops[ id ].split( ',' )[2].indexOf( kword ) > -1 )
+    });
+    var sel = removeOptions( 'busStops' );
+    result.forEach( function ( id ) {
+	addOption( sel, id, objbusstops[ id ].split( ',' )[2] );
+    });
+}
+
+var drawBusRoute = function ( map, route ) {
+    var url = 'https://tkita.github.io/m5/data-kml/' + route.replace( ',', '' ) + '.kml';
+    var geoXmlLayer = new Y.GeoXmlLayer( url );
+    map.addLayer( geoXmlLayer );
+    geoXmlLayer.execute();
+}
+
+var drawBusStops = function ( map, busRouteKey, image, advance ) {
+    // バス路線に含まれるバス停を抽出
+    var key = busRouteKey.split( ',' );
+    var aryBusStop = objBusStopRoute[ key[0] ].route[ key[1] ].data;
+    aryBusStop.forEach( function( e ) {
+	var s = objbusstops[ e ].split( ',' );
+    	// var marker = makeMarker( map, s[0], s[1], image, s[2] );
+        map.addFeature( new Y.Marker( new Y.LatLng( s[0], s[1] ),
+                                      { icon: new Y.Icon( image ),
+                                        title: s[2]
+                                      })
+                      );
+
+	// if ( e == advance ) {
+	//     google.maps.event.trigger( marker, 'click' );
+	// }
+
+    });
+}
+
+var dispBusRoute = function ( busRouteKey ) {
+    var latlngs = getData();
+    if ( !latlngs ) {
+        return;
+    }
+    var ymap = makeMap( 'map_bus', latlngs[0] );
+
+    // drawBoundArea( map );
+    // var transitLayer = new google.maps.TransitLayer();
+    // transitLayer.setMap( map );
+
+    // 出発
+    // makeMarker( map, originLat, originLng, URL_GOOGLE_ICONS + 'green-dot.png' );
+    // makeCircle( map, originLat, originLng );
+
+    // makeMarker( map, latlng[2], latlng[3], URL_GOOGLE_ICONS + 'red-dot.png' );
+
+    // バス停
+    drawBusStops( ymap, busRouteKey,
+                  RESOURCES_URL + 'mm_20_orange.png',
+                  getText( 'busStops' ) );
+
+    // バス路線
+    drawBusRoute( ymap, busRouteKey )
+
+    // var sel = document.getElementById( 'busRoutes' );
+    // drawControl( map, getOptionText( 'busRoutes' ), false, 'black' );
+
+    // 路線を固定
+    // busRouteKey = document.getElementById( 'lock' ).value;
+    // if ( busRouteKey != '' ) {
+    //     busRouteKey = busRouteKey.split( ',' );
+    //     busRouteKey = busRouteKey[1] + ',' + busRouteKey[2];
+    //     drawBusRoute( map, busRouteKey )
+    //     drawBusStops( map, busRouteKey, URL_TKITA_GITHUB + 'resources/mm_20_green.png', false );
+    //     drawControl( map, busRouteKey, google.maps.ControlPosition.BOTTOM_CENTER, 'green' );
+    // }
 }
