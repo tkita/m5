@@ -310,6 +310,8 @@ var getNearStations = function ( lat, lng ) {
     // objStations ... 別ファイル [ id, name, lat, lng ]
     var result = objStations.map(
 	function( s ) {
+            var tmpa = Math.abs( Number( lat ) - Number( s[2] ) );
+            var tmpb = Math.abs( Number( lng ) - Number( s[3] ) );
 	    return { id:   s[0],
 		     name: s[1],
 		     lat:  s[2],
@@ -317,8 +319,7 @@ var getNearStations = function ( lat, lng ) {
 		     // dist: google.maps.geometry.spherical.computeDistanceBetween(
                      //     new google.maps.LatLng( lat, lng ),
                      //     new google.maps.LatLng( s[2], s[3] ) )
-                     dist: Math.abs( Number( lat ) - Number( s[2] ) ) ** 2 +
-                           Math.abs( Number( lng ) - Number( s[3] ) ) ** 2
+                     dist: tmpa * tmpa + tmpb * tmpb
                    };
 	});
 
