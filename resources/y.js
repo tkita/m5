@@ -1,6 +1,14 @@
 // -*- coding: utf-8 -*-
 var RESOURCES_URL = 'https://tkita.github.io/m5/resources/';
 
+var removeAllChilds = function ( id ) {
+    var dom = document.getElementById( id );
+    while ( dom.firstChild ) {
+        dom.removeChild( dom.firstChild );
+    }
+    return dom;
+}
+
 var getText = function ( dom ) {
     var d = document.getElementById( dom );
 
@@ -52,28 +60,29 @@ var removeOptions = function ( id ) {
     return sel;
 }
 
-var hot = new Handsontable( document.getElementById( 'hot' ) ,
-			    { data: [ [ '', '', '', '', '', '', '' ] ],
-			      autoColumnSize: true,
-			      colHeaders: [ '名称', '建物', '住所', 'lat', 'lng', '通勤不便', '電話番号' ],
-			      currentRowClassName: 'currentRow',
-			      disableVisualSelection: 'area',
-			      outsideClickDeselects: false,
-			      readOnly: true,
-			      rowHeaders: true,
-			      stretchH: 'all',
-			      minSpareRows: 10
-			    }
-			  );
-hot.selectCell( 0, 0 );
+var selectDist = function ( d ) {
+    setText( 'name', d.cells[0].textContent );
+    setText( 'build', d.cells[1].textContent );
+    setText( 'build_lat', d.cells[3].textContent );
+    setText( 'build_lng', d.cells[4].textContent );
+}
 
 var changeKyoku = function ( kyoku ) {
     var data = objWorkplace[ kyoku ].data.map( function( e ) {
 	return e.split( ',' );
     });
-    hot.updateSettings( { data: data,
-			} );
-    hot.selectCell( 0, 0 );
+
+    var tbody = removeAllChilds( 'data' );
+    data.forEach( function ( dr ) {
+        var tr = document.createElement( 'tr' );
+        dr.forEach( function ( dd ) {
+            var td = document.createElement( 'td' );
+            td.textContent = dd;
+            tr.appendChild( td );
+        });
+        tr.setAttribute( 'onClick', 'selectDist(this);' );
+        tbody.appendChild( tr );
+    });
 }
 
 var setupBoundCity = function () {
@@ -165,18 +174,22 @@ var doGeocode = function ( dom ) {
                       } );
 };
 
-// var move = function ( dom ) {
-//     [ 'lat', 'lon' ].forEach( function ( e ) {
-//         setText( dom + e, getText(e) );
-//     });
-    
-//     [ 'name', 'addr' ].forEach( function ( e ) {
-//         setText( dom + e, '' );
-//     });
-// };
+var move = function () {
+    var dmy = getHotValue();
+    setText( 'dep_name', '' );
+    setText( 'dep_lat', dmy[3] );
+    setText( 'dep_lon', dmy[4] );
+};
 
 var getHotValue = function () {
-    var wp = hot.getDataAtRow( hot.getSelected()[0] );
+    var wp = [
+        getText( 'name' ),
+        getText( 'build' ),
+        '',
+        getText( 'build_lat' ),
+        getText( 'build_lng' )
+    ];
+
     if ( wp[3] == '' ) {
      	alert( '施設情報地が選択されていません' );
      	return false;
@@ -483,11 +496,17 @@ var dispBusRoute = function ( busRouteKey ) {
     // var transitLayer = new google.maps.TransitLayer();
     // transitLayer.setMap( map );
 
-    // 出発
-    // makeMarker( map, originLat, originLng, URL_GOOGLE_ICONS + 'green-dot.png' );
-    // makeCircle( map, originLat, originLng );
+    ymap.addFeature( new Y.Marker( latlngs[0],
+                                  { icon: new Y.Icon( RESOURCES_URL + 'green-dot.png' )
+                                  })
+                  );
+    makeCircle( ymap, latlngs[0], '00ff00' );
 
-    // makeMarker( map, latlng[2], latlng[3], URL_GOOGLE_ICONS + 'red-dot.png' );
+    ymap.addFeature( new Y.Marker( latlngs[1],
+                                  { icon: new Y.Icon( RESOURCES_URL + 'red-dot.png' )
+                                  })
+                  );
+    makeCircle( ymap, latlngs[1], '00ff00' );
 
     // バス停
     drawBusStops( ymap, busRouteKey,

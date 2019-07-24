@@ -8,8 +8,10 @@
                 src="https://map.yahooapis.jp/js/V1/jsapi?appid=dj00aiZpPTVucG5sTDNqOE1sdiZzPWNvbnN1bWVyc2VjcmV0Jng9MGM-">
         </script>
 
-	<script src="./lib/handsontable.full.min.js"></script>
-	<link rel="stylesheet" href="./lib/handsontable.full.min.css">
+	<!--
+             <script src="./lib/handsontable.full.min.js"></script>
+	     <link rel="stylesheet" href="./lib/handsontable.full.min.css">
+           -->
 
         <link rel="stylesheet" href="./lib/materialize.css">
 
@@ -46,12 +48,8 @@
              overflow: scroll;
          }
 
-         .wtHolder {
-             width: 100%;
-         }
-
-	 .handsontable .currentRow {
-	     background: MistyRose;
+         tr:hover {
+             background: MistyRose;
          }
 
          #map_yougu {
@@ -93,13 +91,48 @@
                 <div class="card-content">
                     <span class="card-title">目的地</span>
                     <div class="row">
+                        <fieldset>
+                            <legend>選択済み</legend>
+                            名称 = <span id="name"></span>｜
+                            建物 = <span id="build"></span>｜
+                            lat = <span id="build_lat"></span>｜
+                            lng = <span id="build_lng"></span>
+                        </fieldset>
+                    </div>
+
+                    <div class="row">
                         <div class="col s2">
                             <select id="kyoku" size="29" onChange="changeKyoku(this.value);"></select>
                         </div>
-                        <div id="hot" class="col s10"></div>
+
+                        <div class="col s10" id="hot">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>名称</th>
+                                        <th>建物</th>
+                                        <th>住所</th>
+                                        <th>lat</th>
+                                        <th>lng</th>
+                                        <th>通勤不便</th>
+                                        <th>電話番号</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="data">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                </div>
+                    <div class="row">
+                        <div class="col s2">
+                            <p class="btn" onClick="alert('yet.');">すべての施設を表示</p>
+                        </div>
+                        <div class="col s3">
+                            <p class="btn" onClick="move();">選んだ施設の位置情報を出発地点へセット</p>
+                        </div>
+                    </div>
+                </div> <!-- card-content -->
             </article>
 
             <article class="card z-depth-2" id="departure">
