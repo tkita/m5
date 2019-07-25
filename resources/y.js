@@ -109,6 +109,19 @@ var changeCity = function  ( city ) {
     addr.forEach( function( e ) {
 	addOption( sel, e[0], e[2] );
     });
+
+   document.onkeydown = function () {
+	if ( event.ctrlKey ) {
+            switch ( event.keyCode ) {
+            case 66: // CTRL-b
+	        document.getElementById( 'bus' ).click();
+                break;
+            }
+            event.keyCode = null;
+            return false;
+        }}
+
+    $( '#boundAddr' ).formSelect();
 }
 
 var init = function () {
@@ -120,6 +133,10 @@ var init = function () {
     changeKyoku( getText( 'kyoku' ) );
     setupBoundCity();
     changeCity( getText( 'boundCity' ) );
+
+    $( '#boundCity' ).formSelect();
+
+
 };
 
 var pasteAddr = function () {

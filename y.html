@@ -3,17 +3,15 @@
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=11" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <script type="text/jscript" src="./lib/jquery-3.1.1.min.js"></script>
+        <link rel="stylesheet" href="./lib/materialize.min.css">
+        <script type="text/javascript" src="./lib/materialize.min.js"></script>
 
         <script type="text/javascript" charset="utf-8"
                 src="https://map.yahooapis.jp/js/V1/jsapi?appid=dj00aiZpPTVucG5sTDNqOE1sdiZzPWNvbnN1bWVyc2VjcmV0Jng9MGM-">
         </script>
-
-	<!--
-             <script src="./lib/handsontable.full.min.js"></script>
-	     <link rel="stylesheet" href="./lib/handsontable.full.min.css">
-           -->
-
-        <link rel="stylesheet" href="./lib/materialize.css">
 
         <style>
          body {
@@ -31,11 +29,8 @@
              bottom: 0;
          }
 
-         select {
-             display: block;
-         }
-
          #kyoku {
+             display: block;
              height: 100%;
          }
 
@@ -45,11 +40,7 @@
 
          #hot {
              height: 45em;
-             overflow: scroll;
-         }
-
-         tr:hover {
-             background: MistyRose;
+             overflow-y: scroll;
          }
 
          #map_yougu {
@@ -64,6 +55,14 @@
              height: 42em;
          }
 
+         a {
+             transition: background-color 0.3s;
+         }
+
+         a:hover {
+             background-color: #ddd;
+         }
+
         </style>
 
     </head>
@@ -73,12 +72,12 @@
             <nav>
                 <div class="nav-wrapper">
                     <ul class="side-nav">
-                        <li><a href="#top">目的地</a></li>
-                        <li><a href="#departure">出発地点</a></li>
-                        <li><a href="#yougu">徒歩・自動車</a></li>
-                        <li><a href="#jrsubway">ＪＲ線・地下鉄</a></li>
-                        <li><a href="#bus">バス</a></li>
-                        <li><a href="#ekibus">えきバス</a></li>
+                        <li><a href="#top">目的地 (t)</a></li>
+                        <li><a href="#departure">出発地点 (d)</a></li>
+                        <li><a href="#yougu">徒歩・自動車 (r)</a></li>
+                        <li><a href="#jrsubway">ＪＲ線・地下鉄 (s)</a></li>
+                        <li><a href="#bus">バス (b)</a></li>
+                        <li><a href="#ekibus">えきバス (e)</a></li>
                         <li><a href="#links">リンク</a></li>
                     </ul>
                 </div>
@@ -106,7 +105,7 @@
                         </div>
 
                         <div class="col s10" id="hot">
-                            <table>
+                            <table class="highlight">
                                 <thead>
                                     <tr>
                                         <th>名称</th>
@@ -122,6 +121,7 @@
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
 
                     <div class="row">
@@ -161,8 +161,12 @@
                         <div class="col s4">
                             <fieldset>
                                 <legend>マップに表示する条丁目境界線</legend>
-		                <select id="boundCity" onChange="changeCity(this.value);"></select><br>
-		                <select id="boundAddr"></select>
+                                <div class="input-field col s12">
+		                    <select id="boundCity" onChange="changeCity(this.value);"></select>
+                                </div>
+                                <div class="input-field col s12">
+		                    <select id="boundAddr"></select>
+                                </div>
                             </fieldset>
                         </div>
                     </div>
@@ -269,7 +273,7 @@
                     <span class="card-title">リンク</span>
                     <dl>
 	                <dt>ＪＲ北海道バス</dt>
-	                <dd><a href="http://www.jhbunchin.com/" target="_blank">片道・定期券運賃、距離照会</a></dd>
+	                <dd><a href="http://www.jhbunchin.com/" target="_blank" class="highlight">片道・定期券運賃、距離照会</a></dd>
 	                <dt>北海道中央バス</dt>
 	                <dd><a href="http://www.chuo-bus.co.jp/city_route/rate_table/" target="_blank">片道・定期運賃・キロ数検索</a></dd>
 	                <dd><a href="http://www.bustei.com/" target="_blank">時刻表</a></dd>
@@ -289,6 +293,21 @@
         <script type="text/jscript" src="./data/objstations.js"></script>
         <script type="text/javascript" src="./data/objwp.js"></script>
         <script type="text/javascript" src="./resources/y.js"></script>
+
+	<script>
+	 $(function () {
+	     // #で始まるアンカーをクリックした場合に処理
+	     $( 'a[href^="#"]' ).click( function () {
+		 var speed = 400; // スクロールの速度。ミリ秒
+		 var href= $( this ).attr( 'href' );
+		 var target = $( href == '#' || href == '' ? 'html' : href );
+		 var position = target.offset().top;
+		 $( 'body,html' ).animate( { scrollTop: position },
+					   speed, 'swing' );
+		 return false;
+	     });
+	 });
+	</script>
 
     </body>
 </html>
