@@ -1,6 +1,15 @@
 // -*- coding: utf-8 -*-
 var RESOURCES_URL = 'https://tkita.github.io/m5/resources/';
 
+var format = function () {
+    var args = Array.prototype.slice.call( arguments, 0 );
+    var str = args.shift();
+    args.forEach( function ( e ) {
+	str = str.replace( '$$$', e );
+    });
+    return str;
+}
+
 var removeAllChilds = function ( id ) {
     var dom = document.getElementById( id );
     while ( dom.firstChild ) {
@@ -556,4 +565,135 @@ var dispBusRoute = function ( busRouteKey ) {
     //     drawBusStops( map, busRouteKey, URL_TKITA_GITHUB + 'resources/mm_20_green.png', false );
     //     drawControl( map, busRouteKey, google.maps.ControlPosition.BOTTOM_CENTER, 'green' );
     // }
+}
+
+var URL_EKIBUS_API = 'https://ekibus-api.city.sapporo.jp/';
+var COMPANY_NAME = { 34: 'ＪＲバス',
+		     42: 'じょうてつバス',
+		     54: '中央バス',
+		     64: 'ばんけいバス',
+		     91: 'ＪＲ鉄道',
+		     92: '地下鉄',
+		     93: '市電',
+		     100: 'ランドマーク'
+                   };
+
+function getRoutePrediction ( word, id ) {
+    var param = {};
+    param[ 'kind' ]        = 0;
+    param[ 'search_flg' ]  = 1;
+    param[ 'search_word' ] = word;
+    param[ 'pos_flg' ]     = 0;
+    param[ 'company_id' ]  = '';
+    param[ 'lang' ]        = '';
+
+    $.ajax( { url: URL_EKIBUS_API + 'get_route_prediction',
+	      type: 'POST',
+	      data: param,
+	      dataType: 'text' }
+          ).done( function( res, status, xhr ) {
+	      var obj = JSON.parse( res );
+	      if ( obj.result == 0 ) {
+	          var dom = removeOptions( id );
+	          obj.route_prediction.forEach( function(e) {
+                      var str = '(' + e.company_id + ')' + COMPANY_NAME[ e.company_id ] + 
+                                ' - ' + e.name;
+		      addOption( dom, e.station_id, str ); // dom, value, text
+	          });
+	      }
+          });
+}
+
+var ebChangeWord = function ( id ) {
+    getRoutePrediction( document.getElementById( 'word_' + id ).value, id );
+}
+
+var getSearchResult = function () {
+    var start_st = getText( 'ebDep' );
+    var end_st = getText( 'ebArr' );
+    if ( ( start_st == '' ) || ( end_st == '' ) ) {
+	alert( '未選択' );
+	return ;
+    }
+//    removeAllChilds( 'result' );
+//    removeAllChilds( 'timetable' );
+
+    var param = {};
+    param[ 'kind' ]               = 0;
+    param[ 'start_st' ]           = start_st;
+    param[ 'end_st' ]             = end_st;
+    param[ 'bus_prediction_flg' ] = 0;
+    param[ 'departure_flg' ]      = 0;
+    param[ 'sort_id' ]            = 2;
+    param[ 'before_after_count' ] = 0;
+    param[ 'start_datetime' ]     = '';
+    param[ 'lang' ]               = '';
+
+    $.ajax( { url: URL_EKIBUS_API + 'get_search_result',
+	      type: 'POST',
+	      data: param,
+	      dataType: 'text' }
+    ).done( function( res, status, xhr ) {
+	var obj = JSON.parse( res );
+	drawTable( obj.search_result.route );
+    });
+}
+
+var drawTable = function ( ary ) {
+    var tbody = removeAllChilds( 'ebTbody' );
+
+    ary.forEach( function ( e ) {
+	var tr = document.createElement( 'tr' );
+
+	// 片道金額
+	var td = document.createElement( 'td' );
+	td.appendChild( document.createTextNode( format( '$$$ 円', e.fare )));
+	td.setAttribute( 'align', 'right' );
+	tr.appendChild( td );
+
+	// 所要時間
+	var td = document.createElement( 'td' );
+        td.appendChild( document.createTextNode( format( '$$$ 分', e.total_time )));
+        td.setAttribute( 'align', 'right' );
+	tr.appendChild( td );
+
+	// 経路
+	var td = document.createElement( 'td' );
+	var ul = document.createElement( 'ul' );
+	e.route_list.forEach( function(r) {
+	    var li = document.createElement( 'li' );
+
+	    var connect = r.connect_flag == 1 ? '（乗継） ' : ' ';
+	    var fare = document.createTextNode( format( '$$$  円$$$', r.fare, connect ));
+
+	    var from_name = document.createElement( 'span' );
+	    from_name.setAttribute( 'class', 'station' );
+	    from_name.appendChild( document.createTextNode( r.from_name ) );
+
+	    var line_name = document.createElement( 'span' );
+	    var fn = 'getTimeTable("' + r.from_id +
+                '", "' + r.from_name +
+                '", "' + r.to_id +
+                '", "' + r.to_name + '");';
+	    line_name.setAttribute( 'class', 'linename' );
+	    line_name.setAttribute( 'onClick', fn );
+	    line_name.appendChild( document.createTextNode( r.line_name ) );
+
+	    var to_name = document.createElement( 'span' );
+	    to_name.setAttribute( 'class', 'station' );
+	    to_name.appendChild( document.createTextNode( r.to_name ) );
+
+	    li.appendChild( fare );
+	    li.appendChild( from_name );
+	    li.appendChild( document.createTextNode( ' 〜 ' ) );
+	    li.appendChild( line_name );
+	    li.appendChild( document.createTextNode( ' 〜 ' ) );
+	    li.appendChild( to_name );
+	    ul.appendChild( li );
+	});
+	td.appendChild( ul );
+	tr.appendChild( td );
+
+	tbody.appendChild( tr );
+    });
 }

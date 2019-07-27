@@ -76,6 +76,16 @@
              background-color: #ddd;
          }
 
+         #ebDep, #ebArr {
+             display: block;
+             height: 16em;
+         }
+
+         .station {
+             border: 1px solid black;
+             padding: 0 0.2em 0 0.2em;
+         }
+
         </style>
 
     </head>
@@ -277,8 +287,42 @@
             <article class="card z-depth-2" id="ekibus">
                 <div class="card-content">
                     <span class="card-title">えきバス</span>
-                    <p>I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information. I am a very simple card. I am good at containing small bits of information.</p>
-                </div>
+                    <div class="row">
+                        <div class="col s4">
+                            <fieldset style="margin-bottom: 1em; border-color: rgba( 48, 97, 198, 1 );;">
+                                <legend>出発</legend>
+			        <input type="text"
+				       id="word_ebDep"
+				       placeholder="名称（ローマ字可）"
+				       onFocus="this.select();"
+				       onKeyUp="ebChangeWord('ebDep');" >
+                                <select id="ebDep" size="15"></select>
+                            </fieldset>
+
+                            <fieldset style="margin-bottom: 1em; border-color: rgba( 200, 48, 48, 1 );">
+                                <legend>到着</legend>
+			        <input type="text"
+				       id="word_ebArr"
+				       placeholder="名称（ローマ字可）"
+				       onFocus="this.select();"
+				       onKeyUp="ebChangeWord('ebArr');" >
+                                <select id="ebArr" size="15"></select>
+                            </fieldset>
+                            <p class="btn" onClick="getSearchResult()">検索を実行</p>
+                        </div>
+                        <div class="col s8">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>片道金額</th><th>所要時間</th><th>経路</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ebTbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- row -->
+                </div> <!-- card-content -->
             </article>
 
             <article class="card z-depth-2" id="links">
