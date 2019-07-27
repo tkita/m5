@@ -110,17 +110,6 @@ var changeCity = function  ( city ) {
 	addOption( sel, e[0], e[2] );
     });
 
-   document.onkeydown = function () {
-	if ( event.ctrlKey ) {
-            switch ( event.keyCode ) {
-            case 66: // CTRL-b
-	        document.getElementById( 'bus' ).click();
-                break;
-            }
-            event.keyCode = null;
-            return false;
-        }}
-
     $( '#boundAddr' ).formSelect();
 }
 
@@ -136,7 +125,34 @@ var init = function () {
 
     $( '#boundCity' ).formSelect();
 
-
+   document.onkeydown = function ( event ) {
+	if ( event.ctrlKey ) {
+            switch ( event.keyCode ) {
+            case 65: // CTRL-a
+                document.getElementById( 'nav_top' ).click();
+                break;
+            case 66: // CTRL-b
+	        document.getElementById( 'nav_bus' ).click();
+                break;
+            case 68: // CTRL-d
+                document.getElementById( 'nav_dep' ).click();
+                break;
+            case 69: // CTRL-e
+                document.getElementById( 'nav_eki' ).click();
+                break;
+            case 76: // CTRL-l
+                document.getElementById( 'nav_link' ).click();
+                break;
+            case 82: // CTRL-r
+                document.getElementById( 'nav_yougu' ).click();
+                break;
+            case 83: // CTRL-s
+                document.getElementById( 'nav_jr' ).click();
+                break;
+            }
+            event.keyCode = null;
+            return false;
+        }}
 };
 
 var pasteAddr = function () {
@@ -293,19 +309,14 @@ var getRoute = function () {
     }
 
     var config = {
-        useCar: false
+        useCar: false,
+        useTollway: false,
     };
     if ( document.getElementById( 'car' ).checked ) {
         config.useCar = true;
     };
 
     var ymap = makeMap( 'map_yougu', latlngs[0] );
-    // ymap.bind( 'click', function ( latlng ) {
-    //     setText( 'lat', latlng[ 'Lat' ] );
-    //     setText( 'lon', latlng[ 'Lon' ] );
-    //     var marker = new Y.Marker( new Y.LatLng( latlng[ 'Lat' ], latlng[ 'Lon' ] ) );
-    //     ymap.addFeature( marker );
-    // });
     
     var routeLayer = new Y.RouteSearchLayer();
     routeLayer.bind( 'drawend', function ( summary ) {

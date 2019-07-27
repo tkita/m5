@@ -43,6 +43,14 @@
              overflow-y: scroll;
          }
 
+         td {
+             padding: 0.5em;
+         }
+
+         table.highlight tbody tr:hover {
+             background-color: MistyRose;
+         }
+
          #map_yougu {
              height: 42em;
          }
@@ -53,6 +61,11 @@
 
          #map_bus {
              height: 42em;
+         }
+
+         #busStops, #busRoutes {
+             display: block;
+             height: 9em;
          }
 
          a {
@@ -72,13 +85,13 @@
             <nav>
                 <div class="nav-wrapper">
                     <ul class="side-nav">
-                        <li><a href="#top">目的地 (t)</a></li>
-                        <li><a href="#departure">出発地点 (d)</a></li>
-                        <li><a href="#yougu">徒歩・自動車 (r)</a></li>
-                        <li><a href="#jrsubway">ＪＲ線・地下鉄 (s)</a></li>
-                        <li><a href="#bus">バス (b)</a></li>
-                        <li><a href="#ekibus">えきバス (e)</a></li>
-                        <li><a href="#links">リンク</a></li>
+                        <li><a href="#top" id="nav_top">目的地 (A)</a></li>
+                        <li><a href="#departure" id="nav_dep">出発地点 (D)</a></li>
+                        <li><a href="#yougu" id="nav_yougu">徒歩・自動車 (R)</a></li>
+                        <li><a href="#jrsubway" id="nav_jr">ＪＲ線・地下鉄 (S)</a></li>
+                        <li><a href="#bus" id="nav_bus">バス (B)</a></li>
+                        <li><a href="#ekibus" id="nav_eki">えきバス (E)</a></li>
+                        <li><a href="#links" id="nav_link">リンク (L)</a></li>
                     </ul>
                 </div>
             </nav>
@@ -246,14 +259,14 @@
                         <div class="col s3">
                             <fieldset style="height: 12em;">
                                 <legend>バス停検索の結果</legend>
-                                <select id="busStops" size="4" style="height: 9em;" onChange="changeBusStop(this.value);"></select>
+                                <select id="busStops" size="4" onChange="changeBusStop(this.value);"></select>
                             </fieldset>
                         </div>
 
                         <div class="col s5">
                             <fieldset style="height: 12em;">
                                 <legend>選択したバス停を含むバス路線</legend>
-                                <select id="busRoutes" size="4" style="height: 9em;" onClick="dispBusRoute(this.value);"></select>
+                                <select id="busRoutes" size="4" onClick="dispBusRoute(this.value);"></select>
                             </fieldset>
                         </div>
                     </div> <!-- row -->
