@@ -615,8 +615,6 @@ var getSearchResult = function () {
 	alert( '未選択' );
 	return ;
     }
-//    removeAllChilds( 'result' );
-//    removeAllChilds( 'timetable' );
 
     var param = {};
     param[ 'kind' ]               = 0;
@@ -663,19 +661,18 @@ var drawTable = function ( ary ) {
 	e.route_list.forEach( function(r) {
 	    var li = document.createElement( 'li' );
 
-	    var connect = r.connect_flag == 1 ? '（乗継） ' : ' ';
-	    var fare = document.createTextNode( format( '$$$  円$$$', r.fare, connect ));
+	    var fare = document.createTextNode( format( '$$$  円$$$', r.fare,
+                                                        r.connect_flag == 1 ? '（乗継） ' : ' '
+                                                      ));
 
 	    var from_name = document.createElement( 'span' );
 	    from_name.setAttribute( 'class', 'station' );
 	    from_name.appendChild( document.createTextNode( r.from_name ) );
 
 	    var line_name = document.createElement( 'span' );
-	    var fn = 'getTimeTable("' + r.from_id +
-                '", "' + r.from_name +
-                '", "' + r.to_id +
-                '", "' + r.to_name + '");';
-	    line_name.setAttribute( 'class', 'linename' );
+	    var fn = format( 'getTimeTable("$$$", "$$$", "$$$", "$$$");',
+			     r.from_id, r.from_name, r.to_id, r.to_name) ;
+	    line_name.setAttribute( 'class', 'btn-small' );
 	    line_name.setAttribute( 'onClick', fn );
 	    line_name.appendChild( document.createTextNode( r.line_name ) );
 
@@ -695,5 +692,109 @@ var drawTable = function ( ary ) {
 	tr.appendChild( td );
 
 	tbody.appendChild( tr );
+    });
+}
+
+var getTimeTable = function ( from_id, from_name, to_id, to_name ) {
+    removeAllChilds( 'timetable' );
+    var param = {};
+    param[ 'kind' ]     = 0;
+    param[ 'start_st' ] = from_id;
+    param[ 'end_st' ]   = to_id;
+    param[ 'lang' ]     = '';
+
+    $.ajax( { url: URL_EKIBUS_API + 'get_time_table',
+	      type: 'POST',
+	      data: param,
+	      dataType: 'text' }
+          ).done( function ( res, status, xhr ) {
+	      var obj = JSON.parse( res );
+	      dispTimeTable( obj, from_id, from_name, to_id, to_name );
+	  });
+}
+
+var dispTimeTable = function ( obj, from_id, from_name, to_id, to_name ) {
+    var objTimeTable = obj.time_table[ 0 ]; // dia_flg = 1
+    var aryHeader = objTimeTable.header_table;
+    var company = objTimeTable.company_name;
+    var aryTimes = objTimeTable.times;
+
+    var dl = document.createElement( 'dl' );
+    aryHeader.forEach( function( e ) {
+	var dt = document.createElement( 'dt' );
+	dt.appendChild( document.createTextNode( format( '$$$ ＠ $$$',
+							 e.line_name,
+							 company ) ) );
+	dl.appendChild( dt );
+
+	var dd = document.createElement( 'dd' );
+	var course = document.createElement( 'span' );
+	course.appendChild(
+	    document.createTextNode( format( ' line_id:$$$ ', e.line_id ) ) );
+	course.setAttribute( 'class', 'btn-small' );
+	var fn = format( 'showLine("$$$", "$$$", "$$$");', e.line_id, from_id, to_id );
+	course.setAttribute( 'onClick', fn );
+	dd.appendChild( course );
+
+	dd.appendChild( document.createTextNode( ' ' + e.course_name ) );
+	dl.appendChild( dd );
+
+	var tt = '';
+	aryTimes.filter( function( t ) {
+	    return ( t.course_id == e.course_id )
+	}).forEach( function( e ) {
+	    tt = tt + e.time + ' / ';
+	});
+	var dd = document.createElement( 'dd' );
+	dd.appendChild( document.createTextNode( tt ) );
+	dl.appendChild( dd );
+
+	var dd = document.createElement( 'dd' );
+	dd.setAttribute( 'id', e.line_id );
+	dl.appendChild( dd );
+    });
+
+    setText( 'ebName', format( '$$$ → $$$', from_name, to_name ) );
+
+    var timetable = document.getElementById( 'timetable' );
+    timetable.appendChild( dl );
+}
+
+var showLine = function ( line_id, from_id, to_id ) {
+    alert( 'yet' );
+    return;
+
+    var param = {};
+    param[ 'kind' ]    = 0;
+    param[ 'line_id' ] = line_id;
+    param[ 'lang' ]    = '';
+
+    var obj = JSON.parse(
+	$.ajax( { url: URL_EKIBUS_API + 'get_route_station',
+		  type: 'POST',
+		  data: param,
+		  dataType: 'text',
+		  async: false      // デフォルトは非同期
+		} ).responseText );
+
+    document.getElementById( line_id ).style.height = '300px';
+    var center = obj.route_station[0].station_list.filter( function(s) {
+	return ( s.station_id == from_id );
+    });
+    var map = makeMap( line_id, center[0].lat, center[0].lon, { zoom: 13 } );
+
+    obj.route_station.forEach( function( route ) {
+	var path = route.station_list.map( function(r) {
+	    return { lat: Number( r.lat ), lng: Number( r.lon ) }
+	});
+        drawPolyline( map, path, { strokeColor: 'cyan', strokeOpacity: 0.8, strokeWeight: 2 } );
+
+	route.station_list.forEach( function(s) {
+            var marker = makeMarker( map, s.lat, s.lon,
+                                     URL_TKITA_GITHUB + 'resources/mm_20_orange.png', s.name );
+	    if ( s.station_id == from_id ) {
+		google.maps.event.trigger( marker, 'click' );
+	    }
+	});
     });
 }
