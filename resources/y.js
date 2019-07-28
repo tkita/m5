@@ -311,6 +311,20 @@ var makeMap = function ( dom, latlng ) {
     return ymap;
 }
 
+/**
+ * @param {object} map
+ * @param {object} latlng
+ * @param {string} iconURL
+ */
+var makeMarker = function ( map, latlng, iconURL, title ) {
+    var marker = new Y.Marker( latlng,
+                               { icon: new Y.Icon( iconURL ),
+                                 title: title
+                               });
+    map.addFeature( marker );
+    return marker;
+}
+
 var getRoute = function () {
     var latlngs = getData();
     if ( !latlngs ) {
@@ -382,22 +396,22 @@ var getNearStations = function ( lat, lng ) {
     return result.slice( 0, 5 ); // 上位５つ
 }
 
+/**
+ * @param { オブジェクト } map
+ * @param { Y.LatLng オブジェクト } latlng
+ * @param { string } color
+ */
 var dispNearStationSub = function ( map, latlng, color ) {
-    // latlng は Y.LatLng オブジェクト
-
-    map.addFeature( new Y.Marker( latlng,
-                                  { icon: new Y.Icon( RESOURCES_URL + color + '-dot.png' )
-                                  })
-                  );
+    var marker = makeMarker( map, latlng, RESOURCES_URL + color + '-dot.png' );
     makeCircle( map, latlng, '00ff00' );
 
     var stations = getNearStations( latlng.Lat, latlng.Lon );
     stations.forEach( function ( e, idx, ary ) {
-        var marker = new Y.Marker( new Y.LatLng( Number( e.lat ), Number( e.lng )),
-                                   { icon: new Y.Icon( RESOURCES_URL + 'mm_20_' + color + '.png' ),
-                                     title: e.name
-                                   });
-        map.addFeature( marker );
+        var marker = makeMarker( map,
+                                 new Y.LatLng( e.lat, e.lng ),
+                                 RESOURCES_URL + 'mm_20_' + color + '.png',
+                                 e.name
+                               );
     });
 
     // stations.forEach(
@@ -426,7 +440,6 @@ var dispNearStation = function () {
     var ymap = makeMap( 'map_jrsubway', latlngs[0] );
     dispNearStationSub( ymap, latlngs[0], 'green' );
     dispNearStationSub( ymap, latlngs[1], 'red' );
-
 }
 
 var getNearBusStop = function ( lat, lng ) {
@@ -508,17 +521,10 @@ var drawBusStops = function ( map, busRouteKey, image, advance ) {
     var aryBusStop = objBusStopRoute[ key[0] ].route[ key[1] ].data;
     aryBusStop.forEach( function( e ) {
 	var s = objbusstops[ e ].split( ',' );
-    	// var marker = makeMarker( map, s[0], s[1], image, s[2] );
-        map.addFeature( new Y.Marker( new Y.LatLng( s[0], s[1] ),
-                                      { icon: new Y.Icon( image ),
-                                        title: s[2]
-                                      })
-                      );
-
+    	var marker = makeMarker( map, new Y.LatLng( s[0], s[1] ), image, s[2] );
 	// if ( e == advance ) {
 	//     google.maps.event.trigger( marker, 'click' );
 	// }
-
     });
 }
 
@@ -527,22 +533,11 @@ var dispBusRoute = function ( busRouteKey ) {
     if ( !latlngs ) {
         return;
     }
+
     var ymap = makeMap( 'map_bus', latlngs[0] );
-
-    // drawBoundArea( map );
-    // var transitLayer = new google.maps.TransitLayer();
-    // transitLayer.setMap( map );
-
-    ymap.addFeature( new Y.Marker( latlngs[0],
-                                  { icon: new Y.Icon( RESOURCES_URL + 'green-dot.png' )
-                                  })
-                  );
+    var marker = makeMarker( ymap, latlngs[0], RESOURCES_URL + 'green-dot.png' );
     makeCircle( ymap, latlngs[0], '00ff00' );
-
-    ymap.addFeature( new Y.Marker( latlngs[1],
-                                  { icon: new Y.Icon( RESOURCES_URL + 'red-dot.png' )
-                                  })
-                  );
+    var marker = makeMarker( ymap, latlngs[1], RESOURCES_URL + 'red-dot.png' );
     makeCircle( ymap, latlngs[1], '00ff00' );
 
     // バス停
@@ -761,9 +756,6 @@ var dispTimeTable = function ( obj, from_id, from_name, to_id, to_name ) {
 }
 
 var showLine = function ( line_id, from_id, to_id ) {
-    alert( 'yet' );
-    return;
-
     var param = {};
     param[ 'kind' ]    = 0;
     param[ 'line_id' ] = line_id;
@@ -781,20 +773,19 @@ var showLine = function ( line_id, from_id, to_id ) {
     var center = obj.route_station[0].station_list.filter( function(s) {
 	return ( s.station_id == from_id );
     });
-    var map = makeMap( line_id, center[0].lat, center[0].lon, { zoom: 13 } );
+    var map = makeMap( line_id, new Y.LatLng( center[0].lat, center[0].lon ) );
 
     obj.route_station.forEach( function( route ) {
 	var path = route.station_list.map( function(r) {
 	    return { lat: Number( r.lat ), lng: Number( r.lon ) }
 	});
-        drawPolyline( map, path, { strokeColor: 'cyan', strokeOpacity: 0.8, strokeWeight: 2 } );
+//        drawPolyline( map, path, { strokeColor: 'cyan', strokeOpacity: 0.8, strokeWeight: 2 } );
 
-	route.station_list.forEach( function(s) {
-            var marker = makeMarker( map, s.lat, s.lon,
-                                     URL_TKITA_GITHUB + 'resources/mm_20_orange.png', s.name );
-	    if ( s.station_id == from_id ) {
-		google.maps.event.trigger( marker, 'click' );
-	    }
+	route.station_list.forEach( function( s ) {
+            map.addFeature( new Y.Marker( new Y.LatLng( s.lat, s.lon ),
+                                          { icon: new Y.Icon( RESOURCES_URL +'mm_20_orange.png' )
+                                          })
+                          );
 	});
     });
 }
