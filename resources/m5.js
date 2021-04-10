@@ -775,6 +775,20 @@ var keyDown = function( event ) {
             document.getElementById( 'link_bus' ).click();
             document.getElementById( 'btnBus' ).focus();
             break;
+
+        case 'd':
+            current = 'departure';
+            document.getElementById( 'link_departure' ).click();
+            document.getElementById( 'btnPaste' ).focus();
+            break;
+
+        case 't':
+            current = 'top';
+            document.getElementById( 'link_top' ).click();
+            break;
+
+
+
         };
     };
 };
@@ -803,18 +817,6 @@ function init () {
     //             if ( mapObj ) {
     //                 mapObj.setZoom( mapObj.getZoom() - 1 );
     //             }
-    //             break;
-
-    //         case 66: // CTRL-b
-    //             current = 'bus';
-    //             document.getElementById( 'link_bus' ).click();
-    //             document.getElementById( 'btnBus' ).focus();
-    //             break;
-
-    //         case 68:// CTRL-d
-    //             current = 'departure';
-    //             document.getElementById( 'link_departure' ).click();
-    //             document.getElementById( 'btnPaste' ).focus();
     //             break;
 
     //         case 69: // CTRL-e
@@ -849,11 +851,6 @@ function init () {
     //                 current ='jrsubway';
     //                 document.getElementById( 'link_jrsubway' ).click();
     //             }
-    //             break;
-
-    //         case 84: // CTRL-t
-    //             current = 'top';
-    //             document.getElementById( 'link_top' ).click();
     //             break;
 
     //         case 86: // CTRL-v
