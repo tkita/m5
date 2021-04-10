@@ -808,7 +808,8 @@ var init = function() {
 //    window.addEventListener( 'keydown', handleKeyDown );
     shortcut.add( 'Ctrl+T', function(){
         console.log( 'ttttt' );
-    });
+    }, { 'propagate': false,
+       });
 
     shortcut.add( 'Ctrl+B', function(){
         document.getElementById( 'link_bus' ).click();
