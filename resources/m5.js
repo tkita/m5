@@ -9,79 +9,79 @@ var URL_EKIBUS_API = 'https://ekibus-api.city.sapporo.jp/';
 var URL_TKITA_GITHUB = 'https://tkita.github.io/m5/';
 
 // subroutines
-function format () {
+var format = function() {
     var args = Array.prototype.slice.call( arguments, 0 );
     var str = args.shift();
     args.forEach( function(e) {
 	str = str.replace( '$$$', e );
     });
     return str;
-}
+};
 
-function fmtNumber( num ) {
+var fmtNumber = function( num ) {
     return String( num ).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,' );
-}
+};
 
-function setInnerHTML ( domId, text ) {
+var setInnerHTML = function( domId, text ) {
     document.getElementById( domId ).innerHTML = text;
-}
+};
 
-function clearGeocodeResult () {
+var clearGeocodeResult = function() {
     [ 'faddr', 'stLat', 'stLng' ].forEach( function( id ) {
 	setInnerHTML( id, '' );
     });
-}
+};
 
-function clearTextContent ( id ) {
+var clearTextContent = function( id ) {
     document.getElementById( id ).textContent = '';
-}
+};
 
-function cbPaste () {
+var cbPaste = function() {
     document.getElementById( 'addr' ).value = clipboardData.getData( 'text' );
     clearGeocodeResult();
     document.getElementById( 'btnGeo' ).focus();
-}
+};
 
-function removeAllChilds ( id ) {
+var removeAllChilds = function( id ) {
     var dom = document.getElementById( id );
     while ( dom.firstChild ) {
 	dom.removeChild( dom.firstChild );
-    }
+    };
     return dom;
-}
+};
 
-function addOption ( sel, value, text ) {
+var addOption = function( sel, value, text ) {
     var opt = document.createElement( 'option' );
     opt.value = value;
     opt.text = text;
     sel.appendChild( opt );
-}
+};
 
-function getOptionValue ( domId ) {
+var getOptionValue = function( domId ) {
     var sel = document.getElementById( domId );
     return sel.options[ sel.selectedIndex ].value;
-}
+};
 
-function getOptionText ( domId ) {
+var getOptionText = function( domId ) {
     var sel = document.getElementById( domId );
     return sel.options[ sel.selectedIndex ].text;
-}
+};
 
-function removeOptions ( id ) {
+var removeOptions = function( id ) {
     var sel = document.getElementById( id );
     while ( sel.options.length ) {
 	sel.remove(0);
-    }
+    };
     return sel;
-}
+};
 
-function replaceZenkaku ( str ) {
+var replaceZenkaku = function( str ) {
     return str.replace( /[A-Za-z0-9]/g, function( s ) {
 	return String.fromCharCode( s.charCodeAt( 0 ) + 0xFEE0 );
     });
-}
+};
 
-function makeMap( canvas, lat, lng, option ) {
+var makeMap = function( canvas, lat, lng, option ) {
     [ [ 'center' , new google.maps.LatLng( lat, lng ) ],
       [ 'panControl' , false ],
       [ 'scaleControl' , true ],
@@ -91,9 +91,9 @@ function makeMap( canvas, lat, lng, option ) {
 	  option[ e[0] ] = e[1];
       });
     return new google.maps.Map( removeAllChilds( canvas ), option );
-}
+};
 
-function makeMarker( map, lat, lng, image, opt_msg ) {
+var makeMarker = function( map, lat, lng, image, opt_msg ) {
     var marker = new google.maps.Marker(
 	{ map: map,
           position: new google.maps.LatLng( lat, lng ),
@@ -105,11 +105,11 @@ function makeMarker( map, lat, lng, image, opt_msg ) {
 	                                   new google.maps.InfoWindow( { content: opt_msg } ).
                                                open( marker.getMap(), marker );
                                        });
-    }
+    };
     return marker;
-}
+};
 
-function makeCircle( map, lat, lng ) {
+var makeCircle = function( map, lat, lng ) {
     var options = { strokeColor: 'green', // '#c71585',
 		    strokeOpacity: 0.3,
 		    strokeWeight: 3,
@@ -121,16 +121,16 @@ function makeCircle( map, lat, lng ) {
 		    radius: 1000   // 半径 1000 m
 		  };
     return new google.maps.Circle( options );
-}
+};
 
-function drawPolyline ( map, path, option ) {
+var drawPolyline = function( map, path, option ) {
     option.path = path;
     option.geodesic = true;
     var objPolyline = new google.maps.Polyline( option );
     objPolyline.setMap( map );
-}
+};
 
-function drawBoundArea ( map ) {
+var drawBoundArea = function( map ) {
     var coords = objBoundLine[ getOptionValue( 'boundAddr' ) ];
     if ( coords ) {
 	var path = coords.split( ' ' ).map( function( e ) {
@@ -141,10 +141,10 @@ function drawBoundArea ( map ) {
 	drawPolyline( map, path, { strokeColor: 'blue',
 				   strokeOpacity: 0.8,
 				   strokeWeight: 2 } );
-    }
-}
+    };
+};
 
-function drawControl ( map, str, pos, color ) {
+var drawControl = function( map, str, pos, color ) {
     var container = document.createElement( 'div' );
     [ [ 'margin',     '10px' ],
       [ 'padding',    '5px'],
@@ -160,26 +160,26 @@ function drawControl ( map, str, pos, color ) {
 	map.controls[ pos ].push( container );
     } else {
 	map.controls[ google.maps.ControlPosition.BOTTOM_LEFT ].push( container );
-    }
-}
+    };
+};
 
-function checkInData () {
+var checkInData = function() {
     var stLat = document.getElementById( 'stLat' ).innerText;
     var stLng = document.getElementById( 'stLng' ).innerText;
     if ( stLat == '' ) {
 	alert( '出発地点が未入力です' );
 	return false;
-    }
+    };
 
     var wp = hot.getDataAtRow( hot.getSelected()[0] );
     if ( wp[3] == '' ) {
      	alert( '目的地が選択されていません' );
      	return false;
-    }
+    };
     return [ stLat, stLng, wp[3], wp[4], wp ];
-}
+};
 
-function setBoundArea () {
+var setBoundArea = function() {
     var mCity, mAddr;
     var addr = document.getElementById( 'addr' ).value;
     for ( var i = 1, max = objBound.length; i < max; i++ ) {
@@ -188,7 +188,7 @@ function setBoundArea () {
 	    mCity = objBound[i][1];
 	    mAddr = objBound[i][2];
 	    break;
-	}}
+	}};
 
     if ( mCity ) {
 	var sel = document.getElementById( 'boundCity' );
@@ -197,25 +197,25 @@ function setBoundArea () {
 		sel.selectedIndex = i;
 		changeCity( mCity );
 		break;
-	    }}
+	    }};
 	var sel = document.getElementById( 'boundAddr' );
 	for ( var i = 0, max = sel.length; i < max; i++ ) {
 	    if ( mAddr == sel.options[i].text ) {
 		sel.selectedIndex = i;
 		break;
-	    }}
+	    }};
     } else {
 	document.getElementById( 'boundCity' ).selectedIndex = 0;
 	changeCity( '---' );
-    }
-}
+    };
+};
 
-function getGeocode () {
+var getGeocode = function() {
     var addr = document.getElementById( 'addr' ).value;
     if ( addr == '' ) {
 	alert( '住所欄が未入力です' );
 	return;
-    }
+    };
     addr = replaceZenkaku( addr );
     document.getElementById( 'addr' ).value = addr;
     clearGeocodeResult();
@@ -231,18 +231,18 @@ function getGeocode () {
 		alert( 'Google Geocoder Faild：' + status );
 	    }});
     setBoundArea();
-}
+};
 
-function doWebSearch () {
+var doWebSearch = function() {
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
-    }
+    };
 
     var url = format( 'https://www.google.co.jp/maps/dir/?api=1&origin=$$$,$$$&destination=$$$,$$$&travelmode=transit',
 		      latlng[0], latlng[1], latlng[2], latlng[3] );
     window.open( url, '_blank' );
-}
+};
 
 var hot = new Handsontable( document.getElementById( 'hot' ) ,
 			    { data: [ [ '', '', '', '', '', '', '' ] ],
@@ -259,7 +259,7 @@ var hot = new Handsontable( document.getElementById( 'hot' ) ,
 			  );
 hot.selectCell( 0, 0 );
 
-function changeKyoku ( kyoku ) {
+var changeKyoku = function( kyoku ) {
     var data = objWorkplace[ kyoku ].data.map( function( e ) {
 	return e.split( ',' );
     });
@@ -267,29 +267,30 @@ function changeKyoku ( kyoku ) {
 			} );
     hot.selectCell( 0, 0 );
     document.getElementById( 'kword' ).value = '';
-}
+};
 
-function doSearchShokuba ( keyCode ) {
+var doSearchShokuba = function( keyCode ) {
     if ( keyCode === 13 ) {
 	if ( searchShokuba() ) {
 	    document.getElementById( 'shokuba' ).focus();
 	} else {
 	    document.getElementById( 'kword' ).focus();
-	}}}
+	}};
+};
 
-function searchShokuba () {
+var searchShokuba = function() {
     var kword = document.getElementById( 'kword' ).value;
     if ( kword == '' ) {
 	alert( 'キーワードが未入力です' );
 	return false;
-    }
+    };
 
     // キーワードが全角数字のみで構成されていれば、半角へ変換する
     if ( kword.match( /[０-９]/g ) ) {
         kword = kword.replace( /[０-９]/g, function( s ) {
 	    return String.fromCharCode( s.charCodeAt( 0 ) - 0xFEE0 );
         });
-    }
+    };
 
     var result = [];
     Object.keys( objWorkplace ).forEach( function( key ) {
@@ -301,7 +302,7 @@ function searchShokuba () {
     if ( result.length == 0 ) {
 	alert( '該当なし' );
 	return false;
-    }
+    };
 
     var data = result.map( function( e ) {
 	return e.split( ',' );
@@ -310,18 +311,18 @@ function searchShokuba () {
     hot.selectCell( 0, 0 );
     document.getElementById( 'hot' ).focus();
     return true;
-}
+};
 
-function move () {
+var move = function() {
     var wp = hot.getDataAtRow( hot.getSelected()[0] );
     setInnerHTML( 'faddr', wp[0] + ' ' + wp[1] );
     setInnerHTML( 'stLat', wp[3] );
     setInnerHTML( 'stLng', wp[4] );
-}
+};
 
 // dom の更新を監視する
 //   https://msdn.microsoft.com/ja-jp/library/dn265034(v=vs.85).aspx
-function mutationObjectCallback ( mutationRecordsList ) {
+var mutationObjectCallback = function( mutationRecordsList ) {
     var dom = document.getElementsByClassName( 'adp-summary' );
     if ( dom[0] ) {
         [].forEach.call( dom, function(e) {
@@ -357,8 +358,8 @@ function mutationObjectCallback ( mutationRecordsList ) {
 	// document.getElementById( 'distance' ).textContent =
 	//     ( document.getElementsByName( 'walk' )[0].checked ? '徒歩' : '自動車' ) +
 	//     ': ' + km + ' km';
-    }
-}
+    };
+};
 
 var observerObject = new MutationObserver( mutationObjectCallback );
 observerObject.observe( document.getElementById( 'directionsPanel' ), // target DOM
@@ -368,7 +369,7 @@ observerObject.observe( document.getElementById( 'directionsPanel' ), // target 
 			    childList: true
 			});
 
-function getWaypoints () {
+var getWaypoints = function() {
     var ary = [];
     var txt = document.getElementById( 'waypoints' ).textContent;
     if ( txt != '' ) {
@@ -376,16 +377,16 @@ function getWaypoints () {
             var coords = e.split(',');
             return { location: new google.maps.LatLng( coords[0], coords[1] ) };
         });
-    }
+    };
     return ary;
-}
+};
 
 var routeMap;
-function measure_distance () {
+var measure_distance = function() {
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
-    }
+    };
     var originLat = latlng[0];
     var originLng = latlng[1];
 
@@ -430,7 +431,7 @@ function measure_distance () {
     if ( userPoint != '' ) {
         latlng[2] = userPoint.split(',')[0];
         latlng[3] = userPoint.split(',')[1];
-    }
+    };
     var request = { origin: new google.maps.LatLng( originLat, originLng ),
                     destination: new google.maps.LatLng( latlng[2], latlng[3] ),
                     waypoints: keiyu,           // 経由地点
@@ -454,11 +455,11 @@ function measure_distance () {
     routeMap.setOptions( { styles: styles[ 'hide' ] } );    // 初期動作
 
     document.getElementById( 'link_yougu' ).click();
-}
+};
 
-function changeStylePoi ( key ) {
+var changeStylePoi = function( key ) {
     routeMap.setOptions( { styles: styles[ key ] } );
-}
+};
 
 // http://phpjavascriptroom.com/?t=ajax&p=googlemapsapiv3_styling#a_maptypestylefeaturetype
 // featureType: 'administrative.land_parcel' ... 土地区画
@@ -495,13 +496,13 @@ var styles = { default: null,
                ]
              };
 
-function clearWaypoints () {
+var clearWaypoints = function() {
     clearTextContent( 'waypoints' );
     measure_distance();
-}
+};
 
 // ＪＲ線・地下鉄
-function getNearStations ( lat, lng ) {
+var getNearStations = function( lat, lng ) {
     // objStations ... 別ファイル [ id, name, lat, lng ]
     var result = objStations.map(
 	function( s ) {
@@ -522,14 +523,14 @@ function getNearStations ( lat, lng ) {
     });
 
     return result.slice( 0, 5 ); // 上位５つ
-}
+};
 
 // btnJrSubway
-function dispNearStation () {
+var dispNearStation = function() {
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
-    }
+    };
 
     // 1.0 <- 地面から遠ざかる <- zoom -> 地面に近づく -> 21.0
     var map = makeMap( 'jrsubway_map', latlng[0], latlng[1], { zoom: 12,
@@ -551,15 +552,15 @@ function dispNearStation () {
         latlng[2] = userPoint.split(',')[0];
         latlng[3] = userPoint.split(',')[1];
         document.getElementById( 'jrarr' ).textContent = '任意地点';
-    }
+    };
     var st = dispNearStationSub( map, latlng[2], latlng[3], 'red' );
     document.getElementById( 'jrarrstation' ).textContent = st[0].name;
     window.clipboardData.setData( 'Text', txt + st[0].name );
 
     drawBoundArea( map );
-}
+};
 
-function dispNearStationSub ( map, lat, lng, color ) {
+var dispNearStationSub = function( map, lat, lng, color ) {
     makeMarker( map, lat, lng, format( URL_GOOGLE_ICONS + '$$$-dot.png', color) );
     makeCircle( map, lat, lng );
     var stations = getNearStations( lat, lng );
@@ -574,12 +575,12 @@ function dispNearStationSub ( map, lat, lng, color ) {
                                    );
             if ( idx == 0 ) {
                 google.maps.event.trigger( marker, 'click' );
-            }
+            };
 	});
     return stations;
-}
+};
 
-function getNearBusStop ( lat, lng ) {
+var getNearBusStop = function( lat, lng ) {
      var result = Object.keys( objbusstops ).
 	map( function( key ) {
 	    var v = objbusstops[ key ].split( ',' );
@@ -598,15 +599,15 @@ function getNearBusStop ( lat, lng ) {
 	return 0;
     });
     return result.slice( 0, 10 ); // 上位
-}
+};
 
 // btnBus
-function searchNearBusStop () {
+var searchNearBusStop = function() {
     var lat, lng;
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
-    }
+    };
     var userPoint = document.getElementById( 'userPoint' ).textContent;
     if ( document.getElementsByName( 'busAround' )[0].checked ) {
 	lat = latlng[0];
@@ -617,15 +618,15 @@ function searchNearBusStop () {
     } else {
 	lat = userPoint.split(',')[0];
 	lng = userPoint.split(',')[1];
-    }
+    };
     var sel = removeOptions( 'busStops' );
     getNearBusStop( lat, lng ).forEach( function( e ) {
 	addOption( sel, e['id'], e['name'] );
     });
-}
+};
 
 // 名称でバス停検索
-function searchNameBusStop () {
+var searchNameBusStop = function() {
     var kword = document.getElementById( 'busstopname' ).value;
     var result = Object.keys( objbusstops ).filter( function( id ) {
 	return ( objbusstops[ id ].split( ',' ) [2].indexOf( kword ) > -1 )
@@ -634,9 +635,9 @@ function searchNameBusStop () {
     result.forEach( function( id ) {
 	addOption( sel, id, objbusstops[ id ].split( ',' )[2] );
     });
-}
+};
 
-function changeBusStop ( id ) {
+var changeBusStop = function( id ) {
     var sel = removeOptions( 'busRoutes' );
     var aryCompany = Object.keys( objBusStopRoute ); 
     aryCompany.forEach( function ( c ) {
@@ -647,18 +648,18 @@ function changeBusStop ( id ) {
                            format( '$$$($$$)',
                                    objBusStopRoute[ c ].route[ r ].name,
                                    objBusStopRoute[ c ].company) );
-	    }
+	    };
 	});
     });
-}
+};
 
-function drawBusRoute ( map, route ) {
+var drawBusRoute = function( map, route ) {
     var url = format( '$$$data-kml/$$$.kml', URL_TKITA_GITHUB, route.replace( ',', '' ) );
     var kml = new google.maps.KmlLayer( url );
     kml.setMap( map );
-}
+};
 
-function drawBusStops ( map, busRouteKey, image, advance ) {
+var drawBusStops = function( map, busRouteKey, image, advance ) {
     // バス路線に含まれるバス停を抽出
     key = busRouteKey.split( ',' );
     var aryBusStop = objBusStopRoute[ key[0] ].route[ key[1] ].data;
@@ -667,16 +668,16 @@ function drawBusStops ( map, busRouteKey, image, advance ) {
     	var marker = makeMarker( map, s[0], s[1], image, s[2] );
 	if ( e == advance ) {
 	    google.maps.event.trigger( marker, 'click' );
-	}	
+	};
     });
-}
+};
 
 // 「選択したバス停を含む路線」listbox をクリック
-function dispBusRoute ( busRouteKey ) {
+var dispBusRoute = function( busRouteKey ) {
     var latlng = checkInData();
     if ( !latlng ) {
 	return false;
-    }
+    };
     var originLat = latlng[0];
     var originLng = latlng[1];
 
@@ -698,7 +699,7 @@ function dispBusRoute ( busRouteKey ) {
     if ( userPoint != '' ) {
         latlng[2] = userPoint.split(',')[0];
         latlng[3] = userPoint.split(',')[1];
-    }
+    };
     makeMarker( map, latlng[2], latlng[3], URL_GOOGLE_ICONS + 'red-dot.png' );
 
     // バス停
@@ -720,28 +721,28 @@ function dispBusRoute ( busRouteKey ) {
 	drawBusRoute( map, busRouteKey )
 	drawBusStops( map, busRouteKey, URL_TKITA_GITHUB + 'resources/mm_20_green.png', false );
 	drawControl( map, busRouteKey, google.maps.ControlPosition.BOTTOM_CENTER, 'green' );
-    }
-}
+    };
+};
 
-function lock () {
+var lock = function() {
     document.getElementById( 'lock' ).value = getOptionText( 'busRoutes' ) +
         ',' + getOptionValue( 'busRoutes' );
-}
+};
 
-function unlock () {
+var unlock = function() {
     document.getElementById( 'lock' ).value = '';
-}
+};
 
-function setupShokuba () {
+var setupShokuba = function() {
     var dom = document.getElementById( 'kyoku' );
     Object.keys( objWorkplace ).forEach( function( e ) {
 	addOption( dom, e, objWorkplace[ e ].name );
     });
     dom.selectedIndex = 0;
     changeKyoku( getOptionValue( 'kyoku' ) );
-}
+};
 
-function setupBoundCity () {
+var setupBoundCity = function() {
     var dom = document.getElementById( 'boundCity' );
     objBound.map( function( e ) {
     	return e[1];
@@ -750,9 +751,9 @@ function setupBoundCity () {
     }).forEach( function( e ) {
 	addOption( dom, e, e );
     });
-}
+};
 
-function changeCity ( city ) {
+var changeCity = function( city ) {
     var addr = objBound.filter( function( e ) {
 	return ( e[1] == city );
     });
@@ -765,17 +766,17 @@ function changeCity ( city ) {
     addr.forEach( function( e ) {
 	addOption( sel, e[0], e[2] );
     });
-}
+};
 
 var handleKeyDown = function( event ) {
     if ( event.ctrlKey ) {
         switch ( event.key ) {
 
         case 'z':
-            event.preventDefault();
+            console.log( 'zzz' );
             current = 'top';
             document.getElementById( 'link_top' ).click();
-            alert( 'z' );
+            event.preventDefault();
             break;
 
         case 'b':
@@ -798,14 +799,16 @@ var handleKeyDown = function( event ) {
     };
 };
 
-function init () {
+var init = function() {
     setupShokuba();
     setupBoundCity();
     changeCity( getOptionValue( 'boundCity' ) );
     geocoder = new google.maps.Geocoder();
 
-    window.addEventListener( 'keydown', handleKeyDown );
-
+//    window.addEventListener( 'keydown', handleKeyDown );
+    shortcut.add( 'Ctrl+T', function(){
+        console.log( 'ttttt' );
+    });
 
     // document.onkeydown = function() {
     //     if ( event.ctrlKey ) {
@@ -872,7 +875,7 @@ function init () {
     // }
 }
 
-function getNearTouhyou ( stLat, stLng ) {
+var getNearTouhyou = function( stLat, stLng ) {
     var fromLatLng = new google.maps.LatLng( stLat, stLng );
     var result = objWorkplace[ getOptionValue( 'kyoku' ) ].data.map(
 	function( s ) {
@@ -890,9 +893,9 @@ function getNearTouhyou ( stLat, stLng ) {
 	if ( a.dist > b.dist ) return 1;
 	return 0;
     });
-}
+};
 
-function drawTouhyouMarker ( map, ary, color, tooltip ) {
+var drawTouhyouMarker = function( map, ary, color, tooltip ) {
     ary.forEach( function( e, idx, ary ) {
         var marker = makeMarker( map, e[ 'lat' ], e[ 'lng' ],
 				 // URL_GOOGLE_ICONS + color + '.png',
@@ -915,13 +918,13 @@ function drawTouhyouMarker ( map, ary, color, tooltip ) {
     });
 }
 
-function dispNearTouhyou () {
+var dispNearTouhyou = function() {
     var stLat = document.getElementById( 'stLat' ).innerText;
     var stLng = document.getElementById( 'stLng' ).innerText;
     if ( stLat == '' ) {
 	alert( '自宅・出発地点が未入力です' );
 	return false;
-    }
+    };
     var map = makeMap( 'touhyou_map', stLat, stLng, { zoom: 14 } );
     drawBoundArea( map );
 
@@ -939,7 +942,7 @@ function dispNearTouhyou () {
     var nearTouhyou = getNearTouhyou( stLat, stLng );
     drawTouhyouMarker( map, nearTouhyou.slice( 0, 5 ), 'red', true );
     drawTouhyouMarker( map, nearTouhyou.slice( 5    ), 'purple', false );
-}
+};
 
 // ekibus
 var COMPANY_NAME = { 34: 'ＪＲバス',
@@ -952,7 +955,7 @@ var COMPANY_NAME = { 34: 'ＪＲバス',
 		     100: 'ランドマーク'
                    };
 
-function getRoutePrediction ( word, id ) {
+var getRoutePrediction = function( word, id ) {
     var param = {};
     param['kind']        = 0;
     param['search_flg']  = 1;
@@ -974,21 +977,21 @@ function getRoutePrediction ( word, id ) {
                                         e.company_id, COMPANY_NAME[ e.company_id ], e.name );
 		      addOption( dom, e.station_id, str ); // dom, value, text
 	          });
-	      }
+	      };
           });
-}
+};
 
-function ebChangeWord ( id ) {
+var ebChangeWord = function( id ) {
     getRoutePrediction( document.getElementById( 'word_' + id ).value, id );
-}
+};
 
-function getSearchResult () {
+var getSearchResult = function() {
     var start_st = document.getElementById( 'ebDep' ).value;
     var end_st = document.getElementById( 'ebArr' ).value;
     if ( ( start_st == '' ) || ( end_st == '' ) ) {
 	alert( '未選択' );
 	return ;
-    }
+    };
     removeAllChilds( 'result' );
     removeAllChilds( 'timetable' );
 
@@ -1011,9 +1014,9 @@ function getSearchResult () {
 	var obj = JSON.parse( res );
 	drawTable( obj.search_result.route );
     });
-}
+};
 
-function drawTable ( ary ) {
+var drawTable = function( ary ) {
     var result = document.getElementById( 'result' );
     var tbl = document.createElement( 'table' );
 
@@ -1079,9 +1082,9 @@ function drawTable ( ary ) {
 	tbl.appendChild( tr );
     });
     result.appendChild( tbl );
-}
+};
 
-function getTimeTable ( from_id, from_name, to_id, to_name ) {
+var getTimeTable = function( from_id, from_name, to_id, to_name ) {
     removeAllChilds( 'timetable' );
     var param = {};
     param['kind']     = 0;
@@ -1097,9 +1100,9 @@ function getTimeTable ( from_id, from_name, to_id, to_name ) {
 	      var obj = JSON.parse( res );
 	      dispTimeTable( obj, from_id, from_name, to_id, to_name );
 	  });
-}
+};
 
-function dispTimeTable ( obj, from_id, from_name, to_id, to_name ) {
+var dispTimeTable = function( obj, from_id, from_name, to_id, to_name ) {
     var objTimeTable = obj.time_table[ 0 ]; // dia_flg = 1
     var aryHeader = objTimeTable.header_table;
     var company = objTimeTable.company_name;
@@ -1144,9 +1147,9 @@ function dispTimeTable ( obj, from_id, from_name, to_id, to_name ) {
 							    from_name,
 							    to_name ) ) );
     timetable.appendChild( dl );
-}
+};
 
-function showLine ( line_id, from_id, to_id ) {
+var showLine = function( line_id, from_id, to_id ) {
     var param = {};
     param[ 'kind' ]    = 0;
     param[ 'line_id' ] = line_id;
@@ -1177,30 +1180,30 @@ function showLine ( line_id, from_id, to_id ) {
                                      URL_TKITA_GITHUB + 'resources/mm_20_orange.png', s.name );
 	    if ( s.station_id == from_id ) {
 		google.maps.event.trigger( marker, 'click' );
-	    }
+	    };
 	});
     });
-}
+};
 
-function setStationName () {
+var setStationName= function() {
     var str = document.getElementById( 'jrdepstation' ).textContent;
     if ( str != '' ) {
         document.getElementById( 'word_ebDep' ).value = str;
         ebChangeWord ( 'ebDep' );
-    }
+    };
 
     var str = document.getElementById( 'jrarrstation' ).textContent;
     if ( str != '' ) {
         document.getElementById( 'word_ebArr' ).value = str;
         ebChangeWord ( 'ebArr' );
-    }
-}
+    };
+};
 
-function showModal ( url ) {
+var showModal = function( url ) {
     window.showModalDialog(
 	url,   //移動先
 	this,  //ダイアログに渡すパラメータ（この例では、自分自身のwindowオブジェクト）
 	'dialogWidth=1200px; dialogHeight=800px;'
     );
     //モーダルダイアログが終了すると、ここからスクリプトが続行される
-}
+};
