@@ -785,6 +785,24 @@ var init = function() {
         document.getElementById( 'btnPaste' ).focus();
     });
 
+    shortcut.add( 'Alt+V', function() {
+        current = false;
+        document.getElementById( 'link_departure' ).click();
+        document.getElementById( 'addr' ).value = '';
+        cbPaste();
+        document.getElementById( 'btnGeo' ).focus();
+    });
+
+    shortcut.add( 'Alt+J', function() {
+        current = false;
+        document.getElementById( 'kword' ).focus();
+    });
+
+    shortcut.add( 'Alt+G', function() {
+        current = false;
+        document.getElementById( 'btnGeo' ).click();
+    });
+
     shortcut.add( 'Alt+R', function() {
         if ( current == 'yougu' ) {
             document.getElementById( 'btnDist' ).click();
@@ -815,41 +833,6 @@ var init = function() {
         document.getElementById( 'link_ekibus' ).click();
     });
 
-    // document.onkeydown = function() {
-    //     if ( event.ctrlKey ) {
-    //         switch ( event.keyCode ) {
-
-    //         case 69: // CTRL-e
-    //             break;
-
-    //         case 70: // CTRL-f
-    //             current = false;
-    //             document.getElementById( 'kword' ).focus();
-    //             break;
-
-    //         case 71: // CTRL-g
-    //             current = false;
-    //             document.getElementById( 'btnGeo' ).click();
-    //             break;
-
-    //         case 82: // CTRL-r
-    //             break;
-
-    //         case 83: // CTRL-s
-    //             break;
-
-    //         case 86: // CTRL-v
-    //             current = false;
-    //             document.getElementById( 'link_departure' ).click();
-    //             document.getElementById( 'addr' ).value = '';
-    //             cbPaste();
-    //             document.getElementById( 'btnGeo' ).focus();
-    //             break;
-    //         }
-    //         event.keyCode = null;
-    //         return false;
-    //     }
-    // }
 };
 
 var getNearTouhyou = function( stLat, stLng ) {
