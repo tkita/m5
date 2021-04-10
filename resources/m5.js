@@ -777,12 +777,14 @@ var keyDown = function( event ) {
             break;
 
         case 'd':
+            event.preventDefault();
             current = 'departure';
             document.getElementById( 'link_departure' ).click();
             document.getElementById( 'btnPaste' ).focus();
             break;
 
         case 't':
+            event.preventDefault();
             current = 'top';
             document.getElementById( 'link_top' ).click();
             break;
