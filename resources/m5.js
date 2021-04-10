@@ -809,6 +809,7 @@ var init = function() {
     shortcut.add( 'Ctrl+T', function(){
         console.log( 'ttttt' );
     }, { 'propagate': false,
+         'target': window,
        });
 
     shortcut.add( 'Ctrl+B', function(){
