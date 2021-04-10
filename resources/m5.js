@@ -774,18 +774,18 @@ var init = function() {
     changeCity( getOptionValue( 'boundCity' ) );
     geocoder = new google.maps.Geocoder();
 
-    shortcut.add( 'Alt+T', function(){
+    shortcut.add( 'Alt+T', function() {
         current = 'top';
         document.getElementById( 'link_top' ).click();
     });
 
-    shortcut.add( 'Alt+B', function(){
-        current = 'bus';
-        document.getElementById( 'link_bus' ).click();
-        document.getElementById( 'btnBus' ).focus();
+    shortcut.add( 'Alt+D', function() {
+        current = 'departure';
+        document.getElementById( 'link_departure' ).click();
+        document.getElementById( 'btnPaste' ).focus();
     });
 
-    shortcut.add( 'Alt+R', function(){
+    shortcut.add( 'Alt+R', function() {
         if ( current == 'yougu' ) {
             document.getElementById( 'btnDist' ).click();
         } else {
@@ -795,14 +795,31 @@ var init = function() {
         };
     });
 
+    shortcut.add( 'Alt+S', function() {
+        if ( current == 'jrsubway' ) {
+            document.getElementById( 'btnJrSubway' ).click();
+        } else {
+            current ='jrsubway';
+            document.getElementById( 'link_jrsubway' ).click();
+        };
+    });
+
+    shortcut.add( 'Alt+B', function() {
+        current = 'bus';
+        document.getElementById( 'link_bus' ).click();
+        document.getElementById( 'btnBus' ).focus();
+    });
+
+    shortcut.add( 'Alt+E', function() {
+        current = 'ekibus';
+        document.getElementById( 'link_ekibus' ).click();
+    });
 
     // document.onkeydown = function() {
     //     if ( event.ctrlKey ) {
     //         switch ( event.keyCode ) {
 
     //         case 69: // CTRL-e
-    //             current = 'ekibus';
-    //             document.getElementById( 'link_ekibus' ).click();
     //             break;
 
     //         case 70: // CTRL-f
@@ -819,12 +836,6 @@ var init = function() {
     //             break;
 
     //         case 83: // CTRL-s
-    //             if ( current == 'jrsubway' ) {
-    //                 document.getElementById( 'btnJrSubway' ).click();
-    //             } else {
-    //                 current ='jrsubway';
-    //                 document.getElementById( 'link_jrsubway' ).click();
-    //             }
     //             break;
 
     //         case 86: // CTRL-v
