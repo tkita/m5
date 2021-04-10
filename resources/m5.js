@@ -772,6 +772,7 @@ var keyDown = function( event ) {
         switch ( event.key ) {
 
         case 'a':
+            event.preventDefault();
             current = 'top';
             document.getElementById( 'link_top' ).click();
             break;
