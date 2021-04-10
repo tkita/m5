@@ -37,7 +37,8 @@ var clearTextContent = function( id ) {
 };
 
 var cbPaste = function() {
-    document.getElementById( 'addr' ).value = clipboardData.getData( 'text' );
+    navigator.clipboard.readText().then(
+        clipText => document.getElementById( 'addr' ).value = clipText );
     clearGeocodeResult();
     document.getElementById( 'btnGeo' ).focus();
 };
