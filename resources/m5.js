@@ -817,61 +817,11 @@ var init = function() {
         document.getElementById( 'btnBus' ).focus();
     });
 
-    shortcut.add( 'Ctrl+E', function(){
-        console.log( 'ee' );
+    shortcut.add( 'Alt+T', function(){
+        console.log( 'Alt+T' );
     });
 
-    shortcut.add( 'Ctrl+F', function(){
-        console.log( 'ff' );
-    });
 
-    shortcut.add( 'Ctrl+G', function(){
-        console.log( 'gg' );
-    });
-
-    shortcut.add( 'Ctrl+H', function(){
-        console.log( 'hh' );
-    });
-
-    shortcut.add( 'Ctrl+I', function(){
-        console.log( 'ii' );
-    });
-
-    shortcut.add( 'Ctrl+J', function(){
-        console.log( 'jj' );
-    });
-
-    shortcut.add( 'Ctrl+K', function(){
-        console.log( 'kk' );
-    });
-
-    shortcut.add( 'Ctrl+L', function(){
-        console.log( 'll' );
-    });
-
-    shortcut.add( 'Ctrl+N', function(){
-        console.log( 'nn' );
-    });
-
-    shortcut.add( 'Ctrl+O', function(){
-        console.log( 'oo' );
-    });
-
-    shortcut.add( 'Ctrl+Q', function(){
-        console.log( 'qq' );
-    });
-
-    shortcut.add( 'Ctrl+U', function(){
-        console.log( 'uu' );
-    });
-
-    shortcut.add( 'Ctrl+Y', function(){
-        console.log( 'yy' );
-    });
-
-    shortcut.add( 'Ctrl+Z', function(){
-        console.log( 'zz' );
-    });
 
     // document.onkeydown = function() {
     //     if ( event.ctrlKey ) {
