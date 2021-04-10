@@ -770,6 +770,12 @@ function changeCity ( city ) {
 var keyDown = function( event ) {
     if ( event.ctrlKey ) {
         switch ( event.key ) {
+
+        case 'a':
+            current = 'top';
+            document.getElementById( 'link_top' ).click();
+            break;
+
         case 'b':
             current = 'bus';
             document.getElementById( 'link_bus' ).click();
@@ -783,12 +789,6 @@ var keyDown = function( event ) {
             document.getElementById( 'btnPaste' ).focus();
             break;
 
-        case 't':
-            event.stopPropagation();
-            event.preventDefault();
-            current = 'top';
-            document.getElementById( 'link_top' ).click();
-            break;
 
 
 
