@@ -784,6 +784,7 @@ var keyDown = function( event ) {
             break;
 
         case 't':
+            event.stopPropagation();
             event.preventDefault();
             current = 'top';
             document.getElementById( 'link_top' ).click();
