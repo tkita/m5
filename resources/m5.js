@@ -810,6 +810,11 @@ var init = function() {
         console.log( 'ttttt' );
     });
 
+    shortcut.add( 'Ctrl+B', function(){
+        document.getElementById( 'link_bus' ).click();
+        document.getElementById( 'btnBus' ).focus();
+    });
+
     // document.onkeydown = function() {
     //     if ( event.ctrlKey ) {
     //         switch ( event.keyCode ) {
