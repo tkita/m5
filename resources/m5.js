@@ -767,7 +767,7 @@ function changeCity ( city ) {
     });
 }
 
-var keyDown = function( event ) {
+var handleKeyDown = function( event ) {
     if ( event.ctrlKey ) {
         switch ( event.key ) {
 
@@ -804,7 +804,7 @@ function init () {
     changeCity( getOptionValue( 'boundCity' ) );
     geocoder = new google.maps.Geocoder();
 
-    document.addEventListener( 'keydown', keyDown );
+    window.addEventListener( 'keydown', handleKeyDown );
 
 
     // document.onkeydown = function() {
