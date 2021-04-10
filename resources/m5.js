@@ -768,77 +768,37 @@ var changeCity = function( city ) {
     });
 };
 
-var handleKeyDown = function( event ) {
-    if ( event.ctrlKey ) {
-        switch ( event.key ) {
-
-        case 'z':
-            console.log( 'zzz' );
-            current = 'top';
-            document.getElementById( 'link_top' ).click();
-            event.preventDefault();
-            break;
-
-        case 'b':
-            current = 'bus';
-            document.getElementById( 'link_bus' ).click();
-            document.getElementById( 'btnBus' ).focus();
-            break;
-
-        case 'd':
-            event.preventDefault();
-            current = 'departure';
-            document.getElementById( 'link_departure' ).click();
-            document.getElementById( 'btnPaste' ).focus();
-            break;
-
-
-
-
-        };
-    };
-};
-
 var init = function() {
     setupShokuba();
     setupBoundCity();
     changeCity( getOptionValue( 'boundCity' ) );
     geocoder = new google.maps.Geocoder();
 
-//    window.addEventListener( 'keydown', handleKeyDown );
-    shortcut.add( 'Ctrl+A', function(){
-        console.log( 'ttttt' );
-    }, { 'propagate': false,
-         'target': window,
-       });
+    shortcut.add( 'Alt+T', function(){
+        current = 'top';
+        document.getElementById( 'link_top' ).click();
+    });
 
-    shortcut.add( 'Ctrl+B', function(){
+    shortcut.add( 'Alt+B', function(){
+        current = 'bus';
         document.getElementById( 'link_bus' ).click();
         document.getElementById( 'btnBus' ).focus();
     });
 
-    shortcut.add( 'Alt+T', function(){
-        console.log( 'Alt+T' );
+    shortcut.add( 'Alt+R', function(){
+        if ( current == 'yougu' ) {
+            document.getElementById( 'btnDist' ).click();
+        } else {
+            current = 'yougu';
+            document.getElementById( 'link_yougu' ).click();
+            document.getElementById( 'btnDist' ).focus();
+        };
     });
-
 
 
     // document.onkeydown = function() {
     //     if ( event.ctrlKey ) {
     //         switch ( event.keyCode ) {
-    //         case 49: // CTRL-1
-    //             var mapObj = currentMapObj[ current ];
-    //             if ( mapObj ) {
-    //                 mapObj.setZoom( mapObj.getZoom() + 1 );
-    //             }
-    //             break;
-
-    //         case 50: // CTRL-2
-    //             var mapObj = currentMapObj[ current ];
-    //             if ( mapObj ) {
-    //                 mapObj.setZoom( mapObj.getZoom() - 1 );
-    //             }
-    //             break;
 
     //         case 69: // CTRL-e
     //             current = 'ekibus';
@@ -856,13 +816,6 @@ var init = function() {
     //             break;
 
     //         case 82: // CTRL-r
-    //             if ( current == 'yougu' ) {
-    //                 document.getElementById( 'btnDist' ).click();
-    //             } else {
-    //                 current = 'yougu';
-    //                 document.getElementById( 'link_yougu' ).click();
-    //                 document.getElementById( 'btnDist' ).focus();
-    //             }
     //             break;
 
     //         case 83: // CTRL-s
@@ -886,7 +839,7 @@ var init = function() {
     //         return false;
     //     }
     // }
-}
+};
 
 var getNearTouhyou = function( stLat, stLng ) {
     var fromLatLng = new google.maps.LatLng( stLat, stLng );
