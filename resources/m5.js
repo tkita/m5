@@ -771,8 +771,7 @@ var keyDown = function( event ) {
     if ( event.ctrlKey ) {
         switch ( event.key ) {
 
-        case 'a':
-            event.preventDefault();
+        case 'q':
             current = 'top';
             document.getElementById( 'link_top' ).click();
             break;
