@@ -806,7 +806,7 @@ var init = function() {
     geocoder = new google.maps.Geocoder();
 
 //    window.addEventListener( 'keydown', handleKeyDown );
-    shortcut.add( 'Ctrl+T', function(){
+    shortcut.add( 'Ctrl+A', function(){
         console.log( 'ttttt' );
     }, { 'propagate': false,
          'target': window,
