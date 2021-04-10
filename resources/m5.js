@@ -771,10 +771,11 @@ var keyDown = function( event ) {
     if ( event.ctrlKey ) {
         switch ( event.key ) {
 
-        case 'q':
+        case 'z':
             event.preventDefault();
             current = 'top';
             document.getElementById( 'link_top' ).click();
+            alert( 'z' );
             break;
 
         case 'b':
